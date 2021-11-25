@@ -364,7 +364,7 @@ Flags:
   -p, --port port             Set port (default 161)
       --version string        specifies SNMP version to use. 1|2c|3  (default "2c")
       --walk string           set an oid
-
+```
 Global Flags:
       --log             Record the scan results in chronological order，Save path./log.txt
   -O, --output          Whether to enter the results into a file（default ./result.txt),can use --path set
@@ -418,6 +418,7 @@ Global Flags:
 ```
 
 
+
 如果直接给目标的话会同时扫描netbios，oxid，smb。可以使用--来指定只使用某一个
 
 </details>
@@ -429,7 +430,6 @@ Global Flags:
 zscan nc
 ```
 
-```
 Usage:
   zscan nc [flags]
 
@@ -445,7 +445,6 @@ Global Flags:
   -T, --thread thread   Set thread eg:2000 (default 100)
   -t, --timeout time    Set timeout(s) eg:5s (default 3s)
   -v, --verbose         Show verbose information
-```
 
 -a指定地址，不使用-l的话代表连接目标，使用-l为监听端口
 
@@ -454,11 +453,8 @@ Global Flags:
 <details>
 <summary><b>socks5模块</b></summary>
 
-```
 zscan socks5
-```
 
-```
 Usage:
   zscan socks5 [flags]
 
@@ -475,7 +471,6 @@ Global Flags:
   -T, --thread thread   Set thread eg:2000 (default 100)
   -t, --timeout time    Set timeout(s) eg:5s (default 3s)
   -v, --verbose         Show verbose information
-```
 
 
 可以使用-a指定socks5服务监听的ip和端口
@@ -487,7 +482,7 @@ Global Flags:
 <details>
 <summary><b>httpserver模块</b></summary>
 
-```
+
 Usage:
  zscan httpserver [flags]
 
@@ -505,7 +500,6 @@ Global Flags:
   -T, --thread thread   Set thread eg:2000 (default 100)
   -t, --timeout time    Set timeout(s) eg:5s (default 3s)
   -v, --verbose         Show verbose information
-```
 
 
 目前开一个简单的http服务器，只能浏览和下载文件和身份验证，还不能上传文件
@@ -519,10 +513,8 @@ Global Flags:
 
 ## 源码编译
 
-```
 go get github.com/zyylhn/zscan
 go bulid
-```
 
 
 ## 免责声明
