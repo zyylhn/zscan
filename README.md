@@ -487,7 +487,7 @@ Global Flags:
 ```
 Usage:
  zscan httpserver [flags]
-
+```
 Flags:
   -a, --addr string   set http server addr (default "0.0.0.0:7001")
   -d, --dir string    set HTTP server root directory (default ".")
@@ -505,6 +505,7 @@ Global Flags:
 ```
 
 
+
 目前开一个简单的http服务器，只能浏览和下载文件和身份验证，还不能上传文件
 
 -a指定监听的ip和地址
@@ -520,6 +521,7 @@ Global Flags:
 go get github.com/zyylhn/zscan
 go bulid
 ```
+
 
 
 ## 免责声明
