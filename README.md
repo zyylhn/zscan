@@ -7,7 +7,6 @@
 
 ## 简介  
 
-<video src="/Users/zhangyunyu/Desktop/iShot2021-11-25 18.31.56.mp4"></video>
 
 ​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体。以主机发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，所有服务爆破成功之后还可以执行命令。除了基本的扫描和服务爆破功能之外，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
 
@@ -27,9 +26,9 @@ zscan 模块 参数
   \/_____/   \/_____/   \/_____/   \/_/\/_/   \/_/ \/_/
 
 Usage:
-  zscan [command]
+  zscan [模块]
 
-Available Commands:
+所有的模块:
   all         Use all scan mode
   completion  generate the autocompletion script for the specified shell
   ftp         burp ftp username and password 
@@ -75,26 +74,8 @@ Flags:
 
 目前已有模块（完整代码暂时没有上传，会尽快）：
 
-- ping模块：普通用户权限调用系统ping，root权限可以选择使用icmp数据包
-- ps模块：端口扫描和获取httptitle
-- all模块：调用所有扫描和爆破模块进行扫描
-- ssh模块：用户名密码爆破，ssh用户名密码登录，公钥登录
-- mysql模块：mysql数据用户名密码爆破和执行简单命令
-- mssql模块：mssql数据用户名密码爆破和执行简单命令
-- mongo模块：mongodb的用户名密码爆破和执行简单命令
-- postgres模块：postgres数据库用户名密码爆破和执行简单命令
-- redis模块：未授权检查和密码爆破和简单命令执行
-- ftp模块：ftp用户名密码爆破和执行简单命令
-- proxyfind模块：扫描网络中的代理，目前支持socks4/5，后期添加http
-- ms17010模块：ms17010漏洞批量扫描
-- winscan模块：包含oxid，smb，netbios扫描功能
-- snmp模块：snmp扫描
-- nc模块：一个简单的nc，可以开端口连接端口
-- socks5模块：开启一个socks5的服务器
-- httpserver模块：在指定的目录下开启一个http服务器，支持身份验证
-
 <details>
-<summary><b>ping模块</b></summary>
+<summary><b>ping模块:普通用户权限调用系统ping，root权限可以选择使用icmp数据包</b></summary>
 
 ```
 zscan ping 
@@ -127,7 +108,7 @@ Global Flags:
 </details>
 
 <details>
-<summary><b>ps模块</b></summary>
+<summary><b>ps模块:端口扫描和获取httptitle</b></summary>
 
 ```
 zscan ps
@@ -166,7 +147,7 @@ Global Flags:
 </details>
 
 <details>
-<summary><b>all模块</b></summary>
+<summary><b>all模块:调用所有扫描和爆破模块进行扫描</b></summary>
 
 ```
 zscan all
@@ -204,7 +185,7 @@ all模块参数和ps模块相同，就多了一个密码字典，是用来设置
 </details>
 
 <details>
-<summary><b>ssh模块</b></summary>
+<summary><b>ssh模块:用户名密码爆破，ssh用户名密码登录，公钥登录</b></summary>
 
 ```
 zscan ssh
@@ -255,7 +236,7 @@ eg：./zscan_linux ssh -H 172.16.95.1-30 -U root -b --passdict 1.txt
 </details>
 
 <details>
-<summary><b>mysql/mssql/mongo/redis/postgres/ftp模块</b></summary>
+<summary><b>mysql/mssql/mongo/redis/postgres/ftp模块:用户名密码爆破和执行简单命令</b></summary>
 
 以mysql为例，数据库的操作基本山都一样
 
@@ -291,7 +272,7 @@ Global Flags:
 </details>
 
 <details>
-<summary><b>proxyfind模块</b></summary>
+<summary><b>proxyfind模块:扫描网络中的代理，目前支持socks4/5，后期添加http</b></summary>
 
 ```
 zscan proxyfind
@@ -323,7 +304,7 @@ Global Flags:
 </details>
 
 <details>
-<summary><b>ms17010模块</b></summary>
+<summary><b>ms17010模块:ms17010漏洞批量扫描</b></summary>
 
 ```
 Usage:
@@ -347,7 +328,7 @@ Global Flags:
 </details>
 
 <details>
-<summary><b>snmp模块</b></summary>
+<summary><b>snmp模块:snmp扫描</b></summary>
 ```
 Usage:
   zscan snmp [flags]
@@ -394,7 +375,7 @@ Global Flags:
 </details>
 
 <details>
-<summary><b>winscan模块</b></summary>
+<summary><b>winscan模块:包含oxid，smb，netbios扫描功能</b></summary>
 
 ```
 Usage:
@@ -422,7 +403,7 @@ Global Flags:
 </details>
 
 <details>
-<summary><b>nc模块</b></summary>
+<summary><b>nc模块:一个简单的nc，可以开端口连接端口</b></summary>
 
 ```
 zscan nc
@@ -451,7 +432,7 @@ Global Flags:
 </details>
 
 <details>
-<summary><b>socks5模块</b></summary>
+<summary><b>socks5模块:开启一个socks5的服务器</b></summary>
 ```
 zscan socks5
 ```
@@ -483,10 +464,12 @@ Global Flags:
 </details>
 
 <details>
-<summary><b>httpserver模块</b></summary>
+<summary><b>httpserver模块:开启一个http服务器，支持身份认证和文件上传</b></summary>
+
 ```
 Usage:
  zscan httpserver [flags]
+```
 ```
 Flags:
   -a, --addr string   set http server addr (default "0.0.0.0:7001")
