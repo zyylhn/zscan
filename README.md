@@ -1,12 +1,23 @@
 # Zscan a scan blasting tool set
+[![Licens](https://img.shields.io/badge/Licens-MIT-orange)](https://github.com/zyylhn/zscan/blob/master/LICENSE)
+[![Releases](https://img.shields.io/badge/Releases-v1.0.0-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.0.0)
+[![go](https://img.shields.io/badge/Go-1.15.6-blue)](https://github.com/zyylhn/zscan)
 
-## 简介
 
-Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体。以主机发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，所有服务爆破成功之后还可以执行命令。除了基本的扫描和服务爆破功能之外，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
 
-缺点：工具体积较大，后期想办法解决，后期会出精简版
+## 简介  
 
-使用格式为zscan 模块 参数
+<video src="/Users/zhangyunyu/Desktop/iShot2021-11-25 18.31.56.mp4"></video>
+
+​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体。以主机发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，所有服务爆破成功之后还可以执行命令。除了基本的扫描和服务爆破功能之外，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
+
+工具体积较大，后期会出精简版
+
+使用格式为
+
+```
+zscan 模块 参数
+```
 
 ```
  ______     ______     ______     ______     __   __    
@@ -50,30 +61,40 @@ Flags:
   -t, --timeout time    Set timeout(s) eg:5s (default 3s)
   -v, --verbose         Show verbose information
 ```
+模块里面的Flag代表当前命令的参数，Global Flags代表全局参数（所有命令都可以用）
+这里的Flags为全局参数，所有模块都可以使用
+- --log：启用这个参数会将当前运行结果以追加的形式写到log.txt（可以记下每次运行的结果）
+- -O --output：将结果输出为文件，默认在当前目录的result.txt中（只保存当前运行这一次的结果），文件路径可以使用--path指定
+- --path：指定结果的保存文件路径
+- --proxy ：设置代理，用户名密码（user:pass@ip:port）不需要省份验证（ip:port）
+- -T --thread：指定线程数，默认100
+- -t --timeout：设置延时，网络条件好追求速度的话可以设置成1s
+- -v --verbose：设置显示扫描过程信息
 
 ## 功能模块
 
-目前已有模块：
+目前已有模块（完整代码暂时没有上传，会尽快）：
 
 - ping模块：普通用户权限调用系统ping，root权限可以选择使用icmp数据包
 - ps模块：端口扫描和获取httptitle
 - all模块：调用所有扫描和爆破模块进行扫描
-- snmp模块：snmp扫描
-- proxyfind模块：扫描网络中的代理，目前支持socks4/5，后期添加http
-- winscan模块：包含oxid，smb，netbios扫描功能
-- ms17010模块：ms17010漏洞批量扫描
-- ftp模块：ftp用户名密码爆破和执行简单命令
-- mongo模块：mongodb的用户名密码爆破和执行简单命令
-- mssql模块：mssql数据用户名密码爆破和执行简单命令
+- ssh模块：用户名密码爆破，ssh用户名密码登录，公钥登录
 - mysql模块：mysql数据用户名密码爆破和执行简单命令
+- mssql模块：mssql数据用户名密码爆破和执行简单命令
+- mongo模块：mongodb的用户名密码爆破和执行简单命令
 - postgres模块：postgres数据库用户名密码爆破和执行简单命令
 - redis模块：未授权检查和密码爆破和简单命令执行
-- ssh模块：用户名密码爆破，ssh用户名密码登录，公钥登录
-- httpserver模块：在指定的目录下开启一个http服务器，支持身份验证
+- ftp模块：ftp用户名密码爆破和执行简单命令
+- proxyfind模块：扫描网络中的代理，目前支持socks4/5，后期添加http
+- ms17010模块：ms17010漏洞批量扫描
+- winscan模块：包含oxid，smb，netbios扫描功能
+- snmp模块：snmp扫描
 - nc模块：一个简单的nc，可以开端口连接端口
 - socks5模块：开启一个socks5的服务器
+- httpserver模块：在指定的目录下开启一个http服务器，支持身份验证
 
-#### Ping Host Discovery
+<details>
+<summary><b>ping模块</b></summary>
 
 ```
 zscan ping 
@@ -103,18 +124,10 @@ Global Flags:
 ```
 
 三个参数，必须指定host和hostfile两个参数其中的一个，当有root权限的时候可以使用-i不调用本地的ping而是自己发icmp数据包（线程开的特别高的话几千那种，调用本地ping命令回到这cpu占用过高）
+</details>
 
-Flag代表当前命令的参数，Global Flags代表全局参数（所有命令都可以用）
-
-- --log：启用这个参数会将当前运行结果以追加的形式写到log.txt（可以记下每次运行的结果）
-- -O --output：将结果输出为文件，默认在当前目录的result.txt中（只保存当前运行这一次的结果），文件路径可以使用--path指定
-- --path：指定结果的保存文件路径
--  --proxy ：设置代理，用户名密码（user:pass@ip:port）不需要省份验证（ip:port）
-- -T --thread：指定线程数，默认100
-- -t --timeout：设置延时，网络条件好追求速度的话可以设置成1s
-- -v --verbose：设置显示扫描过程信息
-
-#### Port scanning
+<details>
+<summary><b>ps模块</b></summary>
 
 ```
 zscan ps
@@ -142,8 +155,6 @@ Global Flags:
   -v, --verbose         Show verbose information
 ```
 
-![ps](image/ps.png)
-
 --host和--hostfile指定目标
 
 -p指定端口，不指定的话使用默认端口
@@ -152,7 +163,10 @@ Global Flags:
 
 --icmp在使用ping的时候使用icmp包进行主机发现
 
-#### all模块
+</details>
+
+<details>
+<summary><b>all模块</b></summary>
 
 ```
 zscan all
@@ -183,9 +197,14 @@ Global Flags:
 
 ```
 
-![all](image/all.png)
+all模块本质是和ps模块基本相同，只不过all模块扫到对应的端口的时候会在当前线程中进行指纹识别或者用户名密码爆破
 
-#### ssh
+all模块参数和ps模块相同，就多了一个密码字典，是用来设置扫到需要爆破的端口时候的字典，其他都一样
+
+</details>
+
+<details>
+<summary><b>ssh模块</b></summary>
 
 ```
 zscan ssh
@@ -217,8 +236,6 @@ Global Flags:
   -v, --verbose         Show verbose information
 ```
 
-![ssh](image/ssh.png)
-
 ##### 登陆模块（默认）
 
 账号密码登陆：./zscan ssh -H 172.16.95.24 -U root -P 123456
@@ -235,7 +252,10 @@ Global Flags:
 
 eg：./zscan_linux ssh -H 172.16.95.1-30 -U root -b --passdict 1.txt 
 
-#### ftp/mysql/mssql/mongo/postgrres/redis模块
+</details>
+
+<details>
+<summary><b>mysql/mssql/mongo/redis/postgres/ftp模块</b></summary>
 
 以mysql为例，数据库的操作基本山都一样
 
@@ -266,13 +286,12 @@ Global Flags:
 
 这里面存在一个新的线程参数是burptheard，这个线程和-T的线程不同，-T的线程代表我们并发扫描的目标数量（这个目标是ip和端口的组合，每次并发相当于对目标发送了一个数据包），burptheard代表当我们在上面的并发扫描的单个线程中发现了我们的目标端口例如mysql，他会在当前的扫描线程中开启一个多线程爆破（这里的目标换成了特定ip特定的一个端口，这里就需要进行限速，速度太快可能导致目标服务不可用）
 
-redis使用截图
+可以使用-c来指定要执行的命令
 
-![redisburp](image/redisburp.png)
+</details>
 
-![redisexec](image/redisexec.png)
-
-#### proxyfind
+<details>
+<summary><b>proxyfind模块</b></summary>
 
 ```
 zscan proxyfind
@@ -298,9 +317,13 @@ Global Flags:
   -v, --verbose         Show verbose information
 ```
 
--H 指定目标，-p指定端口，--type指定扫描的代理协议类型（目前支持socks4/5，其他协议还在努力中）
+扫描内网中的代理服务器
 
-#### ms17010
+-H 指定目标，-p指定端口，--type指定扫描的代理协议类型（目前支持socks4/5，其他协议还在努力中）
+</details>
+
+<details>
+<summary><b>ms17010模块</b></summary>
 
 ```
 Usage:
@@ -321,13 +344,14 @@ Global Flags:
 ```
 
 只需要指定目标即可
+</details>
 
-#### snmp
-
+<details>
+<summary><b>snmp模块</b></summary>
 ```
 Usage:
   zscan snmp [flags]
-
+```
 Flags:
       --burpthread int        Set burp password thread(recommend not to change) (default 100)
       --get string            set an oid
@@ -352,7 +376,6 @@ Global Flags:
 
 --listoid列出常见的查询信息
 
-```
 0: 系统基本信息         SysDesc                 GET     1.3.6.1.2.1.1.1.0
 1: 监控时间             sysUptime               GET     1.3.6.1.2.1.1.3.0
 2: 系统联系人           sysContact              GET     1.3.6.1.2.1.1.4.0
@@ -362,13 +385,16 @@ Global Flags:
 6: 系统运行的进程列表   hrSWRunName             WALK    1.3.6.1.2.1.25.4.2.1.2
 7: 系统安装的软件列表   hrSWInstalledName       WALK    1.3.6.1.2.1.25.6.3.1.2
 8: 网络接口列表         ipAdEntAddr             WALK    1.3.6.1.2.1.4.20.1.1
-```
+
 
 可以通过使用--walk和--get进行查询
 
 密码不指定的话默认使用public
 
-#### winscan
+</details>
+
+<details>
+<summary><b>winscan模块</b></summary>
 
 ```
 Usage:
@@ -391,11 +417,13 @@ Global Flags:
   -v, --verbose         Show verbose information
 ```
 
-![winscan](image/winscan.png)
 
 如果直接给目标的话会同时扫描netbios，oxid，smb。可以使用--来指定只使用某一个
 
-#### nc
+</details>
+
+<details>
+<summary><b>nc模块</b></summary>
 
 ```
 zscan nc
@@ -421,7 +449,10 @@ Global Flags:
 
 -a指定地址，不使用-l的话代表连接目标，使用-l为监听端口
 
-#### Socks5
+</details>
+
+<details>
+<summary><b>socks5模块</b></summary>
 
 ```
 zscan socks5
@@ -444,18 +475,21 @@ Global Flags:
   -T, --thread thread   Set thread eg:2000 (default 100)
   -t, --timeout time    Set timeout(s) eg:5s (default 3s)
   -v, --verbose         Show verbose information
-
 ```
+
 
 可以使用-a指定socks5服务监听的ip和端口
 
 -p和-u指定代理的用户名和密码
 
-#### httpserver
+</details>
+
+<details>
+<summary><b>httpserver模块</b></summary>
 
 ```
 Usage:
-  zscan httpserver [flags]
+ zscan httpserver [flags]
 
 Flags:
   -a, --addr string   set http server addr (default "0.0.0.0:7001")
@@ -473,6 +507,7 @@ Global Flags:
   -v, --verbose         Show verbose information
 ```
 
+
 目前开一个简单的http服务器，只能浏览和下载文件和身份验证，还不能上传文件
 
 -a指定监听的ip和地址
@@ -480,6 +515,7 @@ Global Flags:
 -d指定httpserver开启的
 
 -P和-U设置身份验证的用户名密码
+</details>
 
 ## 源码编译
 
@@ -487,17 +523,6 @@ Global Flags:
 go get github.com/zyylhn/zscan
 go bulid
 ```
-
-## 使用截图
-
-#### winscan模块
-
-
-
-#### redis模块
-
-#### all模块
-
 
 
 ## 免责声明
@@ -515,3 +540,82 @@ go bulid
 https://github.com/shadow1ng/fscan
 
 https://github.com/k8gege/LadonGo
+
+## 更新进度
+
+### 功能模块
+
+- [x] ping模块：ping主机发现
+  - [x] 调用系统ping
+  - [x] 发送icmp数据包
+- [x] ps端口扫描模块
+  - [x] 获取http title和状态吗
+  - [ ] 进行简单的http目录扫描
+  - [x] 返回banner信息
+  - [x] 先ping再扫
+- [x] nc模块
+  - [x] 监听端口功能
+  - [x] 连接端口功能
+- [x] socks服务器模块
+  - [x] 用户名密码认证
+- [x] 扫描代理服务器模块
+  - [x] socks5代理服务器扫描
+  - [ ] http代理服务器扫描
+- [x] 开启http服务器模块
+  - [x] 身份认证功能
+  - [ ] 文件上传功能
+- [x] ssh模块
+  - [x] 用户名密码登录功能（交互式）
+  - [x] 密钥登录功能（交互式）
+  - [x] ssh账号密码爆破功能
+- [x] ftp模块
+  - [x] 用户名密码爆破功能
+  - [x] 执行命令功能
+- [x] mysql模块
+  - [x] 用户名密码爆破功能
+  - [x] 执行命令功能
+- [x] mssql
+  - [x] 用户名密码爆破功能
+  - [x] 执行命令功能
+- [x] mongo模块
+  - [x] 用户名密码爆破功能
+  - [x] 执行命令功能
+- [x] redis模块
+  - [x] 用户名密码爆破
+  - [x] 执行命令功能
+- [x] postgres模块
+  - [x] 用户名密码爆破功能
+  - [x] 执行命令功能
+- [x] winscan模块
+  - [x] smb扫描功能
+  - [x] oxid扫描功能
+  - [x] netbios扫描功能
+- [x] snmp模块
+- [x] 17010扫描模块
+- [ ] wmi模块
+- [ ] ldap
+- [ ] ..........
+
+### 工具本身功能
+
+- [x] 输出结果到文件
+- [x] 记录每次运行结果的log功能
+- [x] 设置线程功能（扫描支持超高线程）
+- [x] 设置timeout功能
+- [x] 代理功能
+- [x] 从文件读取目标功能
+- [x] 爆破支持超大字典
+- [ ] ...........
+
+### 后期目标
+
+- [ ] 完善当前版本各服务器爆破模块，支持更多的命令，尽量达到无障碍命令使用
+  - [ ] Mysql
+  - [ ] Mssql
+  - [ ] Postgres
+  - [ ] Mongodb
+  - [ ] Ftp
+- [ ] 出精简版的zscna
+  - [ ] 去掉所有数据库的驱动以减少体积，代价是不能执行命令
+  - [ ] 去掉cobra框架，框架本身体积比较大
+  - [ ] 去掉不常用的数据库模块，或者没用的数据库模块
