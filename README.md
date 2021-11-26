@@ -9,7 +9,7 @@
 <summary><b>结果输出格式</b></summary>
 -输出的部分结果截图
 
-![](image/result.png)
+<img src="image/result.png" style="zoom:50%;" />
 
 </details>
 
