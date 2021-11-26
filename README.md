@@ -477,8 +477,7 @@ Global Flags:
 ```
 Usage:
  zscan httpserver [flags]
-```
-```
+
 Flags:
   -a, --addr string   set http server addr (default "0.0.0.0:7001")
   -d, --dir string    set HTTP server root directory (default ".")
@@ -504,6 +503,78 @@ Global Flags:
 -d指定httpserver开启的
 
 -P和-U设置身份验证的用户名密码
+</details>
+
+## 使用示例
+
+<details>
+<summary><b>ping主机发现:zscan ping -H ip</b></summary>
+
+```
+zscan ping -H 172.16.95.1/24
+```
+
+
+
+</details>
+
+<details>
+<summary><b>ps端口扫描:zscan ps -H ip</b></summary>
+
+```
+zscan ps -H 172.16.95.1-30 [--ping先ping在扫]
+```
+
+![](image/ps.png)
+
+</details>
+
+<details>
+<summary><b>ssh模块爆破/登录:zscan ssh -H ip -b/zscan ssh -H ip -U user -P pass </b></summary>
+
+```
+爆破 zscan ssh -H 172.16.95.24 -b
+登录 zscan ssh -H 172.16.95.24 -U root -P 123123
+```
+
+![](image/ssh.png)
+
+</details>
+
+<details>
+<summary><b>redis模块爆破/执行命令:zscan redis -H ip/zscan redis -H ip -c cmd</b></summary>
+
+```
+爆破 zscan redis -H 172.16.95.1-30
+登录 zscan redis -H 172.16.95.16 -c cmd
+```
+
+![](image/redisburp.png)
+
+![](image/redisexec.png)
+
+</details>
+
+<details>
+<summary><b>winscan模块:zscan winscan -H ip</b></summary>
+
+```
+zscan winscan -H 172.16.95.1-33
+```
+
+![](image/winscan.png)
+
+</details>
+
+<details>
+<summary><b>调用所有扫描爆破模块:zscan all -H ip</b></summary>
+
+```
+zscan all -H 172.16.95.1-30
+```
+
+![](image/all.png)
+
 </details>
 
 ## 工具优势
@@ -583,11 +654,11 @@ https://github.com/k8gege/LadonGo
 - [x] postgres模块
   - [x] 用户名密码爆破功能
   - [x] 执行命令功能
-- [x] winscan模块
+- [x] winscan模块@https://github.com/shenzhibuqins
   - [x] smb扫描功能
   - [x] oxid扫描功能
   - [x] netbios扫描功能
-- [x] snmp模块
+- [x] snmp模块@https://github.com/shenzhibuqin
 - [x] 17010扫描模块
 - [ ] wmi模块
 - [ ] ldap
