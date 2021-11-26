@@ -3,7 +3,13 @@
 [![Releases](https://img.shields.io/badge/Releases-v1.0.0-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.0.0)
 [![go](https://img.shields.io/badge/Go-1.15.6-blue)](https://github.com/zyylhn/zscan)
 
+![](image/all.svg)
 
+<details>
+<summary><b>结果输出格式</b></summary>
+![result](image/result.png)
+
+</details>
 
 ## 简介  
 
