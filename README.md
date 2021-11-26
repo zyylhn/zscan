@@ -7,7 +7,9 @@
 
 <details>
 <summary><b>结果输出格式</b></summary>
-![result](image/result.png)
+-输出的部分结果截图
+
+![](image/result.png)
 
 </details>
 
