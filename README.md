@@ -13,7 +13,9 @@
 
 </details>
 
-## 简介  
+[TOC]
+
+## 简介🎉
 
 
 ​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体。以主机发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，所有服务爆破成功之后还可以执行命令。除了基本的扫描和服务爆破功能之外，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
@@ -78,7 +80,7 @@ Flags:
 - -t --timeout：设置延时，网络条件好追求速度的话可以设置成1s
 - -v --verbose：设置显示扫描过程信息
 
-## 功能模块
+## 功能模块😈
 
 目前已有模块（完整代码暂时没有上传，会尽快）：
 
@@ -225,21 +227,21 @@ Global Flags:
   -v, --verbose         Show verbose information
 ```
 
-##### 登陆模块（默认）
+登陆模块（默认）
 
-账号密码登陆：./zscan ssh -H 172.16.95.24 -U root -P 123456
+​	账号密码登陆：./zscan ssh -H 172.16.95.24 -U root -P 123456
 
-公钥登陆：./zscan ssh -H 172.16.95.24 -U root -k 
+​	公钥登陆：./zscan ssh -H 172.16.95.24 -U root -k 
 
-公钥登陆默认会去当前用户目录下面的./ssh取私钥，可以使用-d/--keypath指定私钥路径
+​	公钥登陆默认会去当前用户目录下面的./ssh取私钥，可以使用-d/--keypath指定私钥路径
 
-##### 爆破模块（-b/--burp参数）
+爆破模块（-b/--burp参数）
 
-用户名：可以使用-U/--username指定用户名、--userdict指定用户名字典、不指定使用内部用户名（admin，root）
+​	用户名：可以使用-U/--username指定用户名、--userdict指定用户名字典、不指定使用内部用户名（admin，root）
 
-密码：可以使用-P/--password指定密码、--passdict指定密码文件、不指定使用内部密码字典
+​	密码：可以使用-P/--password指定密码、--passdict指定密码文件、不指定使用内部密码字典
 
-eg：./zscan_linux ssh -H 172.16.95.1-30 -U root -b --passdict 1.txt 
+​	eg：./zscan_linux ssh -H 172.16.95.1-30 -U root -b --passdict 1.txt 
 
 </details>
 
@@ -505,18 +507,7 @@ Global Flags:
 -P和-U设置身份验证的用户名密码
 </details>
 
-## 使用示例
-
-<details>
-<summary><b>ping主机发现:zscan ping -H ip</b></summary>
-
-```
-zscan ping -H 172.16.95.1/24
-```
-
-
-
-</details>
+## 使用示例🤪
 
 <details>
 <summary><b>ps端口扫描:zscan ps -H ip</b></summary>
@@ -577,7 +568,7 @@ zscan all -H 172.16.95.1-30
 
 </details>
 
-## 工具优势
+## 工具优势🚀
 
 - 命令简单方便，模块功能调用简洁明了，方便拓展和添加各种新功能
 - 不仅仅是一个扫描器，还集成各种常见的实用功能，内置代理功能，可以称为工具包。
@@ -586,14 +577,14 @@ zscan all -H 172.16.95.1-30
 - 对服务不仅仅能爆破，爆破成功还可以执行命令
 - 正在开发中，各位师傅如果发现什么问题bug，或者有什么新奇有趣的功能需求可与我联系super_yu@yeah.net
 
-## 源码编译
+## 源码编译👨
 
 ```
 go get github.com/zyylhn/zscan
 go bulid
 ```
 
-## 免责声明
+## 免责声明🧐
 
 本工具仅面向**合法授权**的企业安全建设行为，如您需要测试本工具的可用性，请自行搭建靶机环境。
 
@@ -603,13 +594,13 @@ go bulid
 
 在安装并使用本工具前，请您**务必审慎阅读、充分理解各条款内容**，限制、免责条款或者其他涉及您重大权益的条款可能会以加粗、加下划线等形式提示您重点注意。 除非您已充分阅读、完全理解并接受本协议所有条款，否则，请您不要安装并使用本工具。您的使用行为或者您以其他任何明示或者默示方式表示接受本协议的，即视为您已阅读并同意本协议的约束。
 
-## 参考链接
+## 参考链接👀
 
 https://github.com/shadow1ng/fscan
 
 https://github.com/k8gege/LadonGo
 
-## 更新进度
+## 更新进度💪
 
 ### 功能模块
 
