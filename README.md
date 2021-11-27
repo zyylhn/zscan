@@ -81,7 +81,7 @@ Flags:
 
 ## 功能模块😈
 
-目前已有模块（完整代码暂时没有上传，会尽快）：
+目前已有模块：
 
 <details>
 <summary><b>ping模块:普通用户权限调用系统ping，root权限可以选择使用icmp数据包</b></summary>
