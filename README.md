@@ -1,6 +1,6 @@
 #              Zscan a scan blasting tool set
 [![Licens](https://img.shields.io/badge/Licens-MIT-orange)](https://github.com/zyylhn/zscan/blob/master/LICENSE)
-[![Releases](https://img.shields.io/badge/Releases-v1.0.0-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.0.0)
+[![Releases](https://img.shields.io/badge/Releases-v1.1.0-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.1.0)
 [![go](https://img.shields.io/badge/Go-1.15.6-blue)](https://github.com/zyylhn/zscan)
 
 ![](image/all.svg)
@@ -13,7 +13,6 @@
 
 </details>
 
-[TOC]
 
 ## 简介🎉
 
@@ -662,6 +661,16 @@ https://github.com/k8gege/LadonGo
 - [x] 设置线程功能（扫描支持超高线程）
 - [x] 设置timeout功能
 - [x] 代理功能
+	- [ ] udp协议代理功能
+	- [x] tcp协议代理功能
+	- [x] 服务爆破和执行命令代理功能
+		- [x] mysql
+		- [ ] mssql
+		- [x] redis
+		- [ ] mongodb
+		- [ ] postgres
+		- [x] ssh
+		- [x] ftp
 - [x] 从文件读取目标功能
 - [x] 爆破支持超大字典
 - [ ] ...........

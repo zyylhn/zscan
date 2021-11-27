@@ -231,4 +231,5 @@ func init() {
 	portscanCmd.Flags().BoolVar(&pingbefore, "ping", false, "Ping host discovery before port scanning")
 	portscanCmd.Flags().BoolVarP(&banner, "banner", "b",false, "Return banner information")
 	//portscanCmd.MarkFlagRequired("host")
+
 }

@@ -143,7 +143,7 @@ func nbt_smb_oxi_scan(ip string,port int) (string,int,error,[]string) {
 			return ip, port, nil, []string{nbname.msg}
 		}
 	case 445:
-		conn, err := net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+		conn, err := Getconn(fmt.Sprintf("%v:%v",ip,port))
 		if err != nil {
 			return ip, port, err, nil
 		}
@@ -155,7 +155,7 @@ func nbt_smb_oxi_scan(ip string,port int) (string,int,error,[]string) {
 			return ip,port,ok,nil
 		}
 	case 135:
-		conn, err := net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+		conn, err := Getconn(fmt.Sprintf("%v:%v",ip,port))
 		if err != nil {
 			return ip, port, err, nil
 		}
@@ -184,7 +184,7 @@ func netBiosIpInfo(ip string, port int) (string, int, error, []string) {
 }
 
 func PrintResultNetbios(r map[string]*Openport) {
-	Output("\n\r===========================netbios result list=============================\n", LightGreen)
+	Output("\n\r===========================netbios result list===========================\n", LightGreen)
 	for i, data := range r {
 		Output(fmt.Sprintf("Traget:%v\n", i), LightBlue)
 		for _, s := range data.banner[139] {
@@ -464,7 +464,7 @@ func Connectsmb(ip string, port int) (string, int, error, []string) {
 }
 
 func PrintResultSMB(r map[string]*Openport) {
-	Output("\n\r===========================smb result list=============================\n", LightGreen)
+	Output("\n\r============================smb result list=============================\n", LightGreen)
 	for i, data := range r {
 		Output(fmt.Sprintf("Traget:%v\n", i), LightBlue)
 		for _, s := range data.banner[445] {

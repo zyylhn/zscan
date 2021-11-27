@@ -3,6 +3,7 @@ package cmd
 import (
 	"bufio"
 	"fmt"
+	"github.com/cheggaaa/pb/v3"
 	"os"
 	"strings"
 	"sync"
@@ -29,6 +30,7 @@ type Burp struct {
 	tasklist chan *burp_info
 	service Service
 	wg sync.WaitGroup
+	bar *pb.ProgressBar
 	burpthread int
 	stop chan int8
 	burpresult string
@@ -201,4 +203,26 @@ func cancelled(stop chan int8) bool{
 		return false
 	}
 }
+
+//func Start_Burp(aliveip []string,check Service,t int)  {
+//	var wg sync.WaitGroup
+//	for _,i:=range aliveip{
+//		wg.Add(1)
+//		go func(i string) {
+//			startburp:=NewBurp(Password,Username,Userdict,Passdict,i,check,t)
+//			startburp.Run()
+//			wg.Done()
+//		}(i)
+//	}
+//	wg.Wait()
+//}
+
+//func bar()  {
+//	for  {
+//		for _, r := range `-\|/` {
+//			fmt.Printf("\r%c Already test:%v times %c", r,num,r)
+//			time.Sleep(200 * time.Millisecond)
+//		}
+//	}
+//}
 

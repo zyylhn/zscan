@@ -3,9 +3,10 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"net"
@@ -27,11 +28,11 @@ var mysqlCmd = &cobra.Command{
 		defer func() {
 			Output_endtime(start)
 		}()
-		mysql()
+		mysqlmode()
 	},
 }
 
-func mysql()  {
+func mysqlmode()  {
 	burp_mysql()
 }
 
@@ -54,7 +55,7 @@ func burp_mysql()  {
 }
 
 func Connectmysql(ip string, port int) (string, int, error,[]string) {
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+	conn, err := Getconn(fmt.Sprintf("%v:%v",ip,port))
 	if conn != nil {
 		defer conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
@@ -72,6 +73,10 @@ func Connectmysql(ip string, port int) (string, int, error,[]string) {
 
 func mysql_auth(username,password,ip string) (error,bool,string) {
 	DSN := fmt.Sprintf("%s:%s@tcp(%s:%v)/?charset=utf8&timeout=%v", username, password, ip,mysql_port,Timeout)
+	//注册一个tcp网络，根据是否设置代理返回不同的conn
+	mysql.RegisterDialContext("tcp", func(ctx context.Context,network string) (net.Conn, error) {
+		return Getconn(network)
+	})
 	db, err := sql.Open("mysql", DSN)
 	if err == nil {
 		err = db.Ping()

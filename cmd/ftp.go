@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/jlaffaye/ftp"
 	"github.com/spf13/cobra"
-	"net"
 	"time"
 )
 
@@ -49,7 +48,7 @@ func burp_ftp()  {
 }
 
 func Connectftp(ip string,port int) (string,int,error,[]string) {
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, ftp_port))
 	defer func() {
 		if conn != nil {
 			_ = conn.Close()
@@ -63,7 +62,9 @@ func Connectftp(ip string,port int) (string,int,error,[]string) {
 }
 
 func ftp_auth(username,password,ip string) (error,bool,string) {
-	conn, err := ftp.DialTimeout(fmt.Sprintf("%s:%d", ip, ftp_port), Timeout)
+	c,err:=Getconn(fmt.Sprintf("%s:%d", ip, ftp_port))
+	Checkerr_exit(err)
+	conn, err := ftp.Dial(fmt.Sprintf("%s:%d", ip, ftp_port), ftp.DialWithNetConn(c))
 	if err == nil {
 		err = conn.Login(username, password)
 		if err == nil {
@@ -116,5 +117,6 @@ func init() {
 	ftpCmd.Flags().StringVarP(&Password,"password","P","","Set ftp password")
 	ftpCmd.Flags().StringVarP(&Userdict,"userdict","","","Set ftp userdict path")
 	ftpCmd.Flags().StringVarP(&Passdict,"passdict","","","Set ftp passworddict path")
+	//ftpCmd.MarkFlagRequired("host")
 
 }

@@ -52,7 +52,7 @@ func burp_redis()  {
 }
 
 func Connectredis(ip string, port int) (string, int, error,[]string) {
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+	conn, err := Getconn(fmt.Sprintf("%v:%v",ip,port))
 	defer func() {
 		if conn != nil {
 			_ = conn.Close()
@@ -78,6 +78,10 @@ func redis_client(user,pass,addr string) (*redis.Client) {
 	if err != nil {
 		return nil
 	}
+	dialer:= func(ctx context.Context,network,addr string)(net.Conn,error) {
+		return Getconn(addr)
+	}
+	opt.Dialer=dialer
 	return redis.NewClient(opt)
 }
 

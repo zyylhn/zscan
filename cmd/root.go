@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"golang.org/x/net/proxy"
 	"time"
 )
 
@@ -22,6 +23,7 @@ var burp bool
 var burpthread int
 var Hostfile string
 var Proxy string
+var proxyconn proxy.Dialer
 
 const l1 = "2006-01-02 15:04:05"
 

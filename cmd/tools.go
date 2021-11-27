@@ -27,7 +27,7 @@ type Connect_method func(ip string ,port int) (string,int,error,[]string)//用�
 
 //建立tcp连接检测端口开放情况
 func Connect(ip string, port int) (string, int, error,[]string) {
-	conn,err:=Proxyconn(ip,port)
+	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
 	if conn != nil {
 		_ = conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
@@ -38,7 +38,7 @@ func Connect(ip string, port int) (string, int, error,[]string) {
 
 
 func Connect_BannerScan(ip string,port int) (string,int,error,[]string) {
-	conn, err := Proxyconn(ip,port)
+	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
 	if conn!=nil{
 		conn.SetReadDeadline((time.Now().Add(Timeout)))
 		reader:=bufio.NewReader(conn)
@@ -58,24 +58,32 @@ func Connect_BannerScan(ip string,port int) (string,int,error,[]string) {
 	return ip, port, err,nil
 }
 
-func Proxyconn(ip string,port int) (net.Conn,error) {
-	//var err error
-	//var conn net.Conn
+func Proxyconn() (proxy.Dialer,error) {
 	if Proxy==""{
-		return net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+		return nil,fmt.Errorf("")
 	}else {
-		if strings.ContainsAny(Proxy,"@"){
-
+		if strings.ContainsAny(Proxy,"@")&&strings.Count(Proxy,"@")==1{
+			info:=strings.Split(Proxy,"@")
+			userpass:=strings.Split(info[0],":")
+			auth:= proxy.Auth {userpass[0],userpass[1]}
+			dialer,err:=proxy.SOCKS5("tcp",info[1],&auth,proxy.Direct)
+			return dialer,err
 		}else {
 			if strings.ContainsAny(Proxy,":")&&strings.Count(Proxy,":")==1{
-				//proxyipport:=strings.Split(Proxy,":")
 				dialer,err:=proxy.SOCKS5("tcp",Proxy,nil,proxy.Direct)
-				Checkerr_exit(err)
-				return dialer.Dial("tcp",fmt.Sprintf("%v:%v", ip, port))
+				return dialer,err
 			}
 		}
 	}
 	return nil,fmt.Errorf("proxy error")
+}
+
+func Getconn(addr string) (net.Conn,error) {
+	if proxyconn!=nil{
+		return proxyconn.Dial("tcp",addr)
+	}else {
+		return net.DialTimeout("tcp",addr,Timeout)
+	}
 }
 
 //解析ip返回IP类型列表
@@ -200,6 +208,12 @@ func Output_endtime(start time.Time)  {
 
 //输出扫描信息
 func PrintScanBanner(mode string)  {
+	if Proxy!=""{
+		proxyconn,_=Proxyconn()
+		if proxyconn==nil{
+			Checkerr_exit(fmt.Errorf("proxy error"))
+		}
+	}
 	output_verbose:= func() {
 		if Verbose {
 			Output("Verbose:Show verbose\n",LightCyan)
@@ -257,24 +271,24 @@ func PrintScanBanner(mode string)  {
 		output_file()
 		output_log()
 		fmt.Println()
-	//case "nc":
-	//	Output("\nMode:nc\n",Red)
-	//	Output(fmt.Sprintf("%s\n", string(time.Now().AppendFormat([]byte("Start time:"), l1))),LightCyan)
-	//	if listen {
-	//		Output(fmt.Sprintf("Listen on %v\n\n", Addr),LightCyan)
-	//	} else {
-	//		Output(fmt.Sprintf("Connect to %v\n\n", Addr),LightCyan)
-	//	}
-	//case "socks":
-	//	Output("\nMode:Socks5 server\n",Red)
-	//	Output(fmt.Sprintf("Listen addr: %v\n\n",Addr),LightCyan)
-	//case "SocksScan":
-	//	Output("\nMode:Proxy find\n",Red)
-	//	output_scan()
-	//	output_verbose()
-	//	output_file()
-	//	output_log()
-	//	fmt.Println()
+	case "nc":
+		Output("\nMode:nc\n",Red)
+		Output(fmt.Sprintf("%s\n", string(time.Now().AppendFormat([]byte("Start time:"), l1))),LightCyan)
+		if listen {
+			Output(fmt.Sprintf("Listen on %v\n\n", Addr),LightCyan)
+		} else {
+			Output(fmt.Sprintf("Connect to %v\n\n", Addr),LightCyan)
+		}
+	case "socks":
+		Output("\nMode:Socks5 server\n",Red)
+		Output(fmt.Sprintf("Listen addr: %v\n\n",Addr),LightCyan)
+	case "SocksScan":
+		Output("\nMode:Proxy find\n",Red)
+		output_scan()
+		output_verbose()
+		output_file()
+		output_log()
+		fmt.Println()
 	case "ssh":
 		Output("\nMode:ssh\n",Red)
 		if burp{
@@ -327,23 +341,23 @@ func PrintScanBanner(mode string)  {
 		output_file()
 		output_log()
 		fmt.Println()
-	//case "postgres":
-	//	Output("\nMode:postgres\n",Red)
-	//	output_scan()
-	//	output_burpthread()
-	//	output_verbose()
-	//	output_file()
-	//	output_log()
-	//	output_command()
-	//	fmt.Println()
-	//case "all":
-	//	Output("\nMode:all\n",Red)
-	//	output_scan()
-	//	output_verbose()
-	//	output_pingbefor()
-	//	output_file()
-	//	output_log()
-	//	fmt.Println()
+	case "postgres":
+		Output("\nMode:postgres\n",Red)
+		output_scan()
+		output_burpthread()
+		output_verbose()
+		output_file()
+		output_log()
+		output_command()
+		fmt.Println()
+	case "all":
+		Output("\nMode:all\n",Red)
+		output_scan()
+		output_verbose()
+		output_pingbefor()
+		output_file()
+		output_log()
+		fmt.Println()
 	case "ftp":
 		Output("\nMode:ftp\n",Red)
 		output_scan()
@@ -353,36 +367,48 @@ func PrintScanBanner(mode string)  {
 		output_log()
 		output_command()
 		fmt.Println()
-	//case "mongodb":
-	//	Output("\nMode:mongo\n",Red)
-	//	output_scan()
-	//	output_burpthread()
-	//	output_verbose()
-	//	output_file()
-	//	output_log()
-	//	output_command()
-	//	fmt.Println()
-	//case "httpserver":
-	//	Output("\nMode:httpserver\n",Red)
-	//	Output(fmt.Sprintf("%s\n", string(time.Now().AppendFormat([]byte("Start time:"), l1))),LightCyan)
-	//	Output(fmt.Sprintf("Listen on %v\n", httpserveraddr),LightCyan)
-	//	Output(fmt.Sprintf("root directory：%v\n", dir),LightCyan)
-	//	if Username==""&&Password==""{
-	//		Output("No authentication required\n",LightCyan)
-	//	}else {
-	//		Output("Requires authentication\n",LightCyan)
-	//	}
+	case "mongodb":
+		Output("\nMode:mongo\n",Red)
+		output_scan()
+		output_burpthread()
+		output_verbose()
+		output_file()
+		output_log()
+		output_command()
+		fmt.Println()
+	case "httpserver":
+		Output("\nMode:httpserver\n",Red)
+		Output(fmt.Sprintf("%s\n", string(time.Now().AppendFormat([]byte("Start time:"), l1))),LightCyan)
+		Output(fmt.Sprintf("Listen on %v\n", httpserveraddr),LightCyan)
+		Output(fmt.Sprintf("root directory：%v\n", dir),LightCyan)
+		if Username==""&&Password==""{
+			Output("No authentication required\n",LightCyan)
+		}else {
+			Output("Requires authentication\n",LightCyan)
+		}
+	case "ms17010":
+		Output("\nMode:ms17_010\n",Red)
+		output_scan()
+		output_verbose()
+		output_file()
+		output_log()
+		fmt.Println()
 	}
 }
 
 func GetHost()  {
-	if Hostfile!=""{
+	switch  {
+	case Hostfile!=""&&Hosts!="":
+		hostlist,err:=ReadFile(Hostfile)
+		Checkerr_exit(err)
+		Hosts=Hosts+","+strings.Join(hostlist,",")
+	case Hostfile!="":
 		hostlist,err:=ReadFile(Hostfile)
 		Checkerr_exit(err)
 		Hosts=strings.Join(hostlist,",")
-	}
-	if Hostfile==""&&Hosts==""{
+	case Hosts==""&&Hostfile=="":
 		Checkerr_exit(fmt.Errorf("This module must be required --host or --hostfile\nUse \"zscan modename -h\" get some help"))
+	default:
 	}
 }
 

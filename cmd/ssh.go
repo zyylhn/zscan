@@ -7,7 +7,6 @@ import (
 	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"log"
-	"net"
 	"os"
 	"path"
 	"time"
@@ -49,8 +48,7 @@ func burp_ssh()  {
 }
 
 func Connectssh(ip string, port int) (string, int, error,[]string) {
-
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
 	if conn != nil {
 		_ = conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
@@ -105,7 +103,6 @@ func ssh_auto( username, password,ip string) (error,bool,string) {
 //获取公钥认证Client
 func ssh_connect_publickeys(addr,user,key_path string) (*ssh.Client, error) {
 	var (
-		client       *ssh.Client
 		err  error
 		home_path string
 		key []byte
@@ -136,22 +133,25 @@ func ssh_connect_publickeys(addr,user,key_path string) (*ssh.Client, error) {
 		Timeout:         Timeout,
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
-	if client, err = ssh.Dial("tcp", addr, clientConfig); err != nil {
-		return nil, err
+	conn,err:=Getconn(addr)
+	Checkerr_exit(err)
+	c,ch,re,err:=ssh.NewClientConn(conn,addr,clientConfig)
+	if err !=nil{
+		return nil,err
 	}
-
-	return client, nil
+	return ssh.NewClient(c,ch,re), nil
 }
 
 //获取账号密码验证的Client
 func ssh_connect_userpass(addr,user,pass string) (*ssh.Client,error) {
 	client_config:=&ssh.ClientConfig{User: user,Auth: []ssh.AuthMethod{ssh.Password(pass)},HostKeyCallback: ssh.InsecureIgnoreHostKey(),Timeout: Timeout}
-	client,err:=ssh.Dial("tcp",addr,client_config)
+	conn,err:=Getconn(addr)
+	Checkerr_exit(err)
+	c,ch,re,err:=ssh.NewClientConn(conn,addr,client_config)
 	if err !=nil{
-		//fmt.Println(Yellow(err))
 		return nil,err
 	}
-	return client, nil
+	return ssh.NewClient(c,ch,re), nil
 }
 
 //利用Client进行交互式登陆
