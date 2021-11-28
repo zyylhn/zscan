@@ -3,6 +3,8 @@
 [![Releases](https://img.shields.io/badge/Releases-v1.1.0-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.1.0)
 [![go](https://img.shields.io/badge/Go-1.15.6-blue)](https://github.com/zyylhn/zscan)
 
+📄[English document](https://github.com/zyylhn/zscan/README_EN.md)
+
 ![](image/all.svg)
 
 <details>
@@ -113,7 +115,7 @@ Global Flags:
 
 ```
 
-三个参数，必须指定host和hostfile两个参数其中的一个，当有root权限的时候可以使用-i不调用本地的ping而是自己发icmp数据包（线程开的特别高的话几千那种，调用本地ping命令回到这cpu占用过高）
+三个参数，必须指定host和hostfile两个参数其中的一个，当有root权限的时候可以使用-i不调用本地的ping而是自己发icmp数据包（线程开的特别高的话几千那种，调用本地ping命令会导致cpu占用过高）
 </details>
 
 <details>
@@ -606,52 +608,76 @@ https://github.com/k8gege/LadonGo
 - [x] ping模块：ping主机发现
   - [x] 调用系统ping
   - [x] 发送icmp数据包
+  
 - [x] ps端口扫描模块
   - [x] 获取http title和状态吗
   - [ ] 进行简单的http目录扫描
   - [x] 返回banner信息
   - [x] 先ping再扫
+  
 - [x] nc模块
   - [x] 监听端口功能
   - [x] 连接端口功能
+  
 - [x] socks服务器模块
   - [x] 用户名密码认证
+  
 - [x] 扫描代理服务器模块
   - [x] socks5代理服务器扫描
   - [ ] http代理服务器扫描
+  
 - [x] 开启http服务器模块
   - [x] 身份认证功能
   - [ ] 文件上传功能
+  
 - [x] ssh模块
   - [x] 用户名密码登录功能（交互式）
   - [x] 密钥登录功能（交互式）
   - [x] ssh账号密码爆破功能
+  
 - [x] ftp模块
   - [x] 用户名密码爆破功能
   - [x] 执行命令功能
+  
 - [x] mysql模块
   - [x] 用户名密码爆破功能
   - [x] 执行命令功能
+  
 - [x] mssql
   - [x] 用户名密码爆破功能
   - [x] 执行命令功能
+  
 - [x] mongo模块
   - [x] 用户名密码爆破功能
   - [x] 执行命令功能
+  
 - [x] redis模块
   - [x] 用户名密码爆破
   - [x] 执行命令功能
+  - [ ] 主从复制rce
+
 - [x] postgres模块
   - [x] 用户名密码爆破功能
   - [x] 执行命令功能
+  
 - [x] winscan模块@https://github.com/shenzhibuqins
   - [x] smb扫描功能
   - [x] oxid扫描功能
   - [x] netbios扫描功能
+  
 - [x] snmp模块@https://github.com/shenzhibuqin
+
 - [x] 17010扫描模块
+
 - [ ] wmi模块
+
 - [ ] ldap
+
+- [x] version模块
+	- [ ] 当前版本号和最新版本号输出
+	- [ ] 输出更新内容
+	- [ ] 更新到最新版本
+	
 - [ ] ..........
 
 ### 工具本身功能
