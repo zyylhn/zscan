@@ -3,7 +3,7 @@
 [![Releases](https://img.shields.io/badge/Releases-v1.1.0-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.1.0)
 [![go](https://img.shields.io/badge/Go-1.15.6-blue)](https://github.com/zyylhn/zscan)
 
-📄[中文文档](https://github.com/zyylhn/zscan/README.md)
+📄[中文文档](https://github.com/zyylhn/zscan/blob/master/README.md)
 
 ![](image/all.svg)
 
