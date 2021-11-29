@@ -437,6 +437,9 @@ func smbinfo(conn net.Conn) (error,[]string) {
 	if err != nil {
 		return err,nil
 	}
+	if len(buf)<81{
+		return fmt.Errorf(""),nil
+	}
 	buf = buf[81:]
 	end := bytes.Index(buf, []byte{0x00, 0x00, 0x00})
 	var smbRes []string
@@ -516,6 +519,9 @@ func oxidIpInfo(conn net.Conn) (error, []string) {
 		return  err, nil
 	}
 	end := bytes.Index(buf, []byte{0x00, 0x00, 0x09, 0x00, 0xff, 0xff, 0x00, 0x00})
+	if len(buf)<40{
+		return fmt.Errorf(""),nil
+	}
 	buf = buf[40:end]
 	var oxidRes []string
 	for i := bytes.Index(buf, []byte{0x00, 0x00, 0x00}); i != -1; {
