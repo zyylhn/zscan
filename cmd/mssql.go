@@ -6,7 +6,6 @@ import (
 	"fmt"
 	_ "github.com/denisenkom/go-mssqldb"
 	"github.com/spf13/cobra"
-	"net"
 	"time"
 )
 
@@ -52,7 +51,7 @@ func burp_mssql()  {
 }
 
 func Connectmssql(ip string, port int) (string, int, error,[]string) {
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, mssql_port))
 	defer func() {
 		if conn != nil {
 			_ = conn.Close()

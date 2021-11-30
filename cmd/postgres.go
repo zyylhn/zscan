@@ -5,7 +5,6 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/spf13/cobra"
-	"net"
 	"time"
 )
 
@@ -51,23 +50,25 @@ func burp_postgres()  {
 }
 
 func Connectpostgres(ip string, port int) (string, int, error,[]string) {
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
-	defer func() {
-		if conn != nil {
-			_ = conn.Close()
-			fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
-			fmt.Println(Yellow("Start burp postgres : ",ip))
-			startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,postgres_auth,burpthread)
-			startburp.Run()
+	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, postgre_port))
+	if conn != nil {
+		_ = conn.Close()
+		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
+		fmt.Println(Yellow("Start burp postgres : ",ip))
+		_,f,_:=postgres_auth("postgres","",ip)
+		if f{
+			Output(fmt.Sprintf("%v burp success:%v No authentication\n","postgres",ip),LightGreen)
+			return ip,port,nil,[]string{"No authentication"}
 		}
-	}()
+		startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,postgres_auth,burpthread)
+		startburp.Run()
+	}
 	return ip, port, err,nil
 }
 
 func postgres_auth(username,password,addr string) (error, bool,string) {
 	DSN := fmt.Sprintf("postgres://%s:%s@%s:%d/postgres?sslmode=disable&connect_timeout=%d", username, password, addr, postgre_port, Timeout)
 	db, err := sql.Open("postgres", DSN)
-
 	if err == nil {
 		err = db.Ping()
 		if err == nil {

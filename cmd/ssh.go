@@ -146,12 +146,15 @@ func ssh_connect_publickeys(addr,user,key_path string) (*ssh.Client, error) {
 func ssh_connect_userpass(addr,user,pass string) (*ssh.Client,error) {
 	client_config:=&ssh.ClientConfig{User: user,Auth: []ssh.AuthMethod{ssh.Password(pass)},HostKeyCallback: ssh.InsecureIgnoreHostKey(),Timeout: Timeout}
 	conn,err:=Getconn(addr)
-	Checkerr_exit(err)
-	c,ch,re,err:=ssh.NewClientConn(conn,addr,client_config)
-	if err !=nil{
-		return nil,err
+	Checkerr(err)
+	if conn!=nil{
+		c,ch,re,err:=ssh.NewClientConn(conn,addr,client_config)
+		if err !=nil{
+			return nil,err
+		}
+		return ssh.NewClient(c,ch,re), nil
 	}
-	return ssh.NewClient(c,ch,re), nil
+	return nil,err
 }
 
 //利用Client进行交互式登陆

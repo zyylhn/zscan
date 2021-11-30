@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+var notburp bool
 
 var allCmd = &cobra.Command{
 	Use:   "all",
@@ -46,61 +47,103 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
 		switch port {
 		case 22:
-			fmt.Println(Yellow("\rStart burp ssh : ",ip,":",port))
-			name:="root,admin,ssh"
-			_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
-			if f{
-				Output(fmt.Sprintf("[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
-				name="admin,ssh"
-			}
-			startburp:=NewBurp(Password,name,Userdict,Passdict,ip,ssh_auto,10)
-			relust:=startburp.Run()
-			if relust!=""{
-				return ip,port,nil,[]string{relust}
+			if !notburp{
+				fmt.Println(Yellow("\rStart burp ssh : ",ip,":",port))
+				name:="root,admin,ssh"
+				_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
+				if f{
+					Output(fmt.Sprintf("[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
+					name="admin,ssh"
+				}
+				startburp:=NewBurp(Password,name,Userdict,Passdict,ip,ssh_auto,10)
+				relust:=startburp.Run()
+				if relust!=""{
+					return ip,port,nil,[]string{relust}
+				}
 			}
 			return ip,port,nil,nil
 		case 3306:
-			fmt.Println(Yellow("\rStart burp mysql : ",ip,":",port))
-			_,f,_:=mysql_auth("asdasd","zxczxc",ip)
-			if f{
-				Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mysql",ip),LightGreen)
-				return ip,port,nil,[]string{"No authentication"}
-			}
-			startburp:=NewBurp(Password,"root,mysql",Userdict,Passdict,ip,mysql_auth,100)
-			relust:=startburp.Run()
-			if relust!=""{
-				return ip,port,nil,[]string{relust}
+			if !notburp{
+				fmt.Println(Yellow("\rStart burp mysql : ",ip,":",port))
+				_,f,_:=mysql_auth("asdasd","zxczxc",ip)
+				if f{
+					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mysql",ip),LightGreen)
+					return ip,port,nil,[]string{"No authentication"}
+				}
+				startburp:=NewBurp(Password,"root,mysql",Userdict,Passdict,ip,mysql_auth,100)
+				relust:=startburp.Run()
+				if relust!=""{
+					return ip,port,nil,[]string{relust}
+				}
 			}
 			return ip,port,nil,nil
 		case 6379:
-			fmt.Println(Yellow("\rStart burp redis : ",ip,":",port))
-			_,f,_:=redis_auth("","",ip)
-			if f{
-				Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","redis",ip),LightGreen)
-				return ip,port,nil,[]string{"No authentication"}
-			}
-			startburp:=NewBurp(Password,"","",Passdict,ip,redis_auth,100)
-			relust:=startburp.Run()
-			if relust!=""{
-				return ip,port,nil,[]string{relust}
+			if !notburp{
+				fmt.Println(Yellow("\rStart burp redis : ",ip,":",port))
+				_,f,_:=redis_auth("","",ip)
+				if f{
+					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","redis",ip),LightGreen)
+					return ip,port,nil,[]string{"No authentication"}
+				}
+				startburp:=NewBurp(Password,"","",Passdict,ip,redis_auth,100)
+				relust:=startburp.Run()
+				if relust!=""{
+					return ip,port,nil,[]string{relust}
+				}
 			}
 			return ip,port,nil,nil
 		case 1433:
-			fmt.Println(Yellow("\rStart burp mssql : ",ip,":",port))
-			startburp:=NewBurp(Password,"sa,admin,Administrator",Userdict,Passdict,ip,mssql_auth,100)
-			relust:=startburp.Run()
-			if relust!=""{
-				return ip,port,nil,[]string{relust}
+			if !notburp{
+				fmt.Println(Yellow("\rStart burp mssql : ",ip,":",port))
+				startburp:=NewBurp(Password,"sa,admin,Administrator",Userdict,Passdict,ip,mssql_auth,100)
+				relust:=startburp.Run()
+				if relust!=""{
+					return ip,port,nil,[]string{relust}
+				}
 			}
 			return ip,port,nil,nil
 		case 5432:
-			fmt.Println(Yellow("\rStart burp postgres : ",ip,":",port))
-			startburp:=NewBurp(Password,"postgres",Userdict,Passdict,ip,postgres_auth,100)
-			relust:=startburp.Run()
-			if relust!=""{
-				return ip,port,nil,[]string{relust}
+			if !notburp{
+				fmt.Println(Yellow("\rStart burp postgres : ",ip,":",port))
+				_,f,_:=postgres_auth("postgres","",ip)
+				if f{
+					Output(fmt.Sprintf("%v burp success:%v No authentication\n","postgres",ip),LightGreen)
+					return ip,port,nil,[]string{"No authentication"}
+				}
+				startburp:=NewBurp(Password,"postgres",Userdict,Passdict,ip,postgres_auth,100)
+				relust:=startburp.Run()
+				if relust!=""{
+					return ip,port,nil,[]string{relust}
+				}
 			}
 			return ip,port,nil,nil
+		case 21:
+			if !notburp{
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp ftp : ",ip,":",port))
+				}
+				startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,ftp_auth,burpthread)
+				relust:=startburp.Run()
+				if relust!=""{
+					return ip,port,nil,[]string{relust}
+				}
+			}
+			return ip,port,nil,nil
+		case 27017:
+			if !notburp{
+				fmt.Println(Yellow("\rStart burp mongodb : ",ip,":",port))
+				_,f,_:=mongodb_auth("","",ip)
+				if f{
+					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mongodb",ip),LightGreen)
+					return ip,port,nil,[]string{"No authentication"}
+				}
+				startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,mongodb_auth,burpthread)
+				relust:=startburp.Run()
+				if relust!=""{
+					return ip,port,nil,[]string{relust}
+				}
+				return ip,port,nil,nil
+			}
 		case 7890:
 			b,s:=Socks5Find(conn)
 			if b {
@@ -143,35 +186,29 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			if nbname.msg != "" {
 				return ip, port, nil, []string{nbname.msg}
 			}
-		case 21:
-			if Verbose{
-				fmt.Println(Yellow("\rStart burp ftp : ",ip,":",port))
-			}
-			startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,ftp_auth,burpthread)
-			relust:=startburp.Run()
-			if relust!=""{
-				return ip,port,nil,[]string{relust}
-			}
-			return ip,port,nil,nil
-		case 27017:
-			fmt.Println(Yellow("\rStart burp mongodb : ",ip,":",port))
-			_,f,_:=mongodb_auth("","",ip)
-			if f{
-				Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mongodb",ip),LightGreen)
-				return ip,port,nil,[]string{"No authentication"}
-			}
-			startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,mongodb_auth,burpthread)
-			relust:=startburp.Run()
-			if relust!=""{
-				return ip,port,nil,[]string{relust}
-			}
-			return ip,port,nil,nil
 		default:
 			//getScanTitl(fmt.Sprintf("%v:%v",ip,port))
 		}
 	}
 	return ip, port, err,r
 }
+//
+//func serviceburp(ip string,port int,username,servicename string,burpt int,service_auth Service ) (string,int,error,[]string) {
+//	if !notburp{
+//		fmt.Println(Yellow("\rStart burp ",servicename," : ",ip,":",port))
+//		_,f,_:=service_auth("root","Ksdvfjsxc",ip)
+//		if f{
+//			Output(fmt.Sprintf("[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
+//			username="admin,ssh"
+//		}
+//		startburp:=NewBurp(Password,username,Userdict,Passdict,ip,service_auth,burpt)
+//		relust:=startburp.Run()
+//		if relust!=""{
+//			return ip,port,nil,[]string{relust}
+//		}
+//	}
+//	return ip,port,nil,nil
+//}
 
 func init() {
 	rootCmd.AddCommand(allCmd)
@@ -182,4 +219,5 @@ func init() {
 	allCmd.Flags().BoolVar(&pingbefore, "ping", false, "Ping host discovery before port scanning")
 	allCmd.Flags().StringVarP(&Password,"password","P","","Set postgres password")
 	allCmd.Flags().StringVarP(&Passdict,"passdict","","","Set postgres passworddict path")
+	allCmd.Flags().BoolVar(&notburp,"notburp",false,"Set postgres passworddict path")
 }

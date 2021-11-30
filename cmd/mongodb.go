@@ -5,7 +5,6 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/spf13/cobra"
 	"gopkg.in/mgo.v2"
-	"net"
 	"time"
 )
 
@@ -50,7 +49,7 @@ func burp_mongodb()  {
 }
 
 func Connectmongodb(ip string, port int) (string, int, error,[]string) {
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, mongodb_port))
 	defer func() {
 		if conn != nil {
 			_ = conn.Close()
