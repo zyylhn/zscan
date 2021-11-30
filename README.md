@@ -1,6 +1,6 @@
 #              Zscan a scan blasting tool set
 [![Licens](https://img.shields.io/badge/Licens-MIT-orange)](https://github.com/zyylhn/zscan/blob/master/LICENSE)
-[![Releases](https://img.shields.io/badge/Releases-v1.1.1-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.1.1)
+[![Releases](https://img.shields.io/badge/Releases-v1.1.2-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.1.2)
 [![go](https://img.shields.io/badge/Go-1.15.6-blue)](https://github.com/zyylhn/zscan)
 
 📄[English document](https://github.com/zyylhn/zscan/blob/master/README_EN.md)
@@ -717,5 +717,7 @@ https://github.com/k8gege/LadonGo
   - [ ] 去掉不常用的数据库模块，或者没用的数据库模块
 
 感谢老铁的星星🥳
+
 欢迎提问题👏
+
 喜欢用go写工具的同学可以加入我们super_yu@yeah.net😃

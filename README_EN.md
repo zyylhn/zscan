@@ -1,6 +1,6 @@
 #              Zscan a scan blasting tool set
 [![Licens](https://img.shields.io/badge/Licens-MIT-orange)](https://github.com/zyylhn/zscan/blob/master/LICENSE)
-[![Releases](https://img.shields.io/badge/Releases-v1.1.1-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.1.1)
+[![Releases](https://img.shields.io/badge/Releases-v1.1.2-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.1.2)
 [![go](https://img.shields.io/badge/Go-1.15.6-blue)](https://github.com/zyylhn/zscan)
 
 📄[中文文档](https://github.com/zyylhn/zscan/blob/master/README.md)
@@ -697,5 +697,4 @@ https://github.com/k8gege/LadonGo
     - [ ] Remove all database drivers to reduce volume at the cost of not being able to execute commands
     - [ ] Remove the cobra framework, the framework itself is bulky
     - [ ] Remove database modules that are not used or not used
-
-感谢老铁的星星🥳
+  
