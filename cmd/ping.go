@@ -72,7 +72,7 @@ func ICMPRun(hostslist []net.IP, Ping bool) []string {
 		}
 	}()
 
-	if Ping == true {
+	if Ping {
 		scantype="ping"
 		RunPing(hostslist, chanHosts)
 	} else {
