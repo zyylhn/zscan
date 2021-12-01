@@ -34,7 +34,7 @@ func ms17010()  {
 	GetHost()
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver:=NewPortScan(ips,[]int{445},Connect17010)
+	aliveserver:=NewPortScan(ips,[]int{445},Connect17010,true)
 	r:=aliveserver.Run()
 	Printresult(r)
 }

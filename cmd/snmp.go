@@ -47,7 +47,7 @@ func snmpScan() {
 	}
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver := NewPortScan(ips, []int{161}, snmpIpInfo)
+	aliveserver := NewPortScan(ips, []int{161}, snmpIpInfo,true)
 	aliveserver.Run()
 	printSnmpResult()
 }

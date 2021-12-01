@@ -45,7 +45,7 @@ func burp_postgres()  {
 	}
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver:=NewPortScan(ips,[]int{postgre_port},Connectpostgres)
+	aliveserver:=NewPortScan(ips,[]int{postgre_port},Connectpostgres,true)
 	_=aliveserver.Run()
 }
 

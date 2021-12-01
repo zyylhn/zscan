@@ -29,11 +29,15 @@ func allmode()  {
 	if pingbefore {
 		Hosts = ping_discover()
 	}
+	if Hosts==""{
+		Output("Don't have living host",Red)
+		return
+	}
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
 	ports, err := Parse_Port(ps_port)
 	Checkerr(err)
-	aliveserver:=NewPortScan(ips,ports,Connectall)
+	aliveserver:=NewPortScan(ips,ports,Connectall,true)
 	r:=aliveserver.Run()
 	getHttptitle(r)
 	Printresult(r)
@@ -122,7 +126,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				if Verbose{
 					fmt.Println(Yellow("\rStart burp ftp : ",ip,":",port))
 				}
-				startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,ftp_auth,burpthread)
+				startburp:=NewBurp(Password,"ftp,anonymous,root",Userdict,Passdict,ip,ftp_auth,burpthread)
 				relust:=startburp.Run()
 				if relust!=""{
 					return ip,port,nil,[]string{relust}
@@ -137,7 +141,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mongodb",ip),LightGreen)
 					return ip,port,nil,[]string{"No authentication"}
 				}
-				startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,mongodb_auth,burpthread)
+				startburp:=NewBurp(Password,"mongo,root,mongodb",Userdict,Passdict,ip,mongodb_auth,burpthread)
 				relust:=startburp.Run()
 				if relust!=""{
 					return ip,port,nil,[]string{relust}

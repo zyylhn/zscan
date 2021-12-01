@@ -32,7 +32,7 @@ func proxyfind()  {
 	Checkerr(err)
 	ports, err := Parse_Port(proxy_port)
 	Checkerr(err)
-	aliveserver:=NewPortScan(ips,ports,Connect_SocksScan)
+	aliveserver:=NewPortScan(ips,ports,Connect_SocksScan,true)
 	r:=aliveserver.Run()
 	PrintResult_Socks(r)
 }

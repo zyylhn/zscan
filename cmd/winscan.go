@@ -128,7 +128,7 @@ func winscan() {
 func nbt_smb_oxid()  {
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver := NewPortScan(ips, []int{139,445,135}, nbt_smb_oxi_scan)
+	aliveserver := NewPortScan(ips, []int{139,445,135}, nbt_smb_oxi_scan,true)
 	r := aliveserver.Run()
 	PrintResultNetbios(r)
 	PrintResultSMB(r)
@@ -170,7 +170,7 @@ func nbt_smb_oxi_scan(ip string,port int) (string,int,error,[]string) {
 func netBiosScan() map[string]*Openport {
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver := NewPortScan(ips, []int{139}, netBiosIpInfo)
+	aliveserver := NewPortScan(ips, []int{139}, netBiosIpInfo,true)
 	r := aliveserver.Run()
 	return r
 }
@@ -203,7 +203,7 @@ func netBIOS(host string) (nbname NbnsName, err error) {
 		payload0 = append(payload0, []byte("\x00 EOENEBFACACACACACACACACACACACACA\x00")...)
 	}
 	realhost := fmt.Sprintf("%s:%v", host, 139)
-	conn, err := net.DialTimeout("tcp", realhost, Timeout)
+	conn, err := Getconn(realhost)
 	defer func() {
 		if conn != nil {
 			conn.Close()
@@ -319,9 +319,31 @@ func netBIOS(host string) (nbname NbnsName, err error) {
 	nbname.msg=strings.TrimSpace(nbname.msg)
 	return nbname, err
 }
+//
+//func Proxyconn_udp() (proxy.Dialer,error) {
+//	if Proxy==""{
+//		return nil,fmt.Errorf("")
+//	}else {
+//		if strings.ContainsAny(Proxy,"@")&&strings.Count(Proxy,"@")==1{
+//			info:=strings.Split(Proxy,"@")
+//			userpass:=strings.Split(info[0],":")
+//			auth:= proxy.Auth {userpass[0],userpass[1]}
+//			dialer,err:=proxy.SOCKS5("udp",info[1],&auth,proxy.Direct)
+//			return dialer,err
+//		}else {
+//			if strings.ContainsAny(Proxy,":")&&strings.Count(Proxy,":")==1{
+//				dialer,err:=proxy.SOCKS5("udp",Proxy,nil,proxy.Direct)
+//				return dialer,err
+//			}
+//		}
+//	}
+//	return nil,fmt.Errorf("proxy error")
+//}
 
 func getNbnsname(host string) (nbname NbnsName, err error) {
 	senddata1 := []byte{102, 102, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 32, 67, 75, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 0, 0, 33, 0, 1}
+	//d,err:=Proxyconn_udp()
+	//Checkerr(err)
 	realhost := fmt.Sprintf("%s:%v", host, 137)
 	conn, err := net.DialTimeout("udp", realhost, Timeout)
 	defer func() {
@@ -421,7 +443,7 @@ func netbiosEncode(name string) (output []byte) {
 func smbScan() map[string]*Openport {
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver1 := NewPortScan(ips, []int{445}, Connectsmb)
+	aliveserver1 := NewPortScan(ips, []int{445}, Connectsmb,true)
 	r1 := aliveserver1.Run()
 	//PrintResultSMB(r1)
 	return r1
@@ -479,7 +501,7 @@ func PrintResultSMB(r map[string]*Openport) {
 func oxidScan() map[string]*Openport {
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver := NewPortScan(ips, []int{135}, Connectoxid)
+	aliveserver := NewPortScan(ips, []int{135}, Connectoxid,true)
 	r := aliveserver.Run()
 	return r
 	//PrintResultOxid(r)
@@ -519,7 +541,7 @@ func oxidIpInfo(conn net.Conn) (error, []string) {
 		return  err, nil
 	}
 	end := bytes.Index(buf, []byte{0x00, 0x00, 0x09, 0x00, 0xff, 0xff, 0x00, 0x00})
-	if len(buf)<40{
+	if len(buf)<40||end==-1{
 		return fmt.Errorf(""),nil
 	}
 	buf = buf[40:end]

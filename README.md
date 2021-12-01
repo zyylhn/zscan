@@ -19,7 +19,7 @@
 ## 简介🎉
 
 
-​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体。以主机发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，所有服务爆破成功之后还可以执行命令。除了基本的扫描和服务爆破功能之外，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
+​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体。以主机和内网网段发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，所有服务爆破成功之后还可以执行命令（后期会增加服务利用功能例如redis的rce等等）。除了基本的扫描和服务爆破功能之外，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
 
 工具体积较大，后期会出精简版
 
@@ -97,13 +97,13 @@ Usage:
   zscan ping [flags]
 
 Flags:
+  -d, --discover string   Live network segment found
   -h, --help              help for ping
   -H, --host hosts        Set hosts(The format is similar to Nmap)
       --hostfile string   Set host file
   -i, --icmp              Icmp packets are sent to check whether the host is alive(need root)
 
 Global Flags:
- -h, --help            help for zscan
       --log             Record the scan results in chronological order，Save path./log.txt
   -O, --output          Whether to enter the results into a file（default ./result.txt),can use --path set
       --path string     the path of result file (default "result.txt")
@@ -116,6 +116,13 @@ Global Flags:
 ```
 
 三个参数，必须指定host和hostfile两个参数其中的一个，当有root权限的时候可以使用-i不调用本地的ping而是自己发icmp数据包（线程开的特别高的话几千那种，调用本地ping命令会导致cpu占用过高）
+
+--discover两种网段发现模式，一种是ping网络b段网关，一种是oxid扫描
+
+--discover后面需要给一个参数，如果给local（zscan ping --disconver local）就会读取本地网卡信息，去扫描本地的网络b段，例如读取到本地的两张网卡192.168.13.13和172.16.95.23，那么他就会去ping192.168.0.0/16和172.16.0.0/16这两个b段
+
+还可以给定一个或者多个b段ip例如172.17.0.0或者172.18.0.0,10.10.0.0，多个ip段用逗号隔开
+
 </details>
 
 <details>
@@ -513,6 +520,19 @@ Global Flags:
 ## 使用示例🤪
 
 <details>
+<summary><b>ping网段发现:zscan ping --discover local</b></summary>
+
+```
+zscan ping --discover local或者
+zscan ping --discover 192.168.0.0
+```
+
+![](image/pingscaning.png)
+![](image/pingscanre.png)
+
+</details>
+
+<details>
 <summary><b>ps端口扫描:zscan ps -H ip</b></summary>
 
 ```
@@ -574,6 +594,7 @@ zscan all -H 172.16.95.1-30
 ## 工具优势🚀
 
 - 命令简单方便，模块功能调用简洁明了，方便拓展和添加各种新功能
+- 独特的网段发现功能，大家有更好的发现方式可以告诉我，给加上😜
 - 不仅仅是一个扫描器，还集成各种常见的实用功能，内置代理功能（由于数据库驱动没有提供接口，导致msssql、mongo、postgres爆破和执行命令走不了代理，如果有师傅），可以称为工具包。
 - 端口扫描和爆破无缝衔接，大幅提升扫描速度：这个优势在all模块中被体现的淋漓尽致，在端口多线程扫描的过程中会判断开放端口，如果端口可进行爆破会立即在当前的线程再中开启一个多线程进行爆破。大幅提升速度。减少了中间先获取开放端口在进行爆破的步骤
 - 美观易读的输出格式：通过颜色区分，不仅仅在过程中进行输出，还会在扫描结束生成扫描结果，将过程中所有扫描和爆破的结果展示出来（[简介上方的输出格式](https://github.com/zyylhn/zscan#简介)），并且支持讲扫描结果记录到文件
@@ -582,9 +603,16 @@ zscan all -H 172.16.95.1-30
 
 ## 源码编译👨
 
+建议自己编译，relese有时候可能没有更新
+
 ```
 go get github.com/zyylhn/zscan
 go bulid
+或者docker编译
+docker pull golang
+docker run -v "$GOPATH":/go -v "$PWD":/go/src/zscan -w /go/src/zscan -e GOOS="darwin" -e GOARC    H="amd64" golang go build -v -ldflags="-s -w" -trimpath -o zscan_mac_x64
+docker run -v "$GOPATH":/go -v "$PWD":/go/src/zscan -w /go/src/zscan -e GOOS="windows" -e GOAR    CH="amd64" golang go build -v -ldflags="-s -w" -trimpath -o zscan_x64.exe
+docker run -v "$GOPATH":/go -v "$PWD":/go/src/zscan -w /go/src/zscan -e GOOS="linux" -e GOARCH    ="amd64" golang go build -v -ldflags="-s -w" -trimpath -o zscan_linux_x64
 ```
 
 ## 免责声明🧐
@@ -610,6 +638,9 @@ https://github.com/k8gege/LadonGo
 - [x] ping模块：ping主机发现
   - [x] 调用系统ping
   - [x] 发送icmp数据包
+  - [x] 内网网段发现
+    - [x] ping网段b段网关
+    - [x] oxid扫描
   
 - [x] ps端口扫描模块
   - [x] 获取http title和状态吗
@@ -705,7 +736,7 @@ https://github.com/k8gege/LadonGo
 
 ### 后期目标
 
-- [ ] 完善当前版本各服务器爆破模块，支持更多的命令，尽量达到无障碍命令使用
+- [ ] 完善当前版本各服务器爆破模块，支持更多的命令，尽量达到无障碍命令使用，并添加数据库利用模块（爆破成功数据库之后的利用）
   - [ ] Mysql
   - [ ] Mssql
   - [ ] Postgres

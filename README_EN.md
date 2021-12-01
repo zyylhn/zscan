@@ -94,6 +94,7 @@ Usage:
   zscan ping [flags]
 
 Flags:
+  -d, --discover string   Live network segment found
   -h, --help              help for ping
   -H, --host hosts        Set hosts(The format is similar to Nmap)
       --hostfile string   Set host file
@@ -113,6 +114,8 @@ Global Flags:
 ```
 
 You must specify one of the two parameters, host and hostfile. When you have root permission, you can use -i to send ICMP packets instead of calling the local ping command (if the thread is extremely high, calling the local ping command will cause high CPU usage).
+
+add --discover find network
 </details>
 
 <details>
@@ -495,6 +498,19 @@ Currently, open a simple HTTP server that can only browse and download files and
 ## Use the sample🤪
 
 <details>
+<summary><b>ping:zscan ping --discover local</b></summary>
+
+```
+zscan ping --discover local 
+or use zscan ping --discover 192.168.0.0
+```
+
+![](image/pingscaning.png)
+![](image/pingscanre.png)
+
+</details>
+
+<details>
 <summary><b>ps:zscan ps -H ip</b></summary>
 
 ```
@@ -592,6 +608,9 @@ https://github.com/k8gege/LadonGo
 - [x] ping：Ping Host Discovery
     - [x] Calling system ping
     - [x] Sending ICMP Packets
+    - [x] Network segment discovery
+      - [x] Ping Network segment B gateway
+      - [x] oxid scan
 
 - [x] ps Port scanning module
     - [x] Get the HTTP title and status code
@@ -687,7 +706,7 @@ https://github.com/k8gege/LadonGo
 
 ### The late goal
 
-- [ ] Improve the current version of the server blasting module, support more commands, as far as possible to achieve barrier-free command use
+- [ ] Improve the current version of the server blasting module, support more commands, as far as possible to achieve barrier-free command use,And add the database utilization module (after blasting the successful database utilization)
     - [ ] Mysql
     - [ ] Mssql
     - [ ] Postgres

@@ -46,7 +46,7 @@ func burp_mssql()  {
 	}
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver:=NewPortScan(ips,[]int{mssql_port},Connectmssql)
+	aliveserver:=NewPortScan(ips,[]int{mssql_port},Connectmssql,true)
 	_=aliveserver.Run()
 }
 

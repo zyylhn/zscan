@@ -43,7 +43,7 @@ func burp_ssh()  {
 	burpthread=10
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver:=NewPortScan(ips,[]int{ssh_port},Connectssh)
+	aliveserver:=NewPortScan(ips,[]int{ssh_port},Connectssh,true)
 	_=aliveserver.Run()
 }
 
@@ -146,15 +146,14 @@ func ssh_connect_publickeys(addr,user,key_path string) (*ssh.Client, error) {
 func ssh_connect_userpass(addr,user,pass string) (*ssh.Client,error) {
 	client_config:=&ssh.ClientConfig{User: user,Auth: []ssh.AuthMethod{ssh.Password(pass)},HostKeyCallback: ssh.InsecureIgnoreHostKey(),Timeout: Timeout}
 	conn,err:=Getconn(addr)
-	Checkerr(err)
-	if conn!=nil{
-		c,ch,re,err:=ssh.NewClientConn(conn,addr,client_config)
-		if err !=nil{
-			return nil,err
-		}
-		return ssh.NewClient(c,ch,re), nil
+	if err!=nil{
+		return nil,err
 	}
-	return nil,err
+	c,ch,re,err:=ssh.NewClientConn(conn,addr,client_config)
+	if err !=nil{
+		return nil,err
+	}
+	return ssh.NewClient(c,ch,re), nil
 }
 
 //利用Client进行交互式登陆

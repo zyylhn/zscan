@@ -438,6 +438,24 @@ func sortip(iplist []net.IP) []net.IP {
 	return iplist
 }
 
+func sortip_string(iplist []string) []net.IP {
+	iplist_ip:=[]net.IP{}
+	for _,i:=range iplist{
+		iplist_ip=append(iplist_ip,net.ParseIP(i))
+	}
+	iplist_ip=sortip(iplist_ip)
+	return iplist_ip
+}
+
+func contains(s string,list []string) bool {
+	for _,i:=range list{
+		if s==i{
+			return true
+		}
+	}
+	return false
+}
+
 func RemoveRepByMap(slc []string) []string {
 	result := []string{}
 	tempMap := map[string]byte{}  // 存放不重复主键

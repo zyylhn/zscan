@@ -44,7 +44,7 @@ func burp_mongodb()  {
 	}
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver:=NewPortScan(ips,[]int{mongodb_port},Connectmongodb)
+	aliveserver:=NewPortScan(ips,[]int{mongodb_port},Connectmongodb,true)
 	_=aliveserver.Run()
 }
 

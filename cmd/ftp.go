@@ -43,7 +43,7 @@ func burp_ftp()  {
 	}
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver:=NewPortScan(ips,[]int{ftp_port},Connectftp)
+	aliveserver:=NewPortScan(ips,[]int{ftp_port},Connectftp,true)
 	_=aliveserver.Run()
 }
 
@@ -63,7 +63,9 @@ func Connectftp(ip string,port int) (string,int,error,[]string) {
 
 func ftp_auth(username,password,ip string) (error,bool,string) {
 	c,err:=Getconn(fmt.Sprintf("%s:%d", ip, ftp_port))
-	Checkerr_exit(err)
+	if err!=nil{
+		return err,false,"ftp"
+	}
 	conn, err := ftp.Dial(fmt.Sprintf("%s:%d", ip, ftp_port), ftp.DialWithNetConn(c))
 	if err == nil {
 		err = conn.Login(username, password)

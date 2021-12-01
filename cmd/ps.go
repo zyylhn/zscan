@@ -41,9 +41,9 @@ var portscanCmd = &cobra.Command{
 func portscan(ips []net.IP,ports []int)  {
 	var port_scan *PortScan
 	if banner{
-		port_scan=NewPortScan(ips,ports,Connect_BannerScan)
+		port_scan=NewPortScan(ips,ports,Connect_BannerScan,true)
 	}else {
-		port_scan=NewPortScan(ips,ports,Connect)
+		port_scan=NewPortScan(ips,ports,Connect,true)
 	}
 	r:=port_scan.Run()
 	getHttptitle(r)
@@ -69,11 +69,12 @@ type PortScan struct {
 	portscan_result sync.Map
 	tasknum float64
 	donenum float64
+	percent bool
 
 }
 
-func NewPortScan(iplist []net.IP,ports []int,connect Connect_method) *PortScan {
-	return &PortScan{iplist: iplist,ports: ports,taskch: make(chan map[string]int,Thread*2),tcpconn: connect,resultch: make(chan []string,Thread*2),result: make(map[string]*Openport),tasknum: float64(len(iplist)*len(ports))}
+func NewPortScan(iplist []net.IP,ports []int,connect Connect_method,p bool) *PortScan {
+	return &PortScan{iplist: iplist,ports: ports,taskch: make(chan map[string]int,Thread*2),tcpconn: connect,resultch: make(chan []string,Thread*2),result: make(map[string]*Openport),tasknum: float64(len(iplist)*len(ports)),percent: p}
 }
 
 //端口扫描的开始函数，返回结果
@@ -82,7 +83,9 @@ func (p *PortScan) Run() map[string]*Openport {
 	for i := 0; i < Thread; i++ {
 		go p.Startscan()
 	}
-	go p.bar()
+	if p.percent{
+		go p.bar()
+	}
 	time.Sleep(time.Second)  //防止线程开的太低就运行到Wait
 	p.wg.Wait()
 	p.Getresult()
@@ -164,7 +167,10 @@ func (p *PortScan) Getresult()  {
 func (p *PortScan)bar()  {
 	for  {
 		for _, r := range `-\|/` {
-			fmt.Printf("\r%c ps:%4.2f%v %c", r,float64(p.donenum/p.tasknum*100),"%",r)
+			if p.donenum/p.tasknum*100>99{
+				return
+			}
+			fmt.Printf("\r%c portscan:%4.2f%v %c", r,float64(p.donenum/p.tasknum*100),"%",r)
 			time.Sleep(200 * time.Millisecond)
 		}
 	}

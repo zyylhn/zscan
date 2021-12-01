@@ -152,7 +152,6 @@ func (b *Burp) Check()  {
 			fmt.Println(Yellow(fmt.Sprintf("Test:%v %v %v",task.addr,task.username,task.password)))
 		}
 		err,success,servername:=b.service(task.username,task.password,task.addr)
-		//fmt.Println(err,success)
 		if !Verbose{
 			num=num+1
 		}
@@ -220,7 +219,7 @@ func cancelled(stop chan int8) bool{
 //func bar()  {
 //	for  {
 //		for _, r := range `-\|/` {
-//			fmt.Printf("\r%c Already test:%v times %c", r,num,r)
+//			fmt.Printf("\r\t\t\t\t\t%cAlready test:%v times %c", r,num,r)
 //			time.Sleep(200 * time.Millisecond)
 //		}
 //	}

@@ -50,7 +50,7 @@ func burp_mysql()  {
 	}
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
-	aliveserver:=NewPortScan(ips,[]int{mysql_port},Connectmysql)
+	aliveserver:=NewPortScan(ips,[]int{mysql_port},Connectmysql,true)
 	_=aliveserver.Run()
 }
 
