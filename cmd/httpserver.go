@@ -7,12 +7,18 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/spf13/cobra"
+	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
 var httpserveraddr string
 var dir string
+var maxupload int
+var allowupload bool
 
 var httpserverCmd = &cobra.Command{
 	Use:   "httpserver",
@@ -26,11 +32,76 @@ var httpserverCmd = &cobra.Command{
 }
 
 func httpserver()  {
-	if Username==""&&Password==""{
-		http.ListenAndServe(httpserveraddr, http.FileServer(http.Dir(dir)))
+	if allowupload{
+		http.HandleFunc("/u", uploadFileHandler())
 	}
-	http.ListenAndServe(httpserveraddr, SimpleBasicAuth(Username, Password)(http.FileServer(http.Dir(dir))))
+	fs := http.FileServer(http.Dir(dir))
+	if Username==""&&Password==""{
+		http.Handle("/", http.StripPrefix("/", fs))
+	}else {
+		http.Handle("/",SimpleBasicAuth(Username, Password)(http.FileServer(http.Dir(dir))))
+	}
+	log.Fatal(http.ListenAndServe(httpserveraddr, nil))
 }
+
+//文件上传监听
+func uploadFileHandler() http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		maxUploadSize:=maxupload*1024*1024
+		if r.Method == "GET" {
+			var urlip string
+			var urlport string
+			if a:=strings.Split(httpserveraddr,":");a[0]=="0.0.0.0"{
+				urlip="127.0.0.1"
+				urlport=a[1]
+			}else {
+				urlip=a[0]
+				urlport=a[1]
+			}
+			w.Write([]byte(fmt.Sprintf("<html>\n<head>\n\t<title>Upload file</title>\n</head>\n<body>\n<form enctype=\"multipart/form-data\" action=\"http://%v:%v/u\" method=\"post\">\n\t<input type=\"file\" name=\"uploadFile\" />\n\t<input type=\"submit\" value=\"upload\" />\n</form>\n</body>\n</html>",urlip,urlport)))
+			return
+		}
+
+		file, fileHeader, err := r.FormFile("uploadFile")
+		if err != nil {
+			renderError(w, "INVALID_FILE", http.StatusBadRequest)
+			return
+		}
+		defer file.Close()
+		// Get and print out file size
+		fileSize := fileHeader.Size
+		fmt.Printf("File size (bytes): %v\n", fileSize)
+		// validate file size
+		if fileSize > int64(maxUploadSize) {
+			renderError(w, "FILE_TOO_BIG", http.StatusBadRequest)
+			return
+		}
+		fileBytes, err := ioutil.ReadAll(file)
+		if err != nil {
+			renderError(w, "INVALID_FILE", http.StatusBadRequest)
+			return
+		}
+		fileName := fileHeader.Filename
+		newPath := filepath.Join(dir, fileName)
+		newFile, err := os.Create(newPath)
+		if err != nil {
+			renderError(w, "CANT_WRITE_FILE", http.StatusInternalServerError)
+			return
+		}
+		defer newFile.Close() // idempotent, okay to call twice
+		if _, err := newFile.Write(fileBytes); err != nil || newFile.Close() != nil {
+			renderError(w, "CANT_WRITE_FILE", http.StatusInternalServerError)
+			return
+		}
+		w.Write([]byte("SUCCESS UPLOAD"))
+	})
+}
+
+func renderError(w http.ResponseWriter, message string, statusCode int) {
+	w.WriteHeader(statusCode)
+	w.Write([]byte(message))
+}
+
 //身份认证
 type basicAuth struct {
 	h    http.Handler
@@ -126,6 +197,8 @@ func SimpleBasicAuth(user, password string) func(http.Handler) http.Handler {
 
 func init() {
 	rootCmd.AddCommand(httpserverCmd)
+	httpserverCmd.Flags().IntVarP(&maxupload,"size","s",20,"set max upload files size(mb)")
+	httpserverCmd.Flags().BoolVarP(&allowupload,"upload","u",false,"allow upload,/u indicates the file upload path（Unauthorized authorization exists，finished off）")
 	httpserverCmd.Flags().StringVarP(&httpserveraddr,"addr","a","0.0.0.0:7001","set http server addr")
 	httpserverCmd.Flags().StringVarP(&Username,"user","U","","Set the authentication user")
 	httpserverCmd.Flags().StringVarP(&Password,"pass","P","","Set the authentication password")
