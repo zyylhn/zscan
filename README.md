@@ -19,7 +19,7 @@
 ## 简介🎉
 
 
-​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体。以主机和内网网段发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，所有服务爆破成功之后还可以执行命令（后期会增加服务利用功能例如redis的rce等等）。除了基本的扫描和服务爆破功能之外，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
+​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体。以主机和内网网段发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，所有服务爆破成功之后还可以执行命令（后期会增加服务利用功能例如redis的rce等等）。除了基本的扫描和服务爆破功能之外，还支持webtitle抓取和指纹识别，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
 
 工具体积较大，后期会出精简版
 
@@ -517,6 +517,17 @@ Global Flags:
 -P和-U设置身份验证的用户名密码
 </details>
 
+<details>
+<summary><b>httpbanner集成在ps和all模块中，自动调用</b></summary>
+添加规则很简单，在web下面有一个info.go，在这里面添加指纹，type是code的话是在返回包的body中进行匹配，其他的话目前是是在header中匹配
+
+下面的md5是指网站的图标md5
+
+可自行添加，或者给我我帮忙添加
+
+
+</details>
+
 ## 使用示例🤪
 
 <details>
@@ -540,6 +551,8 @@ zscan ps -H 172.16.95.1-30 [--ping先ping在扫]
 ```
 
 ![](image/ps.png)
+![](image/ps_01.png)
+![](image/ps_02.png)
 
 </details>
 
@@ -645,6 +658,8 @@ https://github.com/k8gege/LadonGo
 - [x] ps端口扫描模块
   - [x] 获取http title和状态吗
   - [ ] 进行简单的http目录扫描
+  - [x] http指纹是被
+  - [ ] http poc验证
   - [x] 返回banner信息
   - [x] 先ping再扫
   
@@ -750,5 +765,7 @@ https://github.com/k8gege/LadonGo
 感谢老铁的星星🥳
 
 欢迎提问题👏
+
+欢迎分享web指纹和poc
 
 喜欢用go写工具的同学可以加入我们super_yu@yeah.net😃

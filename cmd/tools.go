@@ -31,6 +31,7 @@ func Connect(ip string, port int) (string, int, error,[]string) {
 	if conn != nil {
 		_ = conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
+		WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout*2})
 		return ip,port,nil,nil
 	}
 	return ip, port, err,nil
@@ -47,6 +48,7 @@ func Connect_BannerScan(ip string,port int) (string,int,error,[]string) {
 		s="Banner:"+s
 		a:=[]string{s}
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
+		WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout*2})
 		return ip,port,err,a
 	}
 
@@ -59,22 +61,19 @@ func Connect_BannerScan(ip string,port int) (string,int,error,[]string) {
 }
 
 func Proxyconn() (proxy.Dialer,error) {
-	if Proxy==""{
-		return nil,fmt.Errorf("")
+	if strings.ContainsAny(Proxy,"@")&&strings.Count(Proxy,"@")==1{
+		info:=strings.Split(Proxy,"@")
+		userpass:=strings.Split(info[0],":")
+		auth:= proxy.Auth {userpass[0],userpass[1]}
+		dialer,err:=proxy.SOCKS5("tcp",info[1],&auth,proxy.Direct)
+		return dialer,err
 	}else {
-		if strings.ContainsAny(Proxy,"@")&&strings.Count(Proxy,"@")==1{
-			info:=strings.Split(Proxy,"@")
-			userpass:=strings.Split(info[0],":")
-			auth:= proxy.Auth {userpass[0],userpass[1]}
-			dialer,err:=proxy.SOCKS5("tcp",info[1],&auth,proxy.Direct)
+		if strings.ContainsAny(Proxy,":")&&strings.Count(Proxy,":")==1{
+			dialer,err:=proxy.SOCKS5("tcp",Proxy,nil,proxy.Direct)
+			//Inithttp(PocInfo{Timeout: Timeout,Num: Thread,Proxy: "http://"+Proxy})
 			return dialer,err
-		}else {
-			if strings.ContainsAny(Proxy,":")&&strings.Count(Proxy,":")==1{
-				dialer,err:=proxy.SOCKS5("tcp",Proxy,nil,proxy.Direct)
-				return dialer,err
 			}
 		}
-	}
 	return nil,fmt.Errorf("proxy error")
 }
 
@@ -142,18 +141,18 @@ func Parse_Port(selection string) ([]int, error) {
 }
 
 //获取字符串中两个子字符串中间的字符串
-func GetBetween(str, starting, ending string) string {
-	s := strings.Index(str, starting)
-	if s < 0 {
-		return ""
-	}
-	s += len(starting)
-	e := strings.Index(str[s:], ending)
-	if e < 0 {
-		return ""
-	}
-	return str[s : s+e]
-}
+//func GetBetween(str, starting, ending string) string {
+//	s := strings.Index(str, starting)
+//	if s < 0 {
+//		return ""
+//	}
+//	s += len(starting)
+//	e := strings.Index(str[s:], ending)
+//	if e < 0 {
+//		return ""
+//	}
+//	return str[s : s+e]
+//}
 
 //输出
 func Output(s string,c Mycolor) {
@@ -214,6 +213,7 @@ func PrintScanBanner(mode string)  {
 			Checkerr_exit(fmt.Errorf("proxy error"))
 		}
 	}
+	Inithttp(PocInfo{Timeout: Timeout,Num: Thread})
 	output_verbose:= func() {
 		if Verbose {
 			Output("Verbose:Show verbose\n",LightCyan)

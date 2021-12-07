@@ -39,7 +39,7 @@ func allmode()  {
 	Checkerr(err)
 	aliveserver:=NewPortScan(ips,ports,Connectall,true)
 	r:=aliveserver.Run()
-	getHttptitle(r)
+	//getHttptitle(r)
 	Printresult(r)
 }
 
@@ -123,8 +123,11 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			return ip,port,nil,nil
 		case 21:
 			if !notburp{
-				if Verbose{
-					fmt.Println(Yellow("\rStart burp ftp : ",ip,":",port))
+				fmt.Println(Yellow("\rStart burp ftp : ",ip,":",port))
+				_,f,_:=ftp_auth("ftp","asdasd",ip)
+				if f{
+					Output(fmt.Sprintf("%v burp success:%v No authentication\n","ftp",ip),LightGreen)
+					return ip,port,nil,[]string{"No authentication"}
 				}
 				startburp:=NewBurp(Password,"ftp,anonymous,root",Userdict,Passdict,ip,ftp_auth,burpthread)
 				relust:=startburp.Run()
@@ -191,7 +194,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				return ip, port, nil, []string{nbname.msg}
 			}
 		default:
-			//getScanTitl(fmt.Sprintf("%v:%v",ip,port))
+			WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout})
 		}
 	}
 	return ip, port, err,r

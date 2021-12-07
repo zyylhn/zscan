@@ -46,7 +46,7 @@ func portscan(ips []net.IP,ports []int)  {
 		port_scan=NewPortScan(ips,ports,Connect,true)
 	}
 	r:=port_scan.Run()
-	getHttptitle(r)
+	//getHttptitle(r)
 	Printresult(r)
 
 }
@@ -167,9 +167,6 @@ func (p *PortScan) Getresult()  {
 func (p *PortScan)bar()  {
 	for  {
 		for _, r := range `-\|/` {
-			if p.donenum/p.tasknum*100>99{
-				return
-			}
 			fmt.Printf("\r%c portscan:%4.2f%v %c", r,float64(p.donenum/p.tasknum*100),"%",r)
 			time.Sleep(200 * time.Millisecond)
 		}
@@ -200,33 +197,73 @@ func Printresult(r map[string]*Openport)  {
 	Output("============================http result list=============================\n",LightGreen)
 	httptitle_result.Range(func(key, value interface{}) bool {
 		Output(fmt.Sprintf("Traget:%v\n", key),LightBlue)
-		Output(fmt.Sprintf("%v\n", value),White)
+		v,ok:=value.(*HostInfo)
+		if ok{
+			//Output(fmt.Sprintf("%v\n", value),White)
+			v.titleinfo=fmt.Sprintf("%v  code:%v  title:%v  len:%v  banner:%v\n",v.Url,v.baseinfo.code,v.baseinfo.title,v.baseinfo.len,v.Infostr)
+			Output(v.Url,White)
+			if v.baseinfo.code==200{
+				Output(fmt.Sprintf("  code:",),White)
+				Output(fmt.Sprintf("%v",v.baseinfo.code),LightGreen)
+			}else {
+				Output(fmt.Sprintf("  code:",),White)
+				Output(fmt.Sprintf("%v",v.baseinfo.code),Yellow)
+			}
+			Output(fmt.Sprintf("  len:%v",v.baseinfo.len),White)
+			Output(fmt.Sprintf("  title:"),White)
+			Output(fmt.Sprintf("%v",v.baseinfo.title),LightGreen)
+			Output(fmt.Sprintf("  banner:"),White)
+			for _,i:=range v.Infostr{
+				Output(fmt.Sprintf("%v",i),LightGreen)
+			}
+			Output("\n\n",White)
+
+		}
 		return true
 	})
 }
 
+//
+//func getHttptitle(r map[string]*Openport)  {
+//	for _,i:=range r{
+//		for _,port:=range i.port{
+//			if port==135{
+//				continue
+//			}
+//			t:=fmt.Sprintf("%v:%v",i.ip,port)
+//			ipport:=strings.Split(t,":")
+//			fmt.Println("Begin: "+t)
+//			WebTitle(&HostInfo{Host: ipport[0],Ports: ipport[1],Timeout: Timeout})
+//			//httptask<-t
+//		}
+//	}
 
-func getHttptitle(r map[string]*Openport)  {
-	wg:=sync.WaitGroup{}
-	httptask:=make(chan string,Thread)
-	for i:=0;i<Thread;i++{
-		go func() {
-			wg.Add(1)
-			defer wg.Done()
-			for task:=range httptask{
-				getScanTitl(task)
-			}
-		}()
-	}
-	for _,i:=range r{
-		for _,port:=range i.port{
-			t:=fmt.Sprintf("%v:%v",i.ip,port)
-			httptask<-t
-		}
-	}
-	close(httptask)
-	wg.Wait()
-}
+	//wg:=sync.WaitGroup{}
+	//httptask:=make(chan string,Thread)
+	//for _,i:=range r{
+	//	for _,port:=range i.port{
+	//		if port==135{
+	//			continue
+	//		}
+	//		t:=fmt.Sprintf("%v:%v",i.ip,port)
+	//		httptask<-t
+	//	}
+	//}
+	//for i:=0;i<Thread;i++{
+	//	go func() {
+	//		wg.Add(1)
+	//		defer wg.Done()
+	//		for task:=range httptask{
+	//			fmt.Println(task)
+	//			ipport:=strings.Split(task,":")
+	//			WebTitle(&HostInfo{Host: ipport[0],Ports: ipport[1]})
+	//		}
+	//	}()
+	//}
+	//
+	//close(httptask)
+	//wg.Wait()
+//}
 
 func init() {
 	rootCmd.AddCommand(portscanCmd)

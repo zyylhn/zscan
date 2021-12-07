@@ -19,7 +19,7 @@
 ## Introduce🎉
 
 
-​	Zscan is an open source collection of Intranet port scanners, blasting tools, and other utilities. Based on host discovery and port scanning, you can blow up mysql, MSSQL, Redis, Mongo, Postgres, FTP, SSH and other services. Other scanning functions include NetBIOS, SMB, OXID, SOCKS Server (scanning proxy servers on the Intranet), SNMP, and MS17010. Each module has its own unique functions such as SSH, which also supports user name, password and public key login, and can execute commands after all services are blown up successfully. In addition to basic scanning and service blasting, ZScan integrates nc module (connect and listen), HTTPServer module (support for downloading files, uploading files, and authentication), SOcks5 module (start a proxy server). There is also the ALL module, which calls all the other scanning and blasting modules during the scan. Built-in proxy functionality.
+​	Zscan is an open source collection of Intranet port scanners, blasting tools, and other utilities. Based on host discovery and port scanning, you can blow up mysql, MSSQL, Redis, Mongo, Postgres, FTP, SSH and other services. Other scanning functions include NetBIOS, SMB, OXID, SOCKS Server (scanning proxy servers on the Intranet), SNMP, and MS17010. Each module has its own unique functions such as SSH, which also supports user name, password and public key login, and can execute commands after all services are blown up successfully. In addition to basic scanning and service blasting,Webtitle capture and fingerprint recognition are also supported, ZScan integrates nc module (connect and listen), HTTPServer module (support for downloading files, uploading files, and authentication), SOcks5 module (start a proxy server). There is also the ALL module, which calls all the other scanning and blasting modules during the scan. Built-in proxy functionality.
 
 The tool is bulky, and a condensed version will be published later
 
@@ -615,6 +615,8 @@ https://github.com/k8gege/LadonGo
 - [x] ps Port scanning module
     - [x] Get the HTTP title and status code
     - [ ] Perform a simple HTTP directory scan
+    - [x] http banner identify
+    - [ ] Poc validation
     - [x] Return banner message
     - [x] First ping again
 

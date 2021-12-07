@@ -14,8 +14,10 @@ require (
 	github.com/lib/pq v1.10.4
 	github.com/malfunkt/iprange v0.9.0
 	github.com/olekukonko/tablewriter v0.0.5
+	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/spf13/cobra v1.2.1
 	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871
 	golang.org/x/net v0.0.0-20211118161319-6a13c67c3ce4
+	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 )
