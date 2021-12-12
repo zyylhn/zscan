@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"strings"
 	"time"
 )
 
@@ -35,40 +36,20 @@ var sshCmd = &cobra.Command{
 	},
 }
 
-func burp_ssh()  {
-	GetHost()
-	if Username==""{
-		Username="root,admin,ssh"
-	}
-	burpthread=10
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
-	aliveserver:=NewPortScan(ips,[]int{ssh_port},Connectssh,true)
-	_=aliveserver.Run()
-}
-
-func Connectssh(ip string, port int) (string, int, error,[]string) {
-	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
-	if conn != nil {
-		_ = conn.Close()
-		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
-		fmt.Println(Yellow("Start burp ssh : ",ip))
-		_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
-		if f{
-			Output(fmt.Sprintf("%v Don't allow root login:%v \n","ssh",ip),LightGreen)
-			Username="admin,ssh"
-		}
-		startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,ssh_auto,burpthread)
-		startburp.Run()
-	}
-	return ip, port, err,nil
-}
 func Ssh()  {
-	addr:=fmt.Sprintf("%v:%v",Hosts,ssh_port)
 	if burp{
-		//run_ssh_burp()
-		burp_ssh()
+		if login_key{
+			if key_path==""{
+				Output("must set private key",Red)
+				return
+			}else {
+				burp_sshwithprivatekey()
+			}
+		}else {
+			burp_ssh()
+		}
 	}else {
+		addr:=fmt.Sprintf("%v:%v",Hosts,ssh_port)
 		if Username==""{
 			Checkerr(fmt.Errorf("login mode must set username\nif want burp need add \"-b\""))
 			os.Exit(0)
@@ -88,11 +69,80 @@ func Ssh()  {
 	}
 }
 
+func burp_ssh()  {
+	GetHost()
+	if Username==""{
+		Username="root,admin,ssh"
+	}
+	burpthread=10
+	ips, err := Parse_IP(Hosts)
+	Checkerr(err)
+	aliveserver:=NewPortScan(ips,[]int{ssh_port},Connectssh,true)
+	_=aliveserver.Run()
+}
+
+func burp_sshwithprivatekey()  {
+	GetHost()
+	if Username==""{
+		Output("must set username ",Red)
+		return
+	}
+	burpthread=10
+	ips, err := Parse_IP(Hosts)
+	Checkerr(err)
+	aliveserver:=NewPortScan(ips,[]int{ssh_port},Connectssh,true)
+	_=aliveserver.Run()
+}
+
+
+func Connectssh(ip string, port int) (string, int, error,[]string) {
+	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
+	if conn != nil {
+		_ = conn.Close()
+		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
+		fmt.Println(Yellow("Start burp ssh : ",ip))
+		_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
+		if f{
+			Output(fmt.Sprintf("%v Don't allow root login:%v \n","ssh",ip),LightGreen)
+			var re []string
+			if strings.Contains(Username,"root"){
+				sl:=strings.Split(Username,",")
+				for _,i:=range sl{
+					if i=="root"{
+						continue
+					}
+					re=append(re,i)
+				}
+			}
+			Username=strings.Join(re,",")
+		}
+		if login_key{
+			startburp:=NewBurp(key_path,Username,Userdict,Passdict,ip,ssh_auto_key,burpthread)
+			startburp.Run()
+		}else {
+			startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,ssh_auto,burpthread)
+			startburp.Run()
+		}
+	}
+	return ip, port, err,nil
+}
+
 //爆破：返回是否连接成功
 func ssh_auto( username, password,ip string) (error,bool,string) {
 	success := false
 	//fmt.Println(Red(username,"\t",password,"\t",addr))
 	c,err:=ssh_connect_userpass(fmt.Sprintf("%v:%v",ip,ssh_port),username,password)
+	if err==nil{
+		defer c.Close()
+		success=true
+	}
+	return err,success,"ssh"
+}
+
+func ssh_auto_key(user,keypath,ip string) (error,bool,string) {
+	success := false
+	//fmt.Println(Red(username,"\t",password,"\t",addr))
+	c,err:=ssh_connect_publickeys(fmt.Sprintf("%v:%v",ip,ssh_port),user,keypath)
 	if err==nil{
 		defer c.Close()
 		success=true

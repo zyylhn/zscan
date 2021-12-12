@@ -1,7 +1,7 @@
 #              Zscan a scan blasting tool set
 [![Licens](https://img.shields.io/badge/Licens-MIT-orange)](https://github.com/zyylhn/zscan/blob/master/LICENSE)
-[![Releases](https://img.shields.io/badge/Releases-v1.1.2-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.1.2)
-[![go](https://img.shields.io/badge/Go-1.15.6-blue)](https://github.com/zyylhn/zscan)
+[![Releases](https://img.shields.io/badge/Releases-v1.1.5-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.1.5)
+[![go](https://img.shields.io/badge/Go-1.16.3-blue)](https://github.com/zyylhn/zscan)
 
 📄[English document](https://github.com/zyylhn/zscan/blob/master/README_EN.md)
 
@@ -21,7 +21,7 @@
 ## 简介🎉
 
 
-​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体。以主机和内网网段发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，所有服务爆破成功之后还可以执行命令（后期会增加服务利用功能例如redis的rce等等）。除了基本的扫描和服务爆破功能之外，还支持webtitle抓取和指纹识别，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
+​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体。以主机和内网网段发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，支持使用ssh私钥遍历主机，所有服务爆破成功之后还可以执行命令（后期会增加服务利用功能例如redis的rce等等）。除了基本的扫描和服务爆破功能之外，还支持webtitle抓取和指纹识别，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
 
 工具体积较大，后期会出精简版
 
@@ -249,12 +249,15 @@ Global Flags:
 
 爆破模块（-b/--burp参数）
 
-​	用户名：可以使用-U/--username指定用户名、--userdict指定用户名字典、不指定使用内部用户名（admin，root）
+​	用户名：可以使用-U/--username指定用户名、--userdict指定用户名字典、不指定使用内部用户名（admin，root，ssh）
 
 ​	密码：可以使用-P/--password指定密码、--passdict指定密码文件、不指定使用内部密码字典
 
 ​	eg：./zscan_linux ssh -H 172.16.95.1-30 -U root -b --passdict 1.txt 
 
+​	使用ssh私钥遍历主机需要同时指定-U，-b，-k，-d
+
+​	eg：./zscan ssh -H 172.16.95.1-24 -U root -k -b -d ~/.ssh/id_rsa
 </details>
 
 <details>

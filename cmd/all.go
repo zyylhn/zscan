@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"strings"
 	"time"
 )
 
@@ -57,7 +58,17 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
 				if f{
 					Output(fmt.Sprintf("[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
-					name="admin,ssh"
+					var re []string
+					if strings.Contains(Username,"root"){
+						sl:=strings.Split(Username,",")
+						for _,i:=range sl{
+							if i=="root"{
+								continue
+							}
+							re=append(re,i)
+						}
+					}
+					Username=strings.Join(re,",")
 				}
 				startburp:=NewBurp(Password,name,Userdict,Passdict,ip,ssh_auto,10)
 				relust:=startburp.Run()
@@ -199,23 +210,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 	}
 	return ip, port, err,r
 }
-//
-//func serviceburp(ip string,port int,username,servicename string,burpt int,service_auth Service ) (string,int,error,[]string) {
-//	if !notburp{
-//		fmt.Println(Yellow("\rStart burp ",servicename," : ",ip,":",port))
-//		_,f,_:=service_auth("root","Ksdvfjsxc",ip)
-//		if f{
-//			Output(fmt.Sprintf("[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
-//			username="admin,ssh"
-//		}
-//		startburp:=NewBurp(Password,username,Userdict,Passdict,ip,service_auth,burpt)
-//		relust:=startburp.Run()
-//		if relust!=""{
-//			return ip,port,nil,[]string{relust}
-//		}
-//	}
-//	return ip,port,nil,nil
-//}
+
 
 func init() {
 	rootCmd.AddCommand(allCmd)
