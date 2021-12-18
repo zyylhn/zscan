@@ -68,6 +68,7 @@ func ping()  {
 			}
 		}
 		result=ICMPRun(gettasklist(network),!useicmp)
+		result=oxid_discover(parsresult(result))
 		Print_network(result)
 	}
 }

@@ -41,7 +41,7 @@ func init() {
 	rootCmd.PersistentFlags().DurationVarP(&Timeout, "timeout", "t", time.Second*3, "Set `time`out(s) eg:5s")
 	rootCmd.PersistentFlags().IntVarP(&Thread, "thread", "T", 100, "Set `thread` eg:2000")
 	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "Show verbose information")
-	rootCmd.PersistentFlags().BoolVarP(&Output_result, "output", "O", false, "Whether to enter the results into a file（default ./result.txt),can use --path set")
+	rootCmd.PersistentFlags().BoolVarP(&Output_result, "output", "o", false, "Whether to enter the results into a file（default ./result.txt),can use --path set")
 	rootCmd.PersistentFlags().StringVar(&Path_result, "path", "result.txt", "the path of result file")
 	rootCmd.PersistentFlags().StringVar(&Proxy, "proxy", "", "Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)")
 	rootCmd.PersistentFlags().BoolVar(&Log, "log", false, "Record the scan results in chronological order，Save path./log.txt")

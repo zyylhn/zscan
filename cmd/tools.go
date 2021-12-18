@@ -180,10 +180,26 @@ func Output(s string,c Mycolor) {
 //创建文件
 func CreatFile(b bool,filename string)  {
 	if b{
+		if Hosts!=""&&Path_result=="result.txt"{
+			new_filename:=filename_filter(Hosts)+".txt"
+			Path_result=new_filename
+			filename=new_filename
+		}
 		file,err:=os.Create(filename)
 		Checkerr(err)
 		defer file.Close()
 	}
+}
+
+func filename_filter(filename string)string{
+	f:= func(c rune) rune{
+		special:="\\/:*?<>|"
+		if strings.Contains(special,string(c)){
+			return '_'
+		}
+		return c
+	}
+	return strings.Map(f,filename)
 }
 
 //检查错误
