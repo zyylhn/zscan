@@ -49,7 +49,7 @@ func burp_mongodb()  {
 }
 
 func Connectmongodb(ip string, port int) (string, int, error,[]string) {
-	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, mongodb_port))
+	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, port))
 	defer func() {
 		if conn != nil {
 			_ = conn.Close()

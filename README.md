@@ -1,6 +1,6 @@
 #              Zscan a scan blasting tool set
 [![Licens](https://img.shields.io/badge/Licens-MIT-orange)](https://github.com/zyylhn/zscan/blob/master/LICENSE)
-[![Releases](https://img.shields.io/badge/Releases-v1.1.5-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.1.5)
+[![Releases](https://img.shields.io/badge/Releases-v1.2.1-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.2.1)
 [![go](https://img.shields.io/badge/Go-1.16.3-blue)](https://github.com/zyylhn/zscan)
 
 📄[English document](https://github.com/zyylhn/zscan/blob/master/README_EN.md)
@@ -21,7 +21,7 @@
 ## 简介🎉
 
 
-​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体。以主机和内网网段发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，支持使用ssh私钥遍历主机，所有服务爆破成功之后还可以执行命令（后期会增加服务利用功能例如redis的rce等等）。除了基本的扫描和服务爆破功能之外，还支持webtitle抓取和指纹识别，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
+​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体可以称为工具包。以主机和内网网段发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh、ldap等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，支持使用ssh私钥遍历主机，所有服务爆破成功之后还可以执行命令（后期会增加服务利用功能例如redis的rce等等）。除了基本的扫描和服务爆破功能之外，还支持webtitle抓取和指纹识别，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
 
 工具体积较大，后期会出精简版
 
@@ -533,6 +533,14 @@ Global Flags:
 
 </details>
 
+<details>
+<summary><b>ldap模块</b></summary>
+
+暂时只是爆破功能，过几天添加查询功能
+使用方式暂时很简单和数据库相同
+
+</details>
+
 ## 使用示例🤪
 
 <details>
@@ -723,8 +731,12 @@ https://github.com/k8gege/LadonGo
 - [x] 17010扫描模块
 
 - [ ] wmi模块
+  
+- [ ] smb模块
 
-- [ ] ldap
+- [x] ldap
+  - [x] 爆破功能
+  - [ ] 查询公能
 
 - [x] version模块
 	- [ ] 当前版本号和最新版本号输出
@@ -772,5 +784,7 @@ https://github.com/k8gege/LadonGo
 欢迎提问题👏
 
 欢迎分享web指纹和poc
+
+暂时只能周末更新工具，如果有比较想要的功能可以联系我，优先添加
 
 喜欢用go写工具的同学可以加入我们super_yu@yeah.net😃

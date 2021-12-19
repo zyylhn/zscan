@@ -162,6 +162,16 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				}
 				return ip,port,nil,nil
 			}
+		case 389:
+			if !notburp{
+				fmt.Println(Yellow("\rStart burp ldap : ",ip))
+				startburp:=NewBurp(Password,"Administrator",Userdict,Passdict,ip,ldap_auth,burpthread)
+				relust:=startburp.Run()
+				if relust!=""{
+					return ip,port,nil,[]string{relust}
+				}
+			}
+			return ip,port,nil,nil
 		case 7890:
 			b,s:=Socks5Find(conn)
 			if b {

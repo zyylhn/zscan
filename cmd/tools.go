@@ -409,6 +409,15 @@ func PrintScanBanner(mode string)  {
 		output_file()
 		output_log()
 		fmt.Println()
+	case "ldap":
+		Output("\nMode:ldap\n",Red)
+		output_scan()
+		output_burpthread()
+		output_verbose()
+		output_file()
+		output_log()
+		output_command()
+		fmt.Println()
 	}
 }
 
