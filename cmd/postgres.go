@@ -15,7 +15,6 @@ var postgresCmd = &cobra.Command{
 	Use:   "postgres",
 	Short: "burp postgres username and password",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		CreatFile(Output_result,Path_result)
 		PrintScanBanner("postgres")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

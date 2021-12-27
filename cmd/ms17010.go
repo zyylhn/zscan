@@ -22,7 +22,6 @@ var ms17010Cmd = &cobra.Command{
 	Use:   "ms17010",
 	Short: "MS17_010 scan",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		CreatFile(Output_result,Path_result)
 		PrintScanBanner("ms17010")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

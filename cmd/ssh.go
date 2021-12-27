@@ -24,7 +24,6 @@ var sshCmd = &cobra.Command{
 	Use:   "ssh",
 	Short: "ssh client support username password burp",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		CreatFile(Output_result,Path_result)
 		PrintScanBanner("ssh")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

@@ -17,7 +17,6 @@ var portscanCmd = &cobra.Command{
 	Use:   "ps",
 	Short: "Port Scan",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		CreatFile(Output_result,Path_result)
 		PrintScanBanner("ps")
 	},
 	Run: func(cmd *cobra.Command, args []string) {
@@ -26,7 +25,7 @@ var portscanCmd = &cobra.Command{
 			Output_endtime(start)
 		}()
 		GetHost()
-		if pingbefore {
+		if !pingbefore {
 			Hosts = ping_discover()
 		}
 		ips, err := Parse_IP(Hosts)
@@ -81,12 +80,13 @@ func NewPortScan(iplist []net.IP,ports []int,connect Connect_method,p bool) *Por
 func (p *PortScan) Run() map[string]*Openport {
 	go p.Gettasklist()
 	for i := 0; i < Thread; i++ {
+		p.wg.Add(1)
 		go p.Startscan()
 	}
 	if p.percent{
 		go p.bar()
 	}
-	time.Sleep(time.Second)  //防止线程开的太低就运行到Wait
+	//time.Sleep(time.Second)  //防止线程开的太低就运行到Wait
 	p.wg.Wait()
 	p.Getresult()
 	return p.result
@@ -109,7 +109,6 @@ func (p *PortScan) Gettasklist()  {
 
 //扫描函数
 func (p *PortScan) Startscan()  {
-	p.wg.Add(1)
 	defer p.wg.Done()
 	for task := range p.taskch {
 		for ip, port := range task {
@@ -196,7 +195,6 @@ func Printresult(r map[string]*Openport)  {
 	}
 	Output("============================http result list=============================\n",LightGreen)
 	httptitle_result.Range(func(key, value interface{}) bool {
-		Output(fmt.Sprintf("Traget:%v\n", key),LightBlue)
 		v,ok:=value.(*HostInfo)
 		if ok{
 			//Output(fmt.Sprintf("%v\n", value),White)
@@ -216,54 +214,13 @@ func Printresult(r map[string]*Openport)  {
 			for _,i:=range v.Infostr{
 				Output(fmt.Sprintf("%v",i),LightGreen)
 			}
-			Output("\n\n",White)
+			Output("\n",White)
 
 		}
 		return true
 	})
 }
 
-//
-//func getHttptitle(r map[string]*Openport)  {
-//	for _,i:=range r{
-//		for _,port:=range i.port{
-//			if port==135{
-//				continue
-//			}
-//			t:=fmt.Sprintf("%v:%v",i.ip,port)
-//			ipport:=strings.Split(t,":")
-//			fmt.Println("Begin: "+t)
-//			WebTitle(&HostInfo{Host: ipport[0],Ports: ipport[1],Timeout: Timeout})
-//			//httptask<-t
-//		}
-//	}
-
-	//wg:=sync.WaitGroup{}
-	//httptask:=make(chan string,Thread)
-	//for _,i:=range r{
-	//	for _,port:=range i.port{
-	//		if port==135{
-	//			continue
-	//		}
-	//		t:=fmt.Sprintf("%v:%v",i.ip,port)
-	//		httptask<-t
-	//	}
-	//}
-	//for i:=0;i<Thread;i++{
-	//	go func() {
-	//		wg.Add(1)
-	//		defer wg.Done()
-	//		for task:=range httptask{
-	//			fmt.Println(task)
-	//			ipport:=strings.Split(task,":")
-	//			WebTitle(&HostInfo{Host: ipport[0],Ports: ipport[1]})
-	//		}
-	//	}()
-	//}
-	//
-	//close(httptask)
-	//wg.Wait()
-//}
 
 func init() {
 	rootCmd.AddCommand(portscanCmd)
@@ -271,7 +228,7 @@ func init() {
 	portscanCmd.Flags().BoolVarP(&useicmp,"icmp","i",false,"Icmp packets are sent to check whether the host is alive(need root)")
 	portscanCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set `hosts`(The format is similar to Nmap) eg:192.168.1.1/24,172.16.95.1-100,127.0.0.1")
 	portscanCmd.Flags().StringVarP(&ps_port, "port", "p", default_port, "Set `port` eg:1-1000,3306,3389")
-	portscanCmd.Flags().BoolVar(&pingbefore, "ping", false, "Ping host discovery before port scanning")
+	portscanCmd.Flags().BoolVar(&pingbefore, "noping", false, "not ping discovery before port scanning")
 	portscanCmd.Flags().BoolVarP(&banner, "banner", "b",false, "Return banner information")
 	//portscanCmd.MarkFlagRequired("host")
 

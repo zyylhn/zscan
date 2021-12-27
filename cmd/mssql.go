@@ -16,7 +16,6 @@ var mssqlCmd = &cobra.Command{
 	Use:   "mssql",
 	Short: "burp mssql username and password",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		CreatFile(Output_result,Path_result)
 		PrintScanBanner("mssql")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

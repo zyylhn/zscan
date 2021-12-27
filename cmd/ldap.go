@@ -13,7 +13,6 @@ var ldapCmd = &cobra.Command{
 	Use:   "ldap",
 	Short: "burp ldap and query",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		CreatFile(Output_result,Path_result)
 		PrintScanBanner("ldap")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

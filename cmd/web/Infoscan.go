@@ -3,18 +3,15 @@ package web
 import (
 	"crypto/md5"
 	"fmt"
-	"github.com/gookit/color"
 	"regexp"
-
 )
-var LightGreen = color.FgLightGreen.Render
 
 type CheckDatas struct {
 	Body    []byte
 	Headers string
 }
 
-func InfoCheck(Url string, CheckData []CheckDatas) []string {
+func InfoCheck( CheckData []CheckDatas) []string {
 	var matched bool
 	var infoname []string
 	//遍历checkdata和rule
@@ -40,11 +37,9 @@ func InfoCheck(Url string, CheckData []CheckDatas) []string {
 	infoname = removeDuplicateElement(infoname)
 
 	if len(infoname) > 0 {
-		result := fmt.Sprintf("\r[*]Find http banner:%-25v %s \r", Url, infoname)
-		fmt.Println(LightGreen(result))
 		return infoname
 	}
-	return []string{""}
+	return nil
 }
 
 func CalcMd5(Body []byte) (bool, string) {

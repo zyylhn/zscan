@@ -87,6 +87,7 @@ func GOWebTitle(info *HostInfo) error {
 	}
 	//re返回跳转的url或者https，checkdata是header和body
 	err, result, CheckData := geturl(info, 1, CheckData)
+	//fmt.Println("第一次",result,string(CheckData[0].Body))
 	if err != nil && !strings.Contains(err.Error(), "EOF") {
 		return err
 	}
@@ -102,7 +103,7 @@ func GOWebTitle(info *HostInfo) error {
 			}
 		}
 	}
-
+	//判断返回如果是https
 	if result == "https" && !strings.HasPrefix(info.Url, "https://") {
 		info.Url = strings.Replace(info.Url, "http://", "https://", 1)
 		err, result, CheckData = geturl(info, 1, CheckData)
@@ -129,12 +130,14 @@ func GOWebTitle(info *HostInfo) error {
 	if err != nil {
 		return err
 	}
-	info.Infostr = web.InfoCheck(info.Url, CheckData)
+	//将CheckData送去与指纹库对比
+	info.Infostr = web.InfoCheck(CheckData)
+	Output(fmt.Sprintf("\r[*]Find http server:%-25v title:[%v]\tbanner:%s \r\n", info.Url,info.baseinfo.title, info.Infostr),LightGreen)
 	httptitle_result.Store(fmt.Sprintf("%v:%v",info.Host,info.Ports), info)
-	if true {
-		//fmt.Println(info)
-		//web.WebScan(info)
-	}
+	//if true {
+	//	//fmt.Println(info)
+	//	//web.WebScan(info)
+	//}
 	return err
 }
 
@@ -170,21 +173,26 @@ func geturl(info *HostInfo, flag int, CheckData []web.CheckDatas) (error, string
 		} else {
 			client = Client
 		}
+		//发送请求
 		resp, err := client.Do(req)
 		if err == nil {
 			defer resp.Body.Close()
 			var title string
 			var text []byte
 			body, err := getRespBody(resp)
+			//fmt.Println(string(body))
 			if err != nil {
-				fmt.Println(err)
+				//fmt.Println(err)
 				return err, "https", CheckData
 			}
 			//获取http title
 			if flag != 2 {
 				//获取title
-				re := regexp.MustCompile("(?ims)<title>(.*)</title>")
+				re := regexp.MustCompile("(?ims)<title.*>(.*)</title>")
+				//fmt.Println(string(body))
 				find := re.FindSubmatch(body)
+				//fmt.Println("正则匹配到",string(find[0]),"\n",string(find[0]))
+				//fmt.Println(find)
 				if len(find) > 1 {
 					text = find[1]
 					GetEncoding := func() string { // 判断Content-Type
@@ -306,6 +314,7 @@ func getRespBody(oResp *http.Response) ([]byte, error) {
 	return body, nil
 }
 
+//判断是什么协议
 func GetProtocol(host string, Timeout time.Duration) string {
 	conn, err := tls.DialWithDialer(&net.Dialer{Timeout: Timeout}, "tcp", host, &tls.Config{InsecureSkipVerify: true})
 	defer func() {
@@ -323,12 +332,11 @@ func GetProtocol(host string, Timeout time.Duration) string {
 var (
 	Client           *http.Client
 	ClientNoRedirect *http.Client
-	dialTimout       = Timeout*2
+	//dialTimout       = Timeout*2
 	keepAlive        = 15 * time.Second
 )
 
 func Inithttp(PocInfo PocInfo) {
-	//PocInfo.Proxy = "http://127.0.0.1:8080"
 	err := InitHttpClient(PocInfo.Num, PocInfo.Timeout)
 	if err != nil {
 		log.Fatal(err)
@@ -336,16 +344,16 @@ func Inithttp(PocInfo PocInfo) {
 }
 
 func InitHttpClient(ThreadsNum int,Timeout time.Duration) error {
-	dialer := &net.Dialer{
-		Timeout:   dialTimout,
-		KeepAlive: keepAlive,
-
-	}
+	//dialer := &net.Dialer{
+	//	Timeout:   dialTimout,
+	//	KeepAlive: keepAlive,
+	//
+	//}
 	d:= func(ctx context.Context,network,addr string)(net.Conn,error) {
 		return Getconn(addr)
 	}
 	tr := &http.Transport{
-		DialContext:         dialer.DialContext,
+		DialContext:         d,
 		MaxConnsPerHost:     0,
 		MaxIdleConns:        0,
 		MaxIdleConnsPerHost: ThreadsNum * 2,
@@ -353,16 +361,8 @@ func InitHttpClient(ThreadsNum int,Timeout time.Duration) error {
 		TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 		TLSHandshakeTimeout: Timeout*2,
 		DisableKeepAlives:   false,
-		DialTLSContext: d,
+		//DialTLSContext: d,
 	}
-	//if DownProxy != "" {
-	//	u, err := url.Parse(DownProxy)
-	//	if err != nil {
-	//		return err
-	//	}
-	//	tr.Proxy = http.ProxyURL(u)
-	//}
-
 	Client = &http.Client{
 		Transport: tr,
 		Timeout:   Timeout,

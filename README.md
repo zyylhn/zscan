@@ -1,6 +1,6 @@
 #              Zscan a scan blasting tool set
 [![Licens](https://img.shields.io/badge/Licens-MIT-orange)](https://github.com/zyylhn/zscan/blob/master/LICENSE)
-[![Releases](https://img.shields.io/badge/Releases-v1.2.1-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.2.1)
+[![Releases](https://img.shields.io/badge/Releases-v1.2.2-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.2.2)
 [![go](https://img.shields.io/badge/Go-1.16.3-blue)](https://github.com/zyylhn/zscan)
 
 📄[English document](https://github.com/zyylhn/zscan/blob/master/README_EN.md)
@@ -32,21 +32,22 @@ zscan 模块 参数
 ```
 
 ```
- ______     ______     ______     ______     __   __    
+  ______     ______     ______     ______     __   __    
 /\___  \   /\  ___\   /\  ___\   /\  __ \   /\ "-.\ \   
 \/_/  /__  \ \___  \  \ \ \____  \ \  __ \  \ \ \-.  \  
   /\_____\  \/\_____\  \ \_____\  \ \_\ \_\  \ \_\\"\_\ 
   \/_____/   \/_____/   \/_____/   \/_/\/_/   \/_/ \/_/
 
 Usage:
-  zscan [模块]
+  zscan [command]
 
-所有的模块:
+Available Commands:
   all         Use all scan mode
   completion  generate the autocompletion script for the specified shell
   ftp         burp ftp username and password 
   help        Help about any command
   httpserver  Start an authentication HTTP server
+  ldap        burp ldap and query
   mongo       burp mongodb username and password
   ms17010     MS17_010 scan
   mssql       burp mssql username and password
@@ -65,19 +66,17 @@ Usage:
 
 Flags:
   -h, --help            help for zscan
-      --log             Record the scan results in chronological order，Save path./log.txt
-  -O, --output          Whether to enter the results into a file（default ./result.txt),can use --path set
-      --path string     the path of result file (default "result.txt")
+  -o, --output string   the path of result file (default "result.txt")
       --proxy string    Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)
-  -T, --thread thread   Set thread eg:2000 (default 100)
+  -T, --thread thread   Set thread eg:2000 (default 600)
   -t, --timeout time    Set timeout(s) eg:5s (default 3s)
   -v, --verbose         Show verbose information
+  
 ```
 模块里面的Flag代表当前命令的参数，Global Flags代表全局参数（所有命令都可以用）
 这里的Flags为全局参数，所有模块都可以使用
 - --log：启用这个参数会将当前运行结果以追加的形式写到log.txt（可以记下每次运行的结果）
-- -o --output：将结果输出为文件，默认在当前目录的中文件名为Hosts（只保存当前运行这一次的结果），文件路径可以使用--path指定
-- --path：指定结果的保存文件路径
+- -o --output：默认在当前目录的中文件名为Hosts -o指定路径
 - --proxy ：设置代理，用户名密码（user:pass@ip:port）不需要省份验证（ip:port）
 - -T --thread：指定线程数，默认100
 - -t --timeout：设置延时，网络条件好追求速度的话可以设置成1s
@@ -144,7 +143,7 @@ Flags:
   -H, --host hosts        Set hosts(The format is similar to Nmap) eg:192.168.1.1/24,172.16.95.1-100,127.0.0.1
       --hostfile string   Set host file
   -i, --icmp              Icmp packets are sent to check whether the host is alive(need root)
-      --ping              Ping host discovery before port scanning
+      --noping            Not ping discovery before port scanning
   -p, --port port         Set port eg:1-1000,3306,3389 
 
 Global Flags:
@@ -184,7 +183,7 @@ Flags:
   -i, --icmp              Icmp packets are sent to check whether the host is alive(need root)
       --passdict string   Set postgres passworddict path
   -P, --password string   Set postgres password
-      --ping              Ping host discovery before port scanning
+      --noping            Not ping discovery before port scanning
   -p, --port port         Set port eg:1-1000,3306,3389 
 
 Global Flags:
@@ -560,7 +559,7 @@ zscan ping --discover 192.168.0.0
 <summary><b>ps端口扫描:zscan ps -H ip</b></summary>
 
 ```
-zscan ps -H 172.16.95.1-30 [--ping先ping在扫]
+zscan ps -H 172.16.95.1-30 [--noping禁用ping]
 ```
 
 ![](image/ps.png)
@@ -788,3 +787,5 @@ https://github.com/k8gege/LadonGo
 暂时只能周末更新工具，如果有比较想要的功能可以联系我，优先添加
 
 喜欢用go写工具的同学可以加入我们super_yu@yeah.net😃
+
+更新内容见日志[log](https://github.com/zyylhn/zscan/blob/master/update.log)

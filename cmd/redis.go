@@ -18,7 +18,6 @@ var redisCmd = &cobra.Command{
 	Use:   "redis",
 	Short: "burp redis password",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		CreatFile(Output_result,Path_result)
 		PrintScanBanner("redis")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

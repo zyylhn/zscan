@@ -13,7 +13,7 @@ var allCmd = &cobra.Command{
 	Use:   "all",
 	Short: "Use all scan mode",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		CreatFile(Output_result,Path_result)
+		//CreatFile(Output_result,Path_result)
 		PrintScanBanner("all")
 	},
 	Run: func(cmd *cobra.Command, args []string) {
@@ -27,7 +27,7 @@ var allCmd = &cobra.Command{
 
 func allmode()  {
 	GetHost()
-	if pingbefore {
+	if !pingbefore {
 		Hosts = ping_discover()
 	}
 	if Hosts==""{
@@ -49,7 +49,8 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
 	if conn != nil {
 		defer conn.Close()
-		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
+		//fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
+		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
 		switch port {
 		case 22:
 			if !notburp{
@@ -228,7 +229,7 @@ func init() {
 	allCmd.Flags().BoolVarP(&useicmp,"icmp","i",false,"Icmp packets are sent to check whether the host is alive(need root)")
 	allCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set `hosts`(The format is similar to Nmap) eg:192.168.1.1/24,172.16.95.1-100,127.0.0.1")
 	allCmd.Flags().StringVarP(&ps_port, "port", "p", default_port, "Set `port` eg:1-1000,3306,3389")
-	allCmd.Flags().BoolVar(&pingbefore, "ping", false, "Ping host discovery before port scanning")
+	allCmd.Flags().BoolVar(&pingbefore, "noping", false, " Not ping before port scanning")
 	allCmd.Flags().StringVarP(&Password,"password","P","","Set postgres password")
 	allCmd.Flags().StringVarP(&Passdict,"passdict","","","Set postgres passworddict path")
 	allCmd.Flags().BoolVar(&notburp,"notburp",false,"Set postgres passworddict path")

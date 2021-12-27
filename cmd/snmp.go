@@ -19,7 +19,6 @@ var snmpCmd = &cobra.Command{
 	Use:   "snmp",
 	Short: "snmp scan",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		CreatFile(Output_result, Path_result)
 		PrintScanBanner("snmp")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

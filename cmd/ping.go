@@ -28,7 +28,6 @@ var pingCmd = &cobra.Command{
 	TraverseChildren: true,
 	Short:            "ping scan to find computer",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		CreatFile(Output_result,Path_result)
 		PrintScanBanner("ping")
 	},
 	Run: func(cmd *cobra.Command, args []string) {
@@ -37,6 +36,7 @@ var pingCmd = &cobra.Command{
 			Output_endtime(start)
 		}()
 		ping()
+
 	},
 }
 
@@ -50,7 +50,11 @@ func ping()  {
 		ICMPRun(host,!useicmp)
 	case "local":
 		localnet:=getlocalnet()   //[192.168.0.0 172.16.0.0]
-		//fmt.Println(localnet)
+		for _,i:=range localnet{
+			fmt.Println("Find local network: "+i)
+		}
+		//Output(fmt.Sprint(gettasklist(localnet)),White)
+
 		result=ICMPRun(gettasklist(localnet),!useicmp)
 		result=oxid_discover(parsresult(result))
 		Print_network(result)

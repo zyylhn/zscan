@@ -30,7 +30,8 @@ func Connect(ip string, port int) (string, int, error,[]string) {
 	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
 	if conn != nil {
 		_ = conn.Close()
-		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
+		//fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
+		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
 		WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout*2})
 		return ip,port,nil,nil
 	}
@@ -47,7 +48,8 @@ func Connect_BannerScan(ip string,port int) (string,int,error,[]string) {
 		s=strings.Replace(s,"\n","",-1)
 		s="Banner:"+s
 		a:=[]string{s}
-		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
+		//fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
+		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
 		WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout*2})
 		return ip,port,err,a
 	}
@@ -140,55 +142,38 @@ func Parse_Port(selection string) ([]int, error) {
 	return ports, nil
 }
 
-//获取字符串中两个子字符串中间的字符串
-//func GetBetween(str, starting, ending string) string {
-//	s := strings.Index(str, starting)
-//	if s < 0 {
-//		return ""
-//	}
-//	s += len(starting)
-//	e := strings.Index(str[s:], ending)
-//	if e < 0 {
-//		return ""
-//	}
-//	return str[s : s+e]
-//}
 
 //输出
 func Output(s string,c Mycolor) {
-	if Output_result{
-		fmt.Print(c(s))
-		file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
-		Checkerr(err)
-		defer file.Close()
-		file.WriteString(s)
-	}else {
-		fmt.Print(c(s))
-	}
-	if Log{
-		_,err:=os.Stat("log.txt")
-		if err!=nil{
-			CreatFile(true,"log.txt")
-		}
-		file,err:=os.OpenFile("log.txt",os.O_APPEND|os.O_WRONLY,0666)
-		defer file.Close()
-		Checkerr(err)
-		file.Write([]byte(s))
-	}
+	//if Output_result{
+	//fmt.Print(c(s))
+	//file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
+	//Checkerr(err)
+	//defer file.Close()
+	//file.WriteString(s)
+	//}else {
+	//	fmt.Print(c(s))
+	//}
+	fmt.Print(c(s))
+	file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
+	defer file.Close()
+	Checkerr(err)
+	file.Write([]byte(s))
 }
 
 //创建文件
-func CreatFile(b bool,filename string)  {
-	if b{
-		if Hosts!=""&&Path_result=="result.txt"{
-			new_filename:=filename_filter(Hosts)+".txt"
-			Path_result=new_filename
-			filename=new_filename
-		}
+func CreatFile(filename string)  {
+	if Hosts!=""&&Path_result=="result.txt"{
+		new_filename:=filename_filter(Hosts)+".txt"
+		Path_result=new_filename
+		filename=new_filename
+	}
+	_,err:=os.Stat(Path_result)
+	if err!=nil{
 		file,err:=os.Create(filename)
 		Checkerr(err)
 		defer file.Close()
-	}
+		}
 }
 
 func filename_filter(filename string)string{
@@ -230,6 +215,7 @@ func PrintScanBanner(mode string)  {
 		}
 	}
 	Inithttp(PocInfo{Timeout: Timeout,Num: Thread})
+	CreatFile(Path_result)
 	output_verbose:= func() {
 		if Verbose {
 			Output("Verbose:Show verbose\n",LightCyan)
@@ -238,7 +224,7 @@ func PrintScanBanner(mode string)  {
 		}
 	}
 	output_pingbefor:= func() {
-		if pingbefore {
+		if !pingbefore {
 			Output(fmt.Sprintf("Ping befor portscan\n"),LightCyan)
 		} else {
 			Output(fmt.Sprintf("Not ping befor portscan\n"),LightCyan)
