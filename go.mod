@@ -6,9 +6,10 @@ require (
 	github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5
 	github.com/cheggaaa/pb/v3 v3.0.8
 	github.com/denisenkom/go-mssqldb v0.11.0
-	github.com/go-ldap/ldap/v3 v3.4.1 // indirect
+	github.com/go-ldap/ldap/v3 v3.4.1
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-sql-driver/mysql v1.6.0
+	github.com/google/gopacket v1.1.19
 	github.com/gookit/color v1.5.0
 	github.com/gosnmp/gosnmp v1.34.0
 	github.com/jlaffaye/ftp v0.0.0-20211117213618-11820403398b

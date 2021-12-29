@@ -12,6 +12,7 @@ import (
 var httptitle_result sync.Map
 var pingbefore bool
 var banner bool
+var syn bool
 var ps_port string
 var portscanCmd = &cobra.Command{
 	Use:   "ps",
@@ -28,8 +29,12 @@ var portscanCmd = &cobra.Command{
 		if !pingbefore {
 			Hosts = ping_discover()
 		}
+		if Hosts==""{
+			Output("Don't have living host,can use --noping test",Red)
+			return
+		}
 		ips, err := Parse_IP(Hosts)
-		Checkerr(err)
+		Checkerr_exit(err)
 		ports, err := Parse_Port(ps_port)
 		Checkerr(err)
 		portscan(ips,ports)
@@ -41,7 +46,9 @@ func portscan(ips []net.IP,ports []int)  {
 	var port_scan *PortScan
 	if banner{
 		port_scan=NewPortScan(ips,ports,Connect_BannerScan,true)
-	}else {
+	}else if syn{
+		port_scan=NewPortScan(ips,ports,ConnectSyn,true)
+	} else {
 		port_scan=NewPortScan(ips,ports,Connect,true)
 	}
 	r:=port_scan.Run()
@@ -122,7 +129,7 @@ func (p *PortScan) Startscan()  {
 
 //将结果保存下来
 func (p *PortScan) Saveresult(ip string, port int, err error,banner []string) error {
-	if err != nil {
+	if err != nil ||port==0{
 		return err
 	}
 	v, ok := p.portscan_result.Load(ip)
@@ -199,7 +206,7 @@ func Printresult(r map[string]*Openport)  {
 		if ok{
 			//Output(fmt.Sprintf("%v\n", value),White)
 			v.titleinfo=fmt.Sprintf("%v  code:%v  title:%v  len:%v  banner:%v\n",v.Url,v.baseinfo.code,v.baseinfo.title,v.baseinfo.len,v.Infostr)
-			Output(v.Url,White)
+			Output(v.Url,LightBlue)
 			if v.baseinfo.code==200{
 				Output(fmt.Sprintf("  code:",),White)
 				Output(fmt.Sprintf("%v",v.baseinfo.code),LightGreen)
@@ -229,6 +236,7 @@ func init() {
 	portscanCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set `hosts`(The format is similar to Nmap) eg:192.168.1.1/24,172.16.95.1-100,127.0.0.1")
 	portscanCmd.Flags().StringVarP(&ps_port, "port", "p", default_port, "Set `port` eg:1-1000,3306,3389")
 	portscanCmd.Flags().BoolVar(&pingbefore, "noping", false, "not ping discovery before port scanning")
+	portscanCmd.Flags().BoolVarP(&syn, "syn", "s",false, "use syn scan")
 	portscanCmd.Flags().BoolVarP(&banner, "banner", "b",false, "Return banner information")
 	//portscanCmd.MarkFlagRequired("host")
 

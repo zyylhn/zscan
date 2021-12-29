@@ -31,16 +31,15 @@ func allmode()  {
 		Hosts = ping_discover()
 	}
 	if Hosts==""{
-		Output("Don't have living host",Red)
+		Output("Don't have living host,can use --noping test",Red)
 		return
 	}
 	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	Checkerr_exit(err)
 	ports, err := Parse_Port(ps_port)
 	Checkerr(err)
 	aliveserver:=NewPortScan(ips,ports,Connectall,true)
 	r:=aliveserver.Run()
-	//getHttptitle(r)
 	Printresult(r)
 }
 

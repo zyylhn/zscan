@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 	"github.com/gookit/color"
 	"github.com/malfunkt/iprange"
 	"golang.org/x/net/proxy"
@@ -62,6 +64,97 @@ func Connect_BannerScan(ip string,port int) (string,int,error,[]string) {
 	return ip, port, err,nil
 }
 
+func ConnectSyn(dstIp string,dstPort int) (string,int,error,[]string) {
+	srcIp, srcPort, err := localIPPort(net.ParseIP(dstIp))
+	dstAddrs, err := net.LookupIP(dstIp)
+	if err != nil {
+		return dstIp, 0, err,nil
+	}
+
+	dstip := dstAddrs[0].To4()
+	var dstport layers.TCPPort
+	dstport = layers.TCPPort(dstPort)
+	srcport := layers.TCPPort(srcPort)
+
+	// Our IP header... not used, but necessary for TCP checksumming.
+	ip := &layers.IPv4{
+		SrcIP:    srcIp,
+		DstIP:    dstip,
+		Protocol: layers.IPProtocolTCP,
+	}
+	// Our TCP header
+	tcp := &layers.TCP{
+		SrcPort: srcport,
+		DstPort: dstport,
+		SYN:     true,
+	}
+	err = tcp.SetNetworkLayerForChecksum(ip)
+
+	buf := gopacket.NewSerializeBuffer()
+	opts := gopacket.SerializeOptions{
+		ComputeChecksums: true,
+		FixLengths:       true,
+	}
+
+	if err := gopacket.SerializeLayers(buf, opts, tcp); err != nil {
+		return dstIp, 0, err,nil
+	}
+
+	conn, err := net.ListenPacket("ip4:tcp", "0.0.0.0")
+	if err != nil {
+		return dstIp, 0, err,nil
+	}
+	defer conn.Close()
+
+	if _, err := conn.WriteTo(buf.Bytes(), &net.IPAddr{IP: dstip}); err != nil {
+		return dstIp, 0, err,nil
+	}
+
+	// Set deadline so we don't wait forever.
+	if err := conn.SetDeadline(time.Now().Add(Timeout)); err != nil {
+		return dstIp, 0, err,nil
+	}
+
+	for {
+		b := make([]byte, 4096)
+		n, addr, err := conn.ReadFrom(b)
+		if err != nil {
+			return dstIp, 0, err,nil
+		} else if addr.String() == dstip.String() {
+			// Decode a packet
+			packet := gopacket.NewPacket(b[:n], layers.LayerTypeTCP, gopacket.Default)
+			// Get the TCP layer from this packet
+			if tcpLayer := packet.Layer(layers.LayerTypeTCP); tcpLayer != nil {
+				tcp, _ := tcpLayer.(*layers.TCP)
+
+				if tcp.DstPort == srcport {
+					if tcp.SYN && tcp.ACK {
+						Output(fmt.Sprintf("\rFind port %v:%v\r\n", dstIp, dstPort),White)
+						return dstIp, dstPort, err,nil
+					} else {
+						return dstIp, 0, err,nil
+					}
+				}
+			}
+		}
+	}
+}
+
+func localIPPort(dstip net.IP) (net.IP, int, error) {
+	serverAddr, err := net.ResolveUDPAddr("udp", dstip.String()+":54321")
+	if err != nil {
+		return nil, 0, err
+	}
+	// We don't actually connect to anything, but we can determine
+	// based on our destination ip what source ip we should use.
+	if con, err := net.DialUDP("udp", nil, serverAddr); err == nil {
+		if udpaddr, ok := con.LocalAddr().(*net.UDPAddr); ok {
+			return udpaddr.IP, udpaddr.Port, nil
+		}
+	}
+	return nil, -1, err
+}
+
 func Proxyconn() (proxy.Dialer,error) {
 	if strings.ContainsAny(Proxy,"@")&&strings.Count(Proxy,"@")==1{
 		info:=strings.Split(Proxy,"@")
@@ -91,7 +184,7 @@ func Getconn(addr string) (net.Conn,error) {
 func Parse_IP(ip_string string) ([]net.IP, error) {
 	list, err := iprange.ParseList(ip_string)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("IP format error,check the entered IP address")
 	}
 	iplist := list.Expand()
 	return iplist, nil
@@ -145,15 +238,6 @@ func Parse_Port(selection string) ([]int, error) {
 
 //输出
 func Output(s string,c Mycolor) {
-	//if Output_result{
-	//fmt.Print(c(s))
-	//file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
-	//Checkerr(err)
-	//defer file.Close()
-	//file.WriteString(s)
-	//}else {
-	//	fmt.Print(c(s))
-	//}
 	fmt.Print(c(s))
 	file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
 	defer file.Close()
