@@ -5,6 +5,8 @@
 
 📄[English document](https://github.com/zyylhn/zscan/blob/master/README_EN.md)
 
+更新内容见日志[log](https://github.com/zyylhn/zscan/blob/master/update.log)
+
 ![](image/all.svg)
 
 <details>
@@ -788,4 +790,4 @@ https://github.com/k8gege/LadonGo
 
 喜欢用go写工具的同学可以加入我们super_yu@yeah.net😃
 
-更新内容见日志[log](https://github.com/zyylhn/zscan/blob/master/update.log)
+

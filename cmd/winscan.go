@@ -101,12 +101,6 @@ var netBiosCmd = &cobra.Command{
 func winscan() {
 	GetHost()
 	if !netbios && !smb && !oxid {
-		//r1 := netBiosScan()
-		//r2 := smbScan()
-		//r3 := oxidScan()
-		//PrintResultNetbios(r1)
-		//PrintResultSMB(r2)
-		//PrintResultOxid(r3)
 		nbt_smb_oxid()
 		return
 	}
@@ -318,31 +312,9 @@ func netBIOS(host string) (nbname NbnsName, err error) {
 	nbname.msg=strings.TrimSpace(nbname.msg)
 	return nbname, err
 }
-//
-//func Proxyconn_udp() (proxy.Dialer,error) {
-//	if Proxy==""{
-//		return nil,fmt.Errorf("")
-//	}else {
-//		if strings.ContainsAny(Proxy,"@")&&strings.Count(Proxy,"@")==1{
-//			info:=strings.Split(Proxy,"@")
-//			userpass:=strings.Split(info[0],":")
-//			auth:= proxy.Auth {userpass[0],userpass[1]}
-//			dialer,err:=proxy.SOCKS5("udp",info[1],&auth,proxy.Direct)
-//			return dialer,err
-//		}else {
-//			if strings.ContainsAny(Proxy,":")&&strings.Count(Proxy,":")==1{
-//				dialer,err:=proxy.SOCKS5("udp",Proxy,nil,proxy.Direct)
-//				return dialer,err
-//			}
-//		}
-//	}
-//	return nil,fmt.Errorf("proxy error")
-//}
 
 func getNbnsname(host string) (nbname NbnsName, err error) {
 	senddata1 := []byte{102, 102, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 32, 67, 75, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 0, 0, 33, 0, 1}
-	//d,err:=Proxyconn_udp()
-	//Checkerr(err)
 	realhost := fmt.Sprintf("%s:%v", host, 137)
 	conn, err := net.DialTimeout("udp", realhost, Timeout)
 	defer func() {
@@ -474,7 +446,7 @@ func smbinfo(conn net.Conn) (error,[]string) {
 }
 
 func Connectsmb(ip string, port int) (string, int, error, []string) {
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+	conn, err := Getconn(fmt.Sprintf("%v:%v", ip, port))
 	if err != nil {
 		return ip, port, err, nil
 	}
@@ -507,7 +479,7 @@ func oxidScan() map[string]*Openport {
 }
 
 func Connectoxid(ip string,port int) (string, int, error, []string) {
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+	conn, err := Getconn(fmt.Sprintf("%v:%v", ip, port))
 	if err != nil {
 		return ip, port, err, nil
 	}

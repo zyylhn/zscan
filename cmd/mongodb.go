@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	_ "github.com/lib/pq"
 	"github.com/spf13/cobra"
 	"gopkg.in/mgo.v2"
 	"time"

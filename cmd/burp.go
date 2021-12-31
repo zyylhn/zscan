@@ -3,13 +3,10 @@ package cmd
 import (
 	"bufio"
 	"fmt"
-	"github.com/cheggaaa/pb/v3"
 	"os"
 	"strings"
 	"sync"
-	"time"
 )
-var num int
 
 type Service func(user string,pass string,addr string)(error,bool,string)
 
@@ -30,11 +27,9 @@ type Burp struct {
 	tasklist chan *burp_info
 	service Service
 	wg sync.WaitGroup
-	bar *pb.ProgressBar
 	burpthread int
 	stop chan int8
 	burpresult string
-
 }
 
 func NewBurp(pass,user,userdict,passdict string,aliveaddr string,service Service,burpthread int) (*Burp) {
@@ -70,6 +65,7 @@ func (b *Burp) Run() string {
 	}
 	switch  {
 	case b.password==""&&b.passdict!="":
+		b.wg.Add(1)
 		go b.Getpass()
 	case b.password!=""&&b.passdict=="":
 		if strings.Contains(b.password,","){
@@ -89,14 +85,15 @@ func (b *Burp) Run() string {
 		}
 		close(b.password_ch)
 	}
+	b.wg.Add(1)
 	go b.Gettasklist()
 	//if !Verbose{
 	//	go bar()
 	//}
 	for i:=0;i<b.burpthread;i++{
+		b.wg.Add(1)
 		go b.Check()
 	}
-	time.Sleep(time.Second*1 ) //防止线程过低for循环速度太快导致获取任务列表等线程的add函数没有执行。
 	b.wg.Wait()
 	return b.burpresult
 }
@@ -104,7 +101,6 @@ func (b *Burp) Run() string {
 
 //读取密码到缓冲信道中
 func (b *Burp) Getpass()  {
-	b.wg.Add(1)
 	//fmt.Println(LightCyan("Begin read pass"))
 	b.readdict_To_Ch(b.passdict,&b.password_ch)
 	//fmt.Println(LightCyan("Stop read pass"))
@@ -128,7 +124,6 @@ func (b *Burp) Getuser()  {
 
 //根据用户名密码还有生成任务列表
 func (b *Burp) Gettasklist()  {
-	b.wg.Add(1)
 	defer b.wg.Done()
 	for pass:=range b.password_ch{
 		for _,user:=range b.username_list{
@@ -142,7 +137,6 @@ func (b *Burp) Gettasklist()  {
 }
 
 func (b *Burp) Check()  {
-	b.wg.Add(1)
 	defer b.wg.Done()
 	for task:=range b.tasklist{
 		if cancelled(b.stop) {
@@ -152,9 +146,6 @@ func (b *Burp) Check()  {
 			fmt.Println(Yellow(fmt.Sprintf("Test:%v %v %v",task.addr,task.username,task.password)))
 		}
 		err,success,servername:=b.service(task.username,task.password,task.addr)
-		if !Verbose{
-			num=num+1
-		}
 		if err==nil&&success{
 			if cancelled(b.stop){
 				break

@@ -69,22 +69,21 @@ type PortScan struct {
 	ports []int
 	wg sync.WaitGroup
 	taskch chan map[string]int
-	resultch chan []string
 	tcpconn Connect_method
 	result map[string]*Openport
 	portscan_result sync.Map
 	tasknum float64
 	donenum float64
 	percent bool
-
 }
 
 func NewPortScan(iplist []net.IP,ports []int,connect Connect_method,p bool) *PortScan {
-	return &PortScan{iplist: iplist,ports: ports,taskch: make(chan map[string]int,Thread*2),tcpconn: connect,resultch: make(chan []string,Thread*2),result: make(map[string]*Openport),tasknum: float64(len(iplist)*len(ports)),percent: p}
+	return &PortScan{iplist: iplist,ports: ports,taskch: make(chan map[string]int,Thread*2),tcpconn: connect,result: make(map[string]*Openport),tasknum: float64(len(iplist)*len(ports)),percent: p}
 }
 
 //端口扫描的开始函数，返回结果
 func (p *PortScan) Run() map[string]*Openport {
+	p.wg.Add(1)
 	go p.Gettasklist()
 	for i := 0; i < Thread; i++ {
 		p.wg.Add(1)
@@ -101,7 +100,6 @@ func (p *PortScan) Run() map[string]*Openport {
 
 //获取任务列表
 func (p *PortScan) Gettasklist()  {
-	p.wg.Add(1)
 	defer p.wg.Done()
 	for _, port := range p.ports  {
 		for _, ip := range p.iplist  {
@@ -120,9 +118,9 @@ func (p *PortScan) Startscan()  {
 	for task := range p.taskch {
 		for ip, port := range task {
 			//fmt.Println(ip,port)
-			err := p.Saveresult(p.tcpconn(ip, port))
+			_ = p.Saveresult(p.tcpconn(ip, port))
 			p.donenum+=1
-			_ = err //dial tcp 172.16.95.1:3301: connect: connection refused
+			//_ = err //dial tcp 172.16.95.1:3301: connect: connection refused
 		}
 	}
 }
@@ -185,7 +183,7 @@ func Printresult(r map[string]*Openport)  {
 	Output(fmt.Sprintf("There are %v IP addresses in total\n",len(r)),LightGreen)
 	realIPs := make([]net.IP, 0, len(r))
 	for ip,_:=range r{
-		realIPs = append(realIPs, net.ParseIP(ip))
+		realIPs = append(realIPs, net.ParseIP(ip))   //将ip放入列表做个排序
 	}
 	for _, i := range sortip(realIPs) {
 		Output(fmt.Sprintf("Traget:%v\n", i), LightBlue)
