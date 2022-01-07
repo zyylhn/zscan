@@ -37,7 +37,6 @@ type HostInfo struct {
 	Url       string
 	Timeout   time.Duration
 	Infostr   []string
-	titleinfo	  string
 	baseinfo *httpresp
 }
 
@@ -132,7 +131,8 @@ func GOWebTitle(info *HostInfo) error {
 	}
 	//将CheckData送去与指纹库对比
 	info.Infostr = web.InfoCheck(CheckData)
-	Output(fmt.Sprintf("\r[*]Find http server:%-25v title:[%v]\tbanner:%s \r\n", info.Url,info.baseinfo.title, info.Infostr),LightGreen)
+	//Output(fmt.Sprintf("\r[*]Find http server:%-25v title:[%v]\tlen:%s\tbanner:%s \r\n", info.Url,info.baseinfo.title,info.baseinfo.len, info.Infostr),LightGreen)
+	OutputHttp(info)
 	httptitle_result.Store(fmt.Sprintf("%v:%v",info.Host,info.Ports), info)
 	//if true {
 	//	//fmt.Println(info)
@@ -375,3 +375,21 @@ func InitHttpClient(ThreadsNum int,Timeout time.Duration) error {
 	return nil
 }
 
+func OutputHttp(v *HostInfo)  {
+	Output("\rFind httpserver "+v.Url,LightGreen)
+	if v.baseinfo.code==200{
+		Output(fmt.Sprintf("  code:",),White)
+		Output(fmt.Sprintf("%v",v.baseinfo.code),LightGreen)
+	}else {
+		Output(fmt.Sprintf("  code:",),White)
+		Output(fmt.Sprintf("%v",v.baseinfo.code),Yellow)
+	}
+	Output(fmt.Sprintf("  len:%v",v.baseinfo.len),White)
+	Output(fmt.Sprintf("  title:"),White)
+	Output(fmt.Sprintf("%v",v.baseinfo.title),LightGreen)
+	Output(fmt.Sprintf("  banner:"),White)
+	for _,i:=range v.Infostr{
+		Output(fmt.Sprintf("%v",i),LightGreen)
+	}
+	Output("\n",White)
+}

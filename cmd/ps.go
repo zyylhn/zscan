@@ -202,25 +202,7 @@ func Printresult(r map[string]*Openport)  {
 	httptitle_result.Range(func(key, value interface{}) bool {
 		v,ok:=value.(*HostInfo)
 		if ok{
-			//Output(fmt.Sprintf("%v\n", value),White)
-			v.titleinfo=fmt.Sprintf("%v  code:%v  title:%v  len:%v  banner:%v\n",v.Url,v.baseinfo.code,v.baseinfo.title,v.baseinfo.len,v.Infostr)
-			Output(v.Url,LightBlue)
-			if v.baseinfo.code==200{
-				Output(fmt.Sprintf("  code:",),White)
-				Output(fmt.Sprintf("%v",v.baseinfo.code),LightGreen)
-			}else {
-				Output(fmt.Sprintf("  code:",),White)
-				Output(fmt.Sprintf("%v",v.baseinfo.code),Yellow)
-			}
-			Output(fmt.Sprintf("  len:%v",v.baseinfo.len),White)
-			Output(fmt.Sprintf("  title:"),White)
-			Output(fmt.Sprintf("%v",v.baseinfo.title),LightGreen)
-			Output(fmt.Sprintf("  banner:"),White)
-			for _,i:=range v.Infostr{
-				Output(fmt.Sprintf("%v",i),LightGreen)
-			}
-			Output("\n",White)
-
+			OutputHttp(v)
 		}
 		return true
 	})

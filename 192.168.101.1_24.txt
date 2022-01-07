@@ -1,0 +1,1018 @@
+
+Mode:portscan
+Start time:2022-01-07 16:27:20
+The number of threads:600
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.4' aliving
+[ping] Find '192.168.101.3' aliving
+[ping] Find '192.168.101.16' aliving
+[ping] Find '192.168.101.35' aliving
+[ping] Find '192.168.101.7' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.35:22
+Find port 192.168.101.4:22
+Find port 192.168.101.3:80
+Find port 192.168.101.16:80
+Find port 192.168.101.35:111
+Find port 192.168.101.4:111
+Find port 192.168.101.4:443
+Find port 192.168.101.7:22
+Find port 192.168.101.35:443
+Find port 192.168.101.3:3306
+Find port 192.168.101.4:3306
+Find port 192.168.101.35:3306
+Find port 192.168.101.35:9999
+Find port 192.168.101.35:6379
+Find port 192.168.101.7:6379
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8080
+Find port 192.168.101.35:8081
+Find port 192.168.101.4:8089
+Find port 192.168.101.3:8888
+[*]Find http server:http://192.168.101.16:8060 title:[404 Not Found]	len:555	banner:[] 
+[*]Find http server:http://192.168.101.35:8080 title:[]	len:37	banner:[Shiro] 
+[*]Find http server:http://192.168.101.4:8089 title:[]	len:37	banner:[Shiro] 
+[*]Find http server:http://192.168.101.35:9999 title:[404 Not Found]	len:232	banner:[] 
+[*]Find http server:http://192.168.101.35:8081 title:[]	len:265209	banner:[editor] 
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+
+End time:2022-01-07 16:27:35
+Time consuming:14.307126438s
+
+
+Mode:portscan
+Start time:2022-01-07 16:27:40
+The number of threads:600
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.35' aliving
+[ping] Find '192.168.101.16' aliving
+[ping] Find '192.168.101.7' aliving
+[ping] Find '192.168.101.3' aliving
+[ping] Find '192.168.101.4' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.4:443
+Find port 192.168.101.16:80
+Find port 192.168.101.35:111
+Find port 192.168.101.3:80
+Find port 192.168.101.35:22
+Find port 192.168.101.35:443
+Find port 192.168.101.4:22
+Find port 192.168.101.4:111
+Find port 192.168.101.7:22
+Find port 192.168.101.7:6379
+Find port 192.168.101.35:6379
+Find port 192.168.101.4:3306
+Find port 192.168.101.3:3306
+Find port 192.168.101.35:3306
+Find port 192.168.101.35:9999
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8080
+Find port 192.168.101.35:8081
+Find port 192.168.101.4:8089
+Find port 192.168.101.3:8888
+[*]Find http server:https://192.168.101.4     title:[404 Not Found]	len:571	banner:[] 
+[*]Find http server:http://192.168.101.3      title:[Index]	len:5362	banner:[] 
+[*]Find http server:http://192.168.101.4:8089 title:[]	len:37	banner:[Shiro] 
+[*]Find http server:http://192.168.101.35:9999 title:[404 Not Found]	len:232	banner:[] 
+[*]Find http server:http://192.168.101.16/users/sign_in title:[Sign in · GitLab]	len:11109	banner:[GitLab] 
+[*]Find http server:http://192.168.101.16:8060 title:[404 Not Found]	len:555	banner:[] 
+[*]Find http server:http://192.168.101.35:8080 title:[]	len:37	banner:[Shiro] 
+[*]Find http server:http://192.168.101.35:8081 title:[]	len:265209	banner:[editor] 
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+http://192.168.101.3  code:200  len:5362  title:Index  banner:
+http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+
+End time:2022-01-07 16:27:55
+Time consuming:14.388334731s
+
+
+Mode:portscan
+Start time:2022-01-07 16:29:05
+The number of threads:600
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.4' aliving
+[ping] Find '192.168.101.7' aliving
+[ping] Find '192.168.101.3' aliving
+[ping] Find '192.168.101.35' aliving
+[ping] Find '192.168.101.16' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.4:22
+Find port 192.168.101.7:22
+Find port 192.168.101.35:22
+Find port 192.168.101.4:443
+Find port 192.168.101.35:443
+Find port 192.168.101.16:80
+Find port 192.168.101.3:80
+Find port 192.168.101.4:111
+Find port 192.168.101.35:111
+Find port 192.168.101.4:3306
+Find port 192.168.101.35:3306
+Find port 192.168.101.3:3306
+Find port 192.168.101.35:9999
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8080
+Find port 192.168.101.35:8081
+Find port 192.168.101.4:8089
+Find port 192.168.101.3:8888
+[*]Find http server:https://192.168.101.4     title:[404 Not Found]	len:571	banner:[] 
+[*]Find http server:http://192.168.101.16:8060 title:[404 Not Found]	len:555	banner:[] 
+[*]Find http server:http://192.168.101.35:8080 title:[]	len:37	banner:[Shiro] 
+[*]Find http server:http://192.168.101.35:9999 title:[404 Not Found]	len:232	banner:[] 
+[*]Find http server:http://192.168.101.4:8089 title:[]	len:37	banner:[Shiro] 
+[*]Find http server:http://192.168.101.16/users/sign_in title:[Sign in · GitLab]	len:11109	banner:[GitLab] 
+Find port 192.168.101.35:6379
+Find port 192.168.101.7:6379
+[*]Find http server:http://192.168.101.35:8081 title:[]	len:265209	banner:[editor] 
+[*]Find http server:https://192.168.101.35    title:[]	len:265209	banner:[editor] 
+[*]Find http server:http://192.168.101.3      title:[Index]	len:5362	banner:[] 
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+https://192.168.101.35  code:200  len:265209  title:  banner:editor
+http://192.168.101.3  code:200  len:5362  title:Index  banner:
+https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+
+End time:2022-01-07 16:29:19
+Time consuming:14.167205847s
+
+
+Mode:portscan
+Start time:2022-01-07 16:31:51
+The number of threads:600
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.3' aliving
+[ping] Find '192.168.101.7' aliving
+[ping] Find '192.168.101.4' aliving
+[ping] Find '192.168.101.35' aliving
+[ping] Find '192.168.101.16' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.35:22
+Find port 192.168.101.35:111
+Find port 192.168.101.4:111
+Find port 192.168.101.3:80
+Find port 192.168.101.16:80
+Find port 192.168.101.4:443
+Find port 192.168.101.35:443
+Find port 192.168.101.7:22
+Find port 192.168.101.4:22
+Find port 192.168.101.3:3306
+Find port 192.168.101.4:3306
+Find port 192.168.101.35:3306
+Find port 192.168.101.7:6379
+Find port 192.168.101.35:6379
+Find port 192.168.101.35:9999
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8081
+Find port 192.168.101.35:8080
+Find port 192.168.101.4:8089
+Find port 192.168.101.3:8888
+[*]Find http server:https://192.168.101.4     title:[404 Not Found]	len:571	banner:[] 
+[*]Find http server:http://192.168.101.3      title:[Index]	len:5362	banner:[] 
+[*]Find http server:http://192.168.101.16:8060 title:[404 Not Found]	len:555	banner:[] 
+[*]Find http server:http://192.168.101.35:8080 title:[]	len:37	banner:[Shiro] 
+[*]Find http server:http://192.168.101.4:8089 title:[]	len:37	banner:[Shiro] 
+[*]Find http server:http://192.168.101.35:9999 title:[404 Not Found]	len:232	banner:[] 
+[*]Find http server:http://192.168.101.16/users/sign_in title:[Sign in · GitLab]	len:11109	banner:[GitLab] 
+[*]Find http server:http://192.168.101.35:8081 title:[]	len:265209	banner:[editor] 
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+http://192.168.101.3  code:200  len:5362  title:Index  banner:
+http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+
+End time:2022-01-07 16:32:04
+Time consuming:13.28598398s
+
+
+Mode:portscan
+Start time:2022-01-07 16:36:17
+The number of threads:600
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.3' aliving
+[ping] Find '192.168.101.7' aliving
+[ping] Find '192.168.101.16' aliving
+[ping] Find '192.168.101.4' aliving
+[ping] Find '192.168.101.35' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.35:22
+Find port 192.168.101.4:22
+Find port 192.168.101.16:80
+Find port 192.168.101.35:111
+Find port 192.168.101.3:80
+Find port 192.168.101.4:111
+Find port 192.168.101.7:22
+Find port 192.168.101.4:443
+Find port 192.168.101.35:443
+Find port 192.168.101.3:3306
+Find port 192.168.101.4:3306
+Find port 192.168.101.35:3306
+Find port 192.168.101.7:6379
+Find port 192.168.101.35:6379
+Find port 192.168.101.35:9999
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8080
+Find port 192.168.101.35:8081
+Find port 192.168.101.4:8089
+Find port 192.168.101.3:8888
+http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+
+End time:2022-01-07 16:36:31
+Time consuming:14.206240379s
+
+
+Mode:portscan
+Start time:2022-01-07 16:36:34
+The number of threads:600
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.4' aliving
+[ping] Find '192.168.101.3' aliving
+[ping] Find '192.168.101.35' aliving
+[ping] Find '192.168.101.16' aliving
+[ping] Find '192.168.101.7' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.35:22
+Find port 192.168.101.4:22
+Find port 192.168.101.7:22
+Find port 192.168.101.35:111
+Find port 192.168.101.16:80
+Find port 192.168.101.4:111
+Find port 192.168.101.3:80
+Find port 192.168.101.35:443
+Find port 192.168.101.4:443
+Find port 192.168.101.3:3306
+Find port 192.168.101.35:3306
+Find port 192.168.101.4:3306
+Find port 192.168.101.3:8888
+Find port 192.168.101.35:9999
+http://192.168.101.3  code:200  len:5362  title:Index  banner:
+https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+Find port 192.168.101.7:6379
+Find port 192.168.101.35:6379
+http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8080
+Find port 192.168.101.35:8081
+Find port 192.168.101.4:8089
+http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+https://192.168.101.35  code:200  len:265209  title:  banner:editor
+http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+http://192.168.101.3  code:200  len:5362  title:Index  banner:
+https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+https://192.168.101.35  code:200  len:265209  title:  banner:editor
+
+End time:2022-01-07 16:36:49
+Time consuming:14.747539113s
+
+
+Mode:portscan
+Start time:2022-01-07 16:37:48
+The number of threads:600
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.7' aliving
+[ping] Find '192.168.101.4' aliving
+[ping] Find '192.168.101.16' aliving
+[ping] Find '192.168.101.3' aliving
+[ping] Find '192.168.101.35' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.7:22
+Find port 192.168.101.35:22
+Find port 192.168.101.4:22
+Find port 192.168.101.16:80
+Find port 192.168.101.3:80
+Find port 192.168.101.4:111
+Find port 192.168.101.35:111
+Find port 192.168.101.35:3306
+Find port 192.168.101.3:3306
+Find port 192.168.101.4:3306
+Find port 192.168.101.7:6379
+Find port 192.168.101.35:6379
+Find port 192.168.101.35:9999
+Find port 192.168.101.4:443
+Find port 192.168.101.35:443
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8080
+Find port 192.168.101.35:8081
+Find port 192.168.101.4:8089
+Find port 192.168.101.3:8888
+Find httpserver	http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+Find httpserver	http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+Find httpserver	http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+Find httpserver	https://192.168.101.35  code:200  len:265209  title:  banner:editor
+Find httpserver	http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find httpserver	https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+Find httpserver	http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+Find httpserver	http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+Find httpserver	http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+Find httpserver	http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+Find httpserver	http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+Find httpserver	https://192.168.101.35  code:200  len:265209  title:  banner:editor
+Find httpserver	http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find httpserver	https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+
+End time:2022-01-07 16:38:03
+Time consuming:14.378145148s
+
+
+Mode:portscan
+Start time:2022-01-07 16:39:25
+The number of threads:600
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.35' aliving
+[ping] Find '192.168.101.16' aliving
+[ping] Find '192.168.101.3' aliving
+[ping] Find '192.168.101.7' aliving
+[ping] Find '192.168.101.4' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.35:443
+Find port 192.168.101.4:443
+Find port 192.168.101.3:80
+Find port 192.168.101.16:80
+Find port 192.168.101.4:111
+Find port 192.168.101.35:111
+Find port 192.168.101.4:22
+Find port 192.168.101.7:22
+Find port 192.168.101.35:22
+Find port 192.168.101.3:3306
+Find port 192.168.101.35:3306
+Find port 192.168.101.4:3306
+Find port 192.168.101.35:9999
+Find port 192.168.101.35:6379
+Find port 192.168.101.7:6379
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8080
+Find port 192.168.101.35:8081
+Find port 192.168.101.4:8089
+Find port 192.168.101.3:8888
+Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find httpserver http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+Find httpserver http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find httpserver http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+Find httpserver http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+
+End time:2022-01-07 16:39:39
+Time consuming:14.344899644s
+
+
+Mode:portscan
+Start time:2022-01-07 16:39:49
+The number of threads:100
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.3' aliving
+[ping] Find '192.168.101.4' aliving
+[ping] Find '192.168.101.7' aliving
+[ping] Find '192.168.101.35' aliving
+[ping] Find '192.168.101.16' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.16:80
+Find port 192.168.101.3:80
+Find port 192.168.101.35:22
+Find port 192.168.101.35:111
+Find port 192.168.101.4:111
+Find port 192.168.101.7:22
+Find port 192.168.101.4:22
+Find port 192.168.101.35:443
+Find port 192.168.101.4:443
+Find httpserver http://192.168.101.3  code:200  len:5362  title:Index  banner:
+Find port 192.168.101.3:3306
+Find port 192.168.101.4:3306
+Find port 192.168.101.35:3306
+Find httpserver https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+Find httpserver https://192.168.101.35  code:200  len:265209  title:  banner:editor
+Find port 192.168.101.7:6379
+Find port 192.168.101.35:6379
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8080
+Find port 192.168.101.35:8081
+Find port 192.168.101.4:8089
+Find port 192.168.101.3:8888
+Find port 192.168.101.35:9999
+Find httpserver http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+Find httpserver http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find httpserver http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+Find httpserver http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+Find httpserver http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+Find httpserver http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find httpserver https://192.168.101.35  code:200  len:265209  title:  banner:editor
+Find httpserver http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.3  code:200  len:5362  title:Index  banner:
+Find httpserver https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+
+End time:2022-01-07 16:40:03
+Time consuming:13.627530977s
+
+
+Mode:portscan
+Start time:2022-01-07 16:40:11
+The number of threads:100
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.7' aliving
+[ping] Find '192.168.101.3' aliving
+[ping] Find '192.168.101.16' aliving
+[ping] Find '192.168.101.35' aliving
+[ping] Find '192.168.101.4' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.16:80
+Find port 192.168.101.3:80
+Find port 192.168.101.7:22
+Find port 192.168.101.4:22
+Find port 192.168.101.35:22
+Find port 192.168.101.4:111
+Find port 192.168.101.35:111
+Find port 192.168.101.4:443
+Find port 192.168.101.35:443
+Find httpserver http://192.168.101.3  code:200  len:5362  title:Index  banner:
+Find port 192.168.101.3:3306
+Find port 192.168.101.35:3306
+Find port 192.168.101.4:3306
+Find httpserver https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+Find httpserver https://192.168.101.35  code:200  len:265209  title:  banner:editor
+Find port 192.168.101.7:6379
+Find port 192.168.101.35:6379
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8080
+Find port 192.168.101.35:8081
+Find port 192.168.101.4:8089
+Find port 192.168.101.3:8888
+Find port 192.168.101.35:9999
+Find httpserver http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+Find httpserver http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+Find httpserver http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+Find httpserver http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+Find httpserver http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+Find httpserver https://192.168.101.35  code:200  len:265209  title:  banner:editor
+Find httpserver http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find httpserver http://192.168.101.3  code:200  len:5362  title:Index  banner:
+Find httpserver https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+
+End time:2022-01-07 16:40:25
+Time consuming:14.357787911s
+
+
+Mode:all
+Start time:2022-01-07 16:41:11
+The number of threads:100
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.4' aliving
+[ping] Find '192.168.101.35' aliving
+[ping] Find '192.168.101.3' aliving
+[ping] Find '192.168.101.7' aliving
+[ping] Find '192.168.101.16' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.35:22
+Find port 192.168.101.7:22
+Find port 192.168.101.3:80
+Find port 192.168.101.4:22
+Find port 192.168.101.16:80
+Find port 192.168.101.4:111
+Find port 192.168.101.35:111
+Find port 192.168.101.4:443
+Find port 192.168.101.35:443
+Find httpserver http://192.168.101.3  code:200  len:5362  title:Index  banner:
+Find port 192.168.101.3:3306
+Find port 192.168.101.4:3306
+Find port 192.168.101.35:3306
+Find httpserver https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+Find httpserver https://192.168.101.35  code:200  len:265209  title:  banner:editor
+Find port 192.168.101.35:6379
+Find port 192.168.101.7:6379
+Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8080
+Find port 192.168.101.35:8081
+Find port 192.168.101.4:8089
+[+]mysql burp success:192.168.101.3 root root
+Find port 192.168.101.3:8888
+Find port 192.168.101.35:9999
+Find httpserver http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+Find httpserver http://192.168.101.4:8089  code:200Find httpserver http://192.168.101.35:8080  code:  len:37  title:200  len:37  banner:  title:Shiro
+  banner:Shiro
+Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find httpserver http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+[+]ssh burp success:192.168.101.35 root root
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306 	Username:root	Password:root
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22 	Username:root	Password:root
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+Find httpserver http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+Find httpserver http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find httpserver http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+Find httpserver http://192.168.101.3  code:200  len:5362  title:Index  banner:
+Find httpserver https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+Find httpserver https://192.168.101.35  code:200  len:265209  title:  banner:editor
+Find httpserver http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+
+End time:2022-01-07 16:41:44
+Time consuming:33.353552397s
+
+
+Mode:all
+Start time:2022-01-07 16:42:57
+The number of threads:100
+Time delay:3s
+Traget:192.168.101.1/24
+Verbose:Don't show verbose
+Ping befor portscan
+
+=========================living ip result list==========================
+[ping] Find '192.168.101.4' aliving
+[ping] Find '192.168.101.7' aliving
+[ping] Find '192.168.101.16' aliving
+[ping] Find '192.168.101.35' aliving
+[ping] Find '192.168.101.3' aliving
+A total of 5 IP addresses were discovered
+Find port 192.168.101.35:22
+Find port 192.168.101.7:22
+Find port 192.168.101.3:80
+Find port 192.168.101.16:80
+Find port 192.168.101.4:22
+Find port 192.168.101.4:111
+Find port 192.168.101.35:111
+Find port 192.168.101.4:443
+Find port 192.168.101.35:443
+Find httpserver http://192.168.101.3  code:200  len:5362  title:Index  banner:
+Find port 192.168.101.4:3306
+Find port 192.168.101.3:3306
+Find port 192.168.101.35:3306
+Find httpserver https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+Find httpserver https://192.168.101.35  code:200  len:265209  title:  banner:editor
+Find port 192.168.101.7:6379
+Find port 192.168.101.35:6379
+Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+Find port 192.168.101.16:8060
+Find port 192.168.101.35:8080
+Find port 192.168.101.35:8081
+Find port 192.168.101.4:8089
+[+]mysql burp success:192.168.101.3 root root
+Find port 192.168.101.3:8888
+Find port 192.168.101.35:9999
+Find httpserver http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.16:8060  code:404  len:555  title:Find httpserver http://192.168.101.4:8089404 Not Found  code:  banner:200  len:37
+  title:  banner:Shiro
+Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find httpserver http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+[+]ssh burp success:192.168.101.35 root root
+
+============================port result list=============================
+There are 5 IP addresses in total
+Traget:192.168.101.3
+  80
+  3306 	Username:root	Password:root
+  8888
+Traget:192.168.101.4
+  22
+  111
+  443
+  3306
+  8089
+Traget:192.168.101.7
+  22
+  6379
+Traget:192.168.101.16
+  80
+  8060
+Traget:192.168.101.35
+  22 	Username:root	Password:root
+  111
+  443
+  3306
+  6379
+  8080
+  8081
+  9999
+============================http result list=============================
+Find httpserver http://192.168.101.3  code:200  len:5362  title:Index  banner:
+Find httpserver https://192.168.101.35  code:200  len:265209  title:  banner:editor
+Find httpserver http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
+Find httpserver http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
+Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
+Find httpserver http://192.168.101.35:8081  code:200  len:265209  title:  banner:editor
+Find httpserver https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
+Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
+
+End time:2022-01-07 16:43:36
+Time consuming:39.379835885s
+
