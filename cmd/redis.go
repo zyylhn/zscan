@@ -71,8 +71,8 @@ func Connectredis(ip string, port int) (string, int, error,[]string) {
 
 
 //获取redis连接的函数
-func redis_client(user,pass,addr string) (*redis.Client) {
-	url:=fmt.Sprintf("redis://%v:%v@%v:%v/",user,pass,addr,redis_port)
+func redis_client(user,pass,ip string) (*redis.Client) {
+	url:=fmt.Sprintf("redis://%v:%v@%v:%v/",user,pass,ip,redis_port)
 	opt,err:=redis.ParseURL(url)
 	if err != nil {
 		return nil
@@ -85,8 +85,8 @@ func redis_client(user,pass,addr string) (*redis.Client) {
 }
 
 //burp功能的身份认证函数
-func redis_auth(user,pass,addr string) (error,bool,string) {
-	rbd:=redis_client(user,pass,addr)
+func redis_auth(user,pass,ip string) (error,bool,string) {
+	rbd:=redis_client(user,pass,ip)
 	if rbd==nil{
 		return fmt.Errorf(""),false,"redis"
 	}

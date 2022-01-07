@@ -759,7 +759,7 @@ https://github.com/k8gege/LadonGo
 		- [x] mysql
 		- [ ] mssql
 		- [x] redis
-		- [ ] mongodb
+		- [x] mongodb
 		- [ ] postgres
 		- [x] ssh
 		- [x] ftp

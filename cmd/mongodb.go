@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"gopkg.in/mgo.v2"
+	"net"
 	"time"
 )
 
@@ -31,7 +32,7 @@ func mongodb()  {
 func burp_mongodb()  {
 	GetHost()
 	if Command!=""{
-		err,_,_:=postgres_auth(Username,Password,Hosts)
+		err,_,_:=mongodb_auth(Username,Password,Hosts)
 		if err!=nil{
 			fmt.Println(err)
 		}
@@ -68,6 +69,9 @@ func Connectmongodb(ip string, port int) (string, int, error,[]string) {
 func mongodb_auth(username,password,ip string) (error,bool,string) {
 
 	dialInfo := &mgo.DialInfo{
+		DialServer: func(addr *mgo.ServerAddr) (net.Conn, error) {
+			return Getconn(fmt.Sprintf("%s:%d", ip, mongodb_port))
+		},
 		Addrs:     []string{fmt.Sprintf("%s:%d", ip, mongodb_port)},
 		Direct:    false,
 		Timeout:   Timeout,
