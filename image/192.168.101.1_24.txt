@@ -1,1052 +1,0 @@
-
-Mode:portscan
-Start time:2022-01-11 15:28:22
-The number of threads:100
-Time delay:3s
-Traget:192.168.101.1/24
-Verbose:Don't show verbose
-Ping befor portscan
-
-=========================living ip result list==========================
-[ping] Find '192.168.101.15' aliving
-[ping] Find '192.168.101.3' aliving
-[ping] Find '192.168.101.7' aliving
-[ping] Find '192.168.101.4' aliving
-[ping] Find '192.168.101.10' aliving
-[ping] Find '192.168.101.11' aliving
-[ping] Find '192.168.101.0' aliving
-[ping] Find '192.168.101.12' aliving
-[ping] Find '192.168.101.38' aliving
-[ping] Find '192.168.101.1' aliving
-[ping] Find '192.168.101.22' aliving
-[ping] Find '192.168.101.45' aliving
-[ping] Find '192.168.101.9' aliving
-[ping] Find '192.168.101.39' aliving
-[ping] Find '192.168.101.2' aliving
-[ping] Find '192.168.101.16' aliving
-[ping] Find '192.168.101.35' aliving
-[ping] Find '192.168.101.51' aliving
-[ping] Find '192.168.101.57' aliving
-[ping] Find '192.168.101.59' aliving
-[ping] Find '192.168.101.58' aliving
-[ping] Find '192.168.101.54' aliving
-[ping] Find '192.168.101.63' aliving
-[ping] Find '192.168.101.79' aliving
-[ping] Find '192.168.101.80' aliving
-[ping] Find '192.168.101.77' aliving
-[ping] Find '192.168.101.94' aliving
-[ping] Find '192.168.101.87' aliving
-[ping] Find '192.168.101.96' aliving
-[ping] Find '192.168.101.100' aliving
-[ping] Find '192.168.101.104' aliving
-[ping] Find '192.168.101.103' aliving
-[ping] Find '192.168.101.101' aliving
-[ping] Find '192.168.101.109' aliving
-[ping] Find '192.168.101.112' aliving
-[ping] Find '192.168.101.120' aliving
-[ping] Find '192.168.101.115' aliving
-[ping] Find '192.168.101.117' aliving
-[ping] Find '192.168.101.116' aliving
-[ping] Find '192.168.101.114' aliving
-[ping] Find '192.168.101.119' aliving
-[ping] Find '192.168.101.122' aliving
-[ping] Find '192.168.101.124' aliving
-[ping] Find '192.168.101.125' aliving
-[ping] Find '192.168.101.126' aliving
-[ping] Find '192.168.101.128' aliving
-[ping] Find '192.168.101.129' aliving
-[ping] Find '192.168.101.127' aliving
-[ping] Find '192.168.101.141' aliving
-[ping] Find '192.168.101.143' aliving
-[ping] Find '192.168.101.153' aliving
-[ping] Find '192.168.101.159' aliving
-[ping] Find '192.168.101.162' aliving
-[ping] Find '192.168.101.176' aliving
-[ping] Find '192.168.101.254' aliving
-[ping] Find '192.168.101.255' aliving
-A total of 56 IP addresses were discovered
-Find port 192.168.101.2:21
-Find port 192.168.101.9:21
-Find port 192.168.101.4:22
-Find port 192.168.101.1:22
-Find port 192.168.101.10:22
-Find port 192.168.101.15:22
-Find port 192.168.101.54:22
-Find port 192.168.101.22:22
-Find port 192.168.101.7:22
-Find port 192.168.101.87:22
-Find port 192.168.101.63:22
-Find port 192.168.101.59:22
-Find port 192.168.101.96:22
-Find port 192.168.101.109:22
-Find port 192.168.101.80:22
-Find port 192.168.101.58:22
-Find port 192.168.101.51:22
-Find port 192.168.101.45:22
-Find port 192.168.101.117:22
-Find port 192.168.101.116:22
-Find port 192.168.101.94:22
-Find port 192.168.101.112:22
-Find port 192.168.101.77:22
-Find port 192.168.101.115:22
-Find port 192.168.101.119:22
-Find port 192.168.101.101:22
-Find port 192.168.101.128:22
-Find port 192.168.101.79:22
-Find port 192.168.101.125:22
-Find port 192.168.101.176:22
-Find port 192.168.101.114:22
-Find port 192.168.101.153:22
-Find port 192.168.101.129:22
-Find port 192.168.101.35:22
-Find port 192.168.101.124:22
-Find port 192.168.101.126:22
-Find port 192.168.101.104:22
-Find port 192.168.101.57:22
-Find port 192.168.101.143:22
-Find port 192.168.101.159:22
-Find port 192.168.101.122:22
-Find port 192.168.101.120:22
-Find port 192.168.101.141:22
-Find port 192.168.101.12:22
-Find port 192.168.101.127:22
-Find port 192.168.101.103:22
-Find port 192.168.101.162:22
-Find port 192.168.101.254:23
-Find port 192.168.101.3:80
-Find port 192.168.101.11:80
-Find port 192.168.101.2:80
-Find port 192.168.101.9:80
-Find port 192.168.101.15:80
-Find port 192.168.101.39:80
-Find port 192.168.101.16:80
-Find port 192.168.101.51:80
-Find port 192.168.101.100:80
-Find port 192.168.101.77:80
-Find port 192.168.101.254:80
-Find httpserver http://192.168.101.15  code:200  len:625  title:华云安综合管理平台  banner:
-Find httpserver http://192.168.101.2  code:200  len:2307  title:站点创建成功-phpstudy for windows  banner:
-Find httpserver http://192.168.101.3  code:200  len:5365  title:Index  banner:
-Find httpserver http://192.168.101.254  code:401  len:18  title:  banner:
-Find port 192.168.101.39:88
-Find httpserver https://192.168.101.11/  code:200  len:258  title:  banner:
-Find httpserver http://192.168.101.9  code:200  len:689  title:IIS7  banner:
-Find httpserver https://192.168.101.39:443/  code:200  len:3618  title:" + ID_VC_Welcome + "  banner:VMware vSphere
-Find httpserver http://192.168.101.51/core/install.php  code:200  len:14031  title:Choose language | Drupal  banner:
-Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
-Find httpserver https://192.168.101.77/  code:200  len:495  title:  banner:
-Find httpserver https://192.168.101.100/  code:200  len:258  title:  banner:
-Find port 192.168.101.35:111
-Find port 192.168.101.4:111
-Find port 192.168.101.2:135
-Find port 192.168.101.38:135
-Find port 192.168.101.9:135
-Find port 192.168.101.2:139
-Find port 192.168.101.9:139
-Find port 192.168.101.38:139
-Find port 192.168.101.39:389
-Find port 192.168.101.2:443
-Find port 192.168.101.4:443
-Find port 192.168.101.11:443
-Find port 192.168.101.35:443
-Find port 192.168.101.39:443
-Find port 192.168.101.77:443
-Find port 192.168.101.79:443
-Find port 192.168.101.100:443
-Find port 192.168.101.103:443
-Find httpserver https://192.168.101.11  code:200  len:258  title:  banner:
-Find httpserver https://192.168.101.2  code:403  len:0  title:  banner:
-Find httpserver https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
-Find httpserver https://192.168.101.39  code:200  len:3618  title:" + ID_VC_Welcome + "  banner:VMware vSphere
-Find port 192.168.101.2:445
-Find port 192.168.101.9:445
-Find port 192.168.101.38:445
-Find httpserver https://192.168.101.100  code:200  len:258  title:  banner:
-Find httpserver https://192.168.101.77  code:200  len:495  title:  banner:
-Find httpserver https://192.168.101.35  code:200  len:265209  title:  banner:editor
-Find port 192.168.101.39:636
-Find httpserver https://192.168.101.103  code:200  len:549079  title:  banner:editor
-Find httpserver https://192.168.101.79  code:200  len:549079  title:  banner:editor
-Find port 192.168.101.11:902
-Find port 192.168.101.100:902
-Find port 192.168.101.54:1883
-Find port 192.168.101.39:2020
-Find port 192.168.101.1:3000
-Find port 192.168.101.54:3000
-Find httpserver http://192.168.101.1:3000  code:200  len:23401  title:CodiMD - Markdown 协作笔记  banner:editor
-Find httpserver http://192.168.101.54:3000  code:200  len:37670  title:Grafana  banner:editor
-Find port 192.168.101.3:3306
-Find port 192.168.101.2:3306
-Find port 192.168.101.15:3306
-Find port 192.168.101.4:3306
-Find port 192.168.101.35:3306
-Find port 192.168.101.79:3306
-Find port 192.168.101.103:3306
-Find port 192.168.101.2:3389
-Find port 192.168.101.9:3389
-Find port 192.168.101.38:3389
-Find port 192.168.101.54:4000
-Find httpserver http://192.168.101.54:4000  code:200  len:10227  title:主页 · TeslaMate  banner:
-Find port 192.168.101.77:5000
-Find port 192.168.101.80:5000
-Find httpserver https://192.168.101.80:5000  code:200  len:582  title:Smart Boot  banner:
-Find port 192.168.101.9:5357
-Find port 192.168.101.54:5432
-Find httpserver http://192.168.101.9:5357  code:503  len:326  title:Service Unavailable  banner:
-Find port 192.168.101.120:5984
-Find port 192.168.101.38:5985
-Find httpserver http://192.168.101.38:5985  code:404  len:315  title:Not Found  banner:
-Find httpserver http://192.168.101.120:5984  code:200  len:116  title:  banner:
-Find port 192.168.101.7:6379
-Find port 192.168.101.35:6379
-Find port 192.168.101.22:7001
-Find port 192.168.101.104:7001
-Find port 192.168.101.11:8000
-Find port 192.168.101.100:8000
-Find port 192.168.101.16:8060
-Find port 192.168.101.15:8080
-Find port 192.168.101.128:8080
-Find port 192.168.101.141:8080
-Find port 192.168.101.143:8080
-Find port 192.168.101.159:8080
-Find port 192.168.101.162:8080
-Find port 192.168.101.35:8081
-Find port 192.168.101.35:8080
-Find port 192.168.101.54:8080
-Find port 192.168.101.51:8080
-Find port 192.168.101.57:8080
-Find port 192.168.101.59:8080
-Find port 192.168.101.87:8080
-Find port 192.168.101.87:8081
-Find port 192.168.101.103:8081
-Find port 192.168.101.94:8080
-Find port 192.168.101.124:8081
-Find httpserver http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
-Find port 192.168.101.127:8081
-Find port 192.168.101.176:8081
-Find port 192.168.101.101:8080
-Find httpserver http://192.168.101.104:7001  code:404  len:1164  title:Error 404--Not Found  banner:weblogic
-Find httpserver http://192.168.101.22:7001  code:404  len:1164  title:Error 404--Not Found  banner:weblogic
-Find httpserver http://192.168.101.94:8080  code:200  len:319  title:Upload  banner:
-Find port 192.168.101.96:8090
-Find port 192.168.101.129:8088
-Find port 192.168.101.4:8089
-Find httpserver http://192.168.101.128:8080  code:404  len:648  title:HTTP状态 404 - 未找到  banner:
-Find httpserver http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
-Find httpserver http://192.168.101.159:8080  code:200  len:9058  title:Dashboard [Jenkins]  banner:Jenkins
-Find httpserver http://192.168.101.101:8080  code:401  len:229  title:Unauthorized  banner:
-Find httpserver http://192.168.101.59:8080  code:200  len:1507  title:Welcome to JBoss&trade;  banner:JbossJBOSS
-Find httpserver http://192.168.101.57:8080  code:200  len:1554  title:Welcome to JBoss AS  banner:JbossJBOSS
-Find port 192.168.101.3:8888
-Find port 192.168.101.10:8888
-Find port 192.168.101.9:8888
-Find httpserver http://192.168.101.9:8888  code:200  len:1091  title:华云安后台管理系统  banner:
-Find port 192.168.101.11:9080
-Find port 192.168.101.100:9080
-Find port 192.168.101.15:9090
-Find port 192.168.101.12:9200
-Find port 192.168.101.125:9200
-Find port 192.168.101.122:9200
-Find httpserver http://192.168.101.15:9090  code:404  len:36  title:  banner:
-Find port 192.168.101.45:9443
-Find httpserver https://192.168.101.11:9080  code:202  len:0  title:  banner:Shiro
-Find httpserver https://192.168.101.100:9080  code:202  len:0  title:  banner:
-Find httpserver http://192.168.101.125:9200  code:200  len:336  title:  banner:
-Find httpserver http://192.168.101.122:9200  code:200  len:336  title:  banner:
-Find port 192.168.101.35:9999
-Find port 192.168.101.103:9999
-Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
-Find httpserver http://192.168.101.103:9999  code:404  len:232  title:404 Not Found  banner:
-Find httpserver http://192.168.101.12:9200  code:200  len:292  title:  banner:
-Find port 192.168.101.9:49152
-Find port 192.168.101.9:49153
-Find port 192.168.101.54:49153
-Find port 192.168.101.9:49154
-Find port 192.168.101.54:49154
-Find port 192.168.101.9:49155
-
-============================port result list=============================
-There are 54 IP addresses in total
-Traget:192.168.101.1
-  22
-  3000
-Traget:192.168.101.2
-  21
-  80
-  135
-  139
-  443
-  445
-  3306
-  3389
-Traget:192.168.101.3
-  80
-  3306
-  8888
-Traget:192.168.101.4
-  22
-  111
-  443
-  3306
-  8089
-Traget:192.168.101.7
-  22
-  6379
-Traget:192.168.101.9
-  21
-  80
-  135
-  139
-  445
-  3389
-  5357
-  8888
-  49152
-  49153
-  49154
-  49155
-Traget:192.168.101.10
-  22
-  8888
-Traget:192.168.101.11
-  80
-  443
-  902
-  8000
-  9080
-Traget:192.168.101.12
-  22
-  9200
-Traget:192.168.101.15
-  22
-  80
-  3306
-  8080
-  9090
-Traget:192.168.101.16
-  80
-  8060
-Traget:192.168.101.22
-  22
-  7001
-Traget:192.168.101.35
-  22
-  111
-  443
-  3306
-  6379
-  8080
-  8081
-  9999
-Traget:192.168.101.38
-  135
-  139
-  445
-  3389
-  5985
-Traget:192.168.101.39
-  80
-  88
-  389
-  443
-  636
-  2020
-Traget:192.168.101.45
-  22
-  9443
-Traget:192.168.101.51
-  22
-  80
-  8080
-Traget:192.168.101.54
-  22
-  1883
-  3000
-  4000
-  5432
-  8080
-  49153
-  49154
-Traget:192.168.101.57
-  22
-  8080
-Traget:192.168.101.58
-  22
-Traget:192.168.101.59
-  22
-  8080
-Traget:192.168.101.63
-  22
-Traget:192.168.101.77
-  22
-  80
-  443
-  5000
-Traget:192.168.101.79
-  22
-  443
-  3306
-Traget:192.168.101.80
-  22
-  5000
-Traget:192.168.101.87
-  22
-  8080
-  8081
-Traget:192.168.101.94
-  22
-  8080
-Traget:192.168.101.96
-  22
-  8090
-Traget:192.168.101.100
-  80
-  443
-  902
-  8000
-  9080
-Traget:192.168.101.101
-  22
-  8080
-Traget:192.168.101.103
-  22
-  443
-  3306
-  8081
-  9999
-Traget:192.168.101.104
-  22
-  7001
-Traget:192.168.101.109
-  22
-Traget:192.168.101.112
-  22
-Traget:192.168.101.114
-  22
-Traget:192.168.101.115
-  22
-Traget:192.168.101.116
-  22
-Traget:192.168.101.117
-  22
-Traget:192.168.101.119
-  22
-Traget:192.168.101.120
-  22
-  5984
-Traget:192.168.101.122
-  22
-  9200
-Traget:192.168.101.124
-  22
-  8081
-Traget:192.168.101.125
-  22
-  9200
-Traget:192.168.101.126
-  22
-Traget:192.168.101.127
-  22
-  8081
-Traget:192.168.101.128
-  22
-  8080
-Traget:192.168.101.129
-  22
-  8088
-Traget:192.168.101.141
-  22
-  8080
-Traget:192.168.101.143
-  22
-  8080
-Traget:192.168.101.153
-  22
-Traget:192.168.101.159
-  22
-  8080
-Traget:192.168.101.162
-  22
-  8080
-Traget:192.168.101.176
-  22
-  8081
-Traget:192.168.101.254
-  23
-  80
-============================http result list=============================
-Find httpserver https://192.168.101.11  code:200  len:258  title:  banner:
-Find httpserver http://192.168.101.1:3000  code:200  len:23401  title:CodiMD - Markdown 协作笔记  banner:editor
-Find httpserver http://192.168.101.94:8080  code:200  len:319  title:Upload  banner:
-Find httpserver http://192.168.101.59:8080  code:200  len:1507  title:Welcome to JBoss&trade;  banner:JbossJBOSS
-Find httpserver http://192.168.101.9:8888  code:200  len:1091  title:华云安后台管理系统  banner:
-Find httpserver https://192.168.101.100:9080  code:202  len:0  title:  banner:
-Find httpserver http://192.168.101.2  code:200  len:2307  title:站点创建成功-phpstudy for windows  banner:
-Find httpserver http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
-Find httpserver http://192.168.101.125:9200  code:200  len:336  title:  banner:
-Find httpserver http://192.168.101.12:9200  code:200  len:292  title:  banner:
-Find httpserver http://192.168.101.120:5984  code:200  len:116  title:  banner:
-Find httpserver http://192.168.101.15  code:200  len:625  title:华云安综合管理平台  banner:
-Find httpserver http://192.168.101.54:3000  code:200  len:37670  title:Grafana  banner:editor
-Find httpserver http://192.168.101.104:7001  code:404  len:1164  title:Error 404--Not Found  banner:weblogic
-Find httpserver http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
-Find httpserver https://192.168.101.100  code:200  len:258  title:  banner:
-Find httpserver https://192.168.101.77  code:200  len:495  title:  banner:
-Find httpserver https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
-Find httpserver https://192.168.101.103  code:200  len:549079  title:  banner:editor
-Find httpserver https://192.168.101.11/  code:200  len:258  title:  banner:
-Find httpserver http://192.168.101.9  code:200  len:689  title:IIS7  banner:
-Find httpserver http://192.168.101.38:5985  code:404  len:315  title:Not Found  banner:
-Find httpserver http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
-Find httpserver http://192.168.101.101:8080  code:401  len:229  title:Unauthorized  banner:
-Find httpserver http://192.168.101.103:9999  code:404  len:232  title:404 Not Found  banner:
-Find httpserver https://192.168.101.77/  code:200  len:495  title:  banner:
-Find httpserver https://192.168.101.39  code:200  len:3618  title:" + ID_VC_Welcome + "  banner:VMware vSphere
-Find httpserver https://192.168.101.79  code:200  len:549079  title:  banner:editor
-Find httpserver http://192.168.101.54:4000  code:200  len:10227  title:主页 · TeslaMate  banner:
-Find httpserver https://192.168.101.80:5000  code:200  len:582  title:Smart Boot  banner:
-Find httpserver http://192.168.101.9:5357  code:503  len:326  title:Service Unavailable  banner:
-Find httpserver http://192.168.101.22:7001  code:404  len:1164  title:Error 404--Not Found  banner:weblogic
-Find httpserver http://192.168.101.128:8080  code:404  len:648  title:HTTP状态 404 - 未找到  banner:
-Find httpserver http://192.168.101.3  code:200  len:5365  title:Index  banner:
-Find httpserver https://192.168.101.100/  code:200  len:258  title:  banner:
-Find httpserver http://192.168.101.159:8080  code:200  len:9058  title:Dashboard [Jenkins]  banner:Jenkins
-Find httpserver http://192.168.101.57:8080  code:200  len:1554  title:Welcome to JBoss AS  banner:JbossJBOSS
-Find httpserver https://192.168.101.2  code:403  len:0  title:  banner:
-Find httpserver http://192.168.101.15:9090  code:404  len:36  title:  banner:
-Find httpserver http://192.168.101.51/core/install.php  code:200  len:14031  title:Choose language | Drupal  banner:
-Find httpserver https://192.168.101.35  code:200  len:265209  title:  banner:editor
-Find httpserver http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
-Find httpserver https://192.168.101.11:9080  code:202  len:0  title:  banner:Shiro
-Find httpserver http://192.168.101.122:9200  code:200  len:336  title:  banner:
-Find httpserver http://192.168.101.254  code:401  len:18  title:  banner:
-Find httpserver https://192.168.101.39:443/  code:200  len:3618  title:" + ID_VC_Welcome + "  banner:VMware vSphere
-
-End time:2022-01-11 15:30:26
-Time consuming:2m3.387736385s
-
-
-Mode:portscan
-Start time:2022-01-11 15:31:37
-The number of threads:300
-Time delay:3s
-Traget:192.168.101.1/24
-Verbose:Don't show verbose
-Ping befor portscan
-
-=========================living ip result list==========================
-[ping] Find '192.168.101.0' aliving
-[ping] Find '192.168.101.38' aliving
-[ping] Find '192.168.101.45' aliving
-[ping] Find '192.168.101.2' aliving
-[ping] Find '192.168.101.35' aliving
-[ping] Find '192.168.101.7' aliving
-[ping] Find '192.168.101.51' aliving
-[ping] Find '192.168.101.4' aliving
-[ping] Find '192.168.101.3' aliving
-[ping] Find '192.168.101.1' aliving
-[ping] Find '192.168.101.22' aliving
-[ping] Find '192.168.101.11' aliving
-[ping] Find '192.168.101.16' aliving
-[ping] Find '192.168.101.39' aliving
-[ping] Find '192.168.101.10' aliving
-[ping] Find '192.168.101.9' aliving
-[ping] Find '192.168.101.15' aliving
-[ping] Find '192.168.101.12' aliving
-[ping] Find '192.168.101.57' aliving
-[ping] Find '192.168.101.54' aliving
-[ping] Find '192.168.101.59' aliving
-[ping] Find '192.168.101.63' aliving
-[ping] Find '192.168.101.58' aliving
-[ping] Find '192.168.101.77' aliving
-[ping] Find '192.168.101.79' aliving
-[ping] Find '192.168.101.80' aliving
-[ping] Find '192.168.101.101' aliving
-[ping] Find '192.168.101.96' aliving
-[ping] Find '192.168.101.87' aliving
-[ping] Find '192.168.101.100' aliving
-[ping] Find '192.168.101.94' aliving
-[ping] Find '192.168.101.104' aliving
-[ping] Find '192.168.101.103' aliving
-[ping] Find '192.168.101.128' aliving
-[ping] Find '192.168.101.122' aliving
-[ping] Find '192.168.101.112' aliving
-[ping] Find '192.168.101.114' aliving
-[ping] Find '192.168.101.127' aliving
-[ping] Find '192.168.101.115' aliving
-[ping] Find '192.168.101.129' aliving
-[ping] Find '192.168.101.117' aliving
-[ping] Find '192.168.101.109' aliving
-[ping] Find '192.168.101.116' aliving
-[ping] Find '192.168.101.119' aliving
-[ping] Find '192.168.101.125' aliving
-[ping] Find '192.168.101.126' aliving
-[ping] Find '192.168.101.124' aliving
-[ping] Find '192.168.101.120' aliving
-[ping] Find '192.168.101.141' aliving
-[ping] Find '192.168.101.143' aliving
-[ping] Find '192.168.101.153' aliving
-[ping] Find '192.168.101.159' aliving
-[ping] Find '192.168.101.162' aliving
-[ping] Find '192.168.101.176' aliving
-[ping] Find '192.168.101.254' aliving
-[ping] Find '192.168.101.255' aliving
-A total of 56 IP addresses were discovered
-Find port 192.168.101.9:21
-Find port 192.168.101.2:21
-Find port 192.168.101.4:22
-Find port 192.168.101.7:22
-Find port 192.168.101.45:22
-Find port 192.168.101.58:22
-Find port 192.168.101.77:22
-Find port 192.168.101.12:22
-Find port 192.168.101.54:22
-Find port 192.168.101.80:22
-Find port 192.168.101.15:22
-Find port 192.168.101.63:22
-Find port 192.168.101.96:22
-Find port 192.168.101.112:22
-Find port 192.168.101.117:22
-Find port 192.168.101.104:22
-Find port 192.168.101.1:22
-Find port 192.168.101.10:22
-Find port 192.168.101.35:22
-Find port 192.168.101.57:22
-Find port 192.168.101.79:22
-Find port 192.168.101.51:22
-Find port 192.168.101.94:22
-Find port 192.168.101.109:22
-Find port 192.168.101.87:22
-Find port 192.168.101.59:22
-Find port 192.168.101.22:22
-Find port 192.168.101.129:22
-Find port 192.168.101.153:22
-Find port 192.168.101.176:22
-Find port 192.168.101.141:22
-Find port 192.168.101.115:22
-Find port 192.168.101.159:22
-Find port 192.168.101.126:22
-Find port 192.168.101.114:22
-Find port 192.168.101.162:22
-Find port 192.168.101.125:22
-Find port 192.168.101.122:22
-Find port 192.168.101.119:22
-Find port 192.168.101.116:22
-Find port 192.168.101.120:22
-Find port 192.168.101.127:22
-Find port 192.168.101.128:22
-Find port 192.168.101.143:22
-Find port 192.168.101.103:22
-Find port 192.168.101.124:22
-Find port 192.168.101.101:22
-Find port 192.168.101.254:23
-Find port 192.168.101.2:80
-Find port 192.168.101.3:80
-Find port 192.168.101.11:80
-Find port 192.168.101.9:80
-Find port 192.168.101.16:80
-Find port 192.168.101.15:80
-Find port 192.168.101.39:80
-Find port 192.168.101.51:80
-Find port 192.168.101.77:80
-Find port 192.168.101.100:80
-Find port 192.168.101.254:80
-Find port 192.168.101.39:88
-http://192.168.101.3  code:200  len:5365  title:Index  banner:
-Find port 192.168.101.2:135
-Find port 192.168.101.9:135
-Find port 192.168.101.38:135
-Find port 192.168.101.4:111
-Find port 192.168.101.35:111
-Find port 192.168.101.2:139
-Find port 192.168.101.9:139
-http://192.168.101.15  code:200  len:625  title:华云安综合管理平台  banner:
-Find port 192.168.101.38:139
-http://192.168.101.9  code:200  len:689  title:IIS7  banner:
-Find port 192.168.101.39:389
-Find port 192.168.101.2:443
-Find port 192.168.101.77:443
-Find port 192.168.101.79:443
-Find port 192.168.101.35:443
-Find port 192.168.101.4:443
-Find port 192.168.101.39:443
-Find port 192.168.101.11:443
-Find port 192.168.101.100:443
-Find port 192.168.101.103:443
-Find port 192.168.101.9:445
-http://192.168.101.2  code:200  len:2307  title:站点创建成功-phpstudy for windows  banner:
-Find port 192.168.101.38:445
-Find port 192.168.101.2:445
-http://192.168.101.51/core/install.php  code:200  len:14031  title:Choose language | Drupal  banner:
-https://192.168.101.11/  code:200  len:258  title:  banner:
-http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
-https://192.168.101.39:443/  code:200  len:3618  title:" + ID_VC_Welcome + "  banner:VMware vSphere
-Find port 192.168.101.39:636
-https://192.168.101.77  code:200  len:495  title:  banner:
-https://192.168.101.100/  code:200  len:258  title:  banner:
-Find port 192.168.101.11:902
-Find port 192.168.101.100:902
-https://192.168.101.2  code:403  len:0  title:https://192.168.101.11  banner:  code:
-200  len:258  title:  banner:
-https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
-https://192.168.101.39  code:200  len:3618  title:" + ID_VC_Welcome + "  banner:VMware vSphere
-https://192.168.101.100  code:200  len:258  title:  banner:
-Find port 192.168.101.54:1883
-Find port 192.168.101.39:2020
-Find port 192.168.101.1:3000
-Find port 192.168.101.54:3000
-Find port 192.168.101.2:3306
-Find port 192.168.101.103:3306
-Find port 192.168.101.3:3306
-Find port 192.168.101.79:3306
-Find port 192.168.101.15:3306
-Find port 192.168.101.35:3306
-Find port 192.168.101.4:3306
-Find port 192.168.101.2:3389
-Find port 192.168.101.38:3389
-Find port 192.168.101.9:3389
-Find port 192.168.101.54:4000
-http://192.168.101.1:3000  code:200  len:23401  title:CodiMD - Markdown 协作笔记  banner:editor
-http://192.168.101.54:4000  code:200  len:10275  title:主页 · TeslaMate  banner:
-http://192.168.101.54:3000  code:200  len:37670  title:Grafana  banner:editor
-Find port 192.168.101.77:5000
-Find port 192.168.101.80:5000
-Find port 192.168.101.9:5357
-http://192.168.101.9:5357  code:503  len:326  title:Service Unavailable  banner:
-Find port 192.168.101.54:5432
-Find port 192.168.101.38:5985
-Find port 192.168.101.120:5984
-Find port 192.168.101.35:6379
-Find port 192.168.101.7:6379
-Find port 192.168.101.22:7001
-Find port 192.168.101.104:7001
-Find port 192.168.101.11:8000
-Find port 192.168.101.100:8000
-Find port 192.168.101.16:8060
-Find port 192.168.101.15:8080
-Find port 192.168.101.51:8080
-Find port 192.168.101.35:8080
-Find port 192.168.101.54:8080
-Find port 192.168.101.59:8080
-Find port 192.168.101.57:8080
-Find port 192.168.101.94:8080
-Find port 192.168.101.101:8080
-Find port 192.168.101.112:8080
-Find port 192.168.101.87:8080
-Find port 192.168.101.103:8080
-Find port 192.168.101.115:8080
-Find port 192.168.101.143:8080
-Find port 192.168.101.114:8080
-Find port 192.168.101.119:8080
-Find port 192.168.101.162:8080
-Find port 192.168.101.128:8080
-Find port 192.168.101.141:8080
-Find port 192.168.101.159:8080
-Find port 192.168.101.35:8081
-Find port 192.168.101.87:8081
-http://192.168.101.104:7001  code:404  len:1164  title:Error 404--Not Found  banner:weblogic
-Find port 192.168.101.127:8081
-Find port 192.168.101.124:8081
-Find port 192.168.101.176:8081
-Find port 192.168.101.103:8081
-http://192.168.101.22:7001  code:404  len:1164  title:Error 404--Not Found  banner:weblogic
-Find port 192.168.101.4:8089
-Find port 192.168.101.129:8088
-Find port 192.168.101.96:8090
-http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
-http://192.168.101.94:8080  code:200  len:319  title:Upload  banner:
-http://192.168.101.15:8080  code:404  len:18  title:  banner:
-http://192.168.101.35:8080  code:http://192.168.101.103:8080200  len:37  code:  title:200  len:37  banner:  title:Shiro  banner:
-Shiro
-http://192.168.101.115:8080  code:http://192.168.101.128:8080200  code:  len:134404  len:648  title:  banner:
-  title:HTTP状态 404 - 未找到  banner:
-http://192.168.101.54:8080  code:200  len:11230  title:Apache Tomcat/8.0.43  banner:
-http://192.168.101.127:8081  code:200  len:2137  title:Apache Flink Web Dashboard  banner:
-http://192.168.101.159:8080  code:200  len:8376  title:Dashboard [Jenkins]  banner:Jenkins
-http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
-http://192.168.101.124:8081  code:200  len:2137  title:Apache Flink Web Dashboard  banner:
-http://192.168.101.143:8080  code:200  len:90  title:$Title$  banner:
-http://192.168.101.103:8081  code:200  len:549079  title:  banner:editor
-Find port 192.168.101.11:9080
-Find port 192.168.101.100:9080
-Find port 192.168.101.15:9090
-Find port 192.168.101.12:9200
-Find port 192.168.101.122:9200
-Find port 192.168.101.125:9200
-Find port 192.168.101.45:9443
-Find port 192.168.101.35:9999
-Find port 192.168.101.103:9999
-http://192.168.101.15:9090  code:404  len:36  title:  banner:
-http://192.168.101.12:9200  code:200  len:292  title:  banner:
-http://192.168.101.125:9200  code:200  len:336  title:  banner:
-http://192.168.101.122:9200  code:200  len:336  title:  banner:
-https://192.168.101.11:9080  code:202  len:0  title:  banner:Shiro
-https://192.168.101.100:9080  code:202  len:0  title:  banner:
-http://192.168.101.103:9999  code:404  len:232  title:404 Not Found  banner:http://192.168.101.35:9999
-  code:404  len:232  title:404 Not Found  banner:
-Find port 192.168.101.9:49152
-Find port 192.168.101.9:49153
-Find port 192.168.101.54:49153
-Find port 192.168.101.9:49154
-Find port 192.168.101.54:49154
-Find port 192.168.101.9:49155
-
-============================port result list=============================
-There are 54 IP addresses in total
-Traget:192.168.101.1
-  22
-  3000
-Traget:192.168.101.2
-  21
-  80
-  135
-  139
-  443
-  445
-  3306
-  3389
-Traget:192.168.101.3
-  80
-  3306
-Traget:192.168.101.4
-  22
-  111
-  443
-  3306
-  8089
-Traget:192.168.101.7
-  22
-  6379
-Traget:192.168.101.9
-  21
-  80
-  135
-  139
-  445
-  3389
-  5357
-  49152
-  49153
-  49154
-  49155
-Traget:192.168.101.10
-  22
-Traget:192.168.101.11
-  80
-  443
-  902
-  8000
-  9080
-Traget:192.168.101.12
-  22
-  9200
-Traget:192.168.101.15
-  22
-  80
-  3306
-  8080
-  9090
-Traget:192.168.101.16
-  80
-  8060
-Traget:192.168.101.22
-  22
-  7001
-Traget:192.168.101.35
-  22
-  111
-  443
-  3306
-  6379
-  8080
-  8081
-  9999
-Traget:192.168.101.38
-  135
-  139
-  445
-  3389
-  5985
-Traget:192.168.101.39
-  80
-  88
-  389
-  443
-  636
-  2020
-Traget:192.168.101.45
-  22
-  9443
-Traget:192.168.101.51
-  22
-  80
-  8080
-Traget:192.168.101.54
-  22
-  1883
-  3000
-  4000
-  5432
-  8080
-  49153
-  49154
-Traget:192.168.101.57
-  22
-  8080
-Traget:192.168.101.58
-  22
-Traget:192.168.101.59
-  22
-  8080
-Traget:192.168.101.63
-  22
-Traget:192.168.101.77
-  22
-  80
-  443
-  5000
-Traget:192.168.101.79
-  22
-  443
-  3306
-Traget:192.168.101.80
-  22
-  5000
-Traget:192.168.101.87
-  22
-  8080
-  8081
-Traget:192.168.101.94
-  22
-  8080
-Traget:192.168.101.96
-  22
-  8090
-Traget:192.168.101.100
-  80
-  443
-  902
-  8000
-  9080
-Traget:192.168.101.101
-  22
-  8080
-Traget:192.168.101.103
-  22
-  443
-  3306
-  8080
-  8081
-  9999
-Traget:192.168.101.104
-  22
-  7001
-Traget:192.168.101.109
-  22
-Traget:192.168.101.112
-  22
-  8080
-Traget:192.168.101.114
-  22
-  8080
-Traget:192.168.101.115
-  22
-  8080
-Traget:192.168.101.116
-  22
-Traget:192.168.101.117
-  22
-Traget:192.168.101.119
-  22
-  8080
-Traget:192.168.101.120
-  22
-  5984
-Traget:192.168.101.122
-  22
-  9200
-Traget:192.168.101.124
-  22
-  8081
-Traget:192.168.101.125
-  22
-  9200
-Traget:192.168.101.126
-  22
-Traget:192.168.101.127
-  22
-  8081
-Traget:192.168.101.128
-  22
-  8080
-Traget:192.168.101.129
-  22
-  8088
-Traget:192.168.101.141
-  22
-  8080
-Traget:192.168.101.143
-  22
-  8080
-Traget:192.168.101.153
-  22
-Traget:192.168.101.159
-  22
-  8080
-Traget:192.168.101.162
-  22
-  8080
-Traget:192.168.101.176
-  22
-  8081
-Traget:192.168.101.254
-  23
-  80
-============================http result list=============================
-http://192.168.101.128:8080  code:404  len:648  title:HTTP状态 404 - 未找到  banner:
-http://192.168.101.4:8089  code:200  len:37  title:  banner:Shiro
-http://192.168.101.35:9999  code:404  len:232  title:404 Not Found  banner:
-http://192.168.101.9  code:200  len:689  title:IIS7  banner:
-https://192.168.101.11/  code:200  len:258  title:  banner:
-http://192.168.101.54:3000  code:200  len:37670  title:Grafana  banner:editor
-http://192.168.101.35:8080  code:200  len:37  title:  banner:Shiro
-https://192.168.101.39  code:200  len:3618  title:" + ID_VC_Welcome + "  banner:VMware vSphere
-http://192.168.101.54:8080  code:200  len:11230  title:Apache Tomcat/8.0.43  banner:
-http://192.168.101.143:8080  code:200  len:90  title:$Title$  banner:
-http://192.168.101.103:8081  code:200  len:549079  title:  banner:editor
-http://192.168.101.15:9090  code:404  len:36  title:  banner:
-http://192.168.101.12:9200  code:200  len:292  title:  banner:
-http://192.168.101.22:7001  code:404  len:1164  title:Error 404--Not Found  banner:weblogic
-http://192.168.101.94:8080  code:200  len:319  title:Upload  banner:
-http://192.168.101.124:8081  code:200  len:2137  title:Apache Flink Web Dashboard  banner:
-http://192.168.101.122:9200  code:200  len:336  title:  banner:
-https://192.168.101.100:9080  code:202  len:0  title:  banner:
-https://192.168.101.39:443/  code:200  len:3618  title:" + ID_VC_Welcome + "  banner:VMware vSphere
-https://192.168.101.100  code:200  len:258  title:  banner:
-http://192.168.101.54:4000  code:200  len:10275  title:主页 · TeslaMate  banner:
-http://192.168.101.16:8060  code:404  len:555  title:404 Not Found  banner:
-http://192.168.101.104:7001  code:404  len:1164  title:Error 404--Not Found  banner:weblogic
-http://192.168.101.115:8080  code:200  len:134  title:  banner:
-http://192.168.101.125:9200  code:200  len:336  title:  banner:
-http://192.168.101.103:9999  code:404  len:232  title:404 Not Found  banner:
-http://192.168.101.127:8081  code:200  len:2137  title:Apache Flink Web Dashboard  banner:
-http://192.168.101.159:8080  code:200  len:8376  title:Dashboard [Jenkins]  banner:Jenkins
-https://192.168.101.11:9080  code:202  len:0  title:  banner:Shiro
-http://192.168.101.2  code:200  len:2307  title:站点创建成功-phpstudy for windows  banner:
-http://192.168.101.16/users/sign_in  code:200  len:11109  title:Sign in · GitLab  banner:GitLab
-https://192.168.101.77  code:200  len:495  title:  banner:
-https://192.168.101.11  code:200  len:258  title:  banner:
-https://192.168.101.2  code:403  len:0  title:  banner:
-https://192.168.101.4  code:404  len:571  title:404 Not Found  banner:
-http://192.168.101.1:3000  code:200  len:23401  title:CodiMD - Markdown 协作笔记  banner:editor
-http://192.168.101.9:5357  code:503  len:326  title:Service Unavailable  banner:
-http://192.168.101.3  code:200  len:5365  title:Index  banner:
-http://192.168.101.15  code:200  len:625  title:华云安综合管理平台  banner:
-http://192.168.101.51/core/install.php  code:200  len:14031  title:Choose language | Drupal  banner:
-https://192.168.101.100/  code:200  len:258  title:  banner:
-http://192.168.101.15:8080  code:404  len:18  title:  banner:
-http://192.168.101.103:8080  code:200  len:37  title:  banner:Shiro
-
-End time:2022-01-11 15:33:09
-Time consuming:1m32.478137369s
-
