@@ -124,6 +124,18 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				}
 			}
 			return ip,port,nil,nil
+		case 3389:
+			if !notburp{
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp rdp : ",ip,":",port))
+				}
+				startburp:=NewBurp(Password,"admin,Administrator",Userdict,Passdict,ip,rdp_auth,100)
+				relust:=startburp.Run()
+				if relust!=""{
+					return ip,port,nil,[]string{relust}
+				}
+			}
+			return ip,port,nil,nil
 		case 5432:
 			if !notburp{
 				if Verbose{

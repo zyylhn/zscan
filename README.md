@@ -262,7 +262,7 @@ Global Flags:
 </details>
 
 <details>
-<summary><b>mysql/mssql/mongo/redis/postgres/ftp模块:用户名密码爆破和执行简单命令</b></summary>
+<summary><b>mysql/mssql/mongo/redis/postgres/ftp/rdp模块:用户名密码爆破和执行简单命令</b></summary>
 
 以mysql为例，数据库的操作基本山都一样
 
@@ -293,7 +293,7 @@ Global Flags:
 
 这里面存在一个新的线程参数是burptheard，这个线程和-T的线程不同，-T的线程代表我们并发扫描的目标数量（这个目标是ip和端口的组合，每次并发相当于对目标发送了一个数据包），burptheard代表当我们在上面的并发扫描的单个线程中发现了我们的目标端口例如mysql，他会在当前的扫描线程中开启一个多线程爆破（这里的目标换成了特定ip特定的一个端口，这里就需要进行限速，速度太快可能导致目标服务不可用）
 
-可以使用-c来指定要执行的命令
+可以使用-c来指定要执行的命令，rdp模块只能爆破
 
 </details>
 
@@ -514,11 +514,11 @@ Global Flags:
 
 
 
-目前开一个简单的http服务器，只能浏览和下载文件和身份验证，还不能上传文件
+开一个简单的http服务器，能下载文件和上传文件，上传文件需要使用-u参数并访问/u进行上传
 
 -a指定监听的ip和地址
 
--d指定httpserver开启的
+-d指定httpserver开启的根目录
 
 -P和-U设置身份验证的用户名密码
 </details>
@@ -537,7 +537,7 @@ Global Flags:
 <details>
 <summary><b>ldap模块</b></summary>
 
-暂时只是爆破功能，过几天添加查询功能
+暂时只是爆破功能，过段时间添加查询功能
 使用方式暂时很简单和数据库相同
 
 </details>
@@ -730,6 +730,8 @@ https://github.com/k8gege/LadonGo
 - [x] snmp模块@https://github.com/shenzhibuqin
 
 - [x] 17010扫描模块
+
+- [x] rdp模块
 
 - [ ] wmi模块
   

@@ -144,9 +144,9 @@ func (b *Burp) Check()  {
 		if cancelled(b.stop) {
 			break
 		}
-		if Verbose{
-			fmt.Println(Yellow(fmt.Sprintf("Test:%v %v %v",task.addr,task.username,task.password)))
-		}
+		//if Verbose{
+		//	fmt.Println(Yellow(fmt.Sprintf("Test:%v %v %v",task.addr,task.username,task.password)))
+		//}
 		err,success,servername:=b.service(task.username,task.password,task.addr)
 		//num+=1
 		if err==nil&&success{

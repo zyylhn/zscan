@@ -376,7 +376,7 @@ func InitHttpClient(ThreadsNum int,Timeout time.Duration) error {
 }
 
 func OutputHttp(v *HostInfo)  {
-	Output("\rFind httpserver "+v.Url,LightGreen)
+	Output("\r"+v.Url,LightGreen)
 	if v.baseinfo.code==200{
 		Output(fmt.Sprintf("  code:",),White)
 		Output(fmt.Sprintf("%v",v.baseinfo.code),LightGreen)

@@ -58,9 +58,9 @@ func Connectldap(ip string,port int) (string,int,error,[]string) {
 	return ip, port, err,nil
 }
 
-func ldap_auth(username,password,addr string) (error,bool,string) {
+func ldap_auth(username,password,ip string) (error,bool,string) {
 	//l, err := ldap.Dial("tcp", fmt.Sprintf("%s:%d", addr, ldap_port))
-	conn,err:=Getconn(fmt.Sprintf("%s:%d", addr, ldap_port))
+	conn,err:=Getconn(fmt.Sprintf("%s:%d",ip, ldap_port))
 	l:=ldap.NewConn(conn,false)
 	l.Start()
 	if err==nil{
