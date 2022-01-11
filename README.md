@@ -1,6 +1,6 @@
 #              Zscan a scan blasting tool set
 [![Licens](https://img.shields.io/badge/Licens-MIT-orange)](https://github.com/zyylhn/zscan/blob/master/LICENSE)
-[![Releases](https://img.shields.io/badge/Releases-v1.2.2-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.2.2)
+[![Releases](https://img.shields.io/badge/Releases-v1.3.1-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.3.1)
 [![go](https://img.shields.io/badge/Go-1.16.3-blue)](https://github.com/zyylhn/zscan)
 
 📄[English document](https://github.com/zyylhn/zscan/blob/master/README_EN.md)
