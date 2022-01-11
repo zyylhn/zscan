@@ -89,8 +89,10 @@ func (p *PortScan) Run() map[string]*Openport {
 		p.wg.Add(1)
 		go p.Startscan()
 	}
-	if p.percent{
-		go p.bar()
+	if !No_progress_bar{
+		if p.percent{
+			go p.bar()
+		}
 	}
 	//time.Sleep(time.Second)  //防止线程开的太低就运行到Wait
 	p.wg.Wait()

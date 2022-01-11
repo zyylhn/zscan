@@ -48,12 +48,13 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
 	if conn != nil {
 		defer conn.Close()
-		//fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
 		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
 		switch port {
 		case 22:
 			if !notburp{
-				fmt.Println(Yellow("\rStart burp ssh : ",ip,":",port))
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp ssh : ",ip,":",port))
+				}
 				name:="root,admin,ssh"
 				_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
 				if f{
@@ -79,7 +80,9 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			return ip,port,nil,nil
 		case 3306:
 			if !notburp{
-				fmt.Println(Yellow("\rStart burp mysql : ",ip,":",port))
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp mysql : ",ip,":",port))
+				}
 				_,f,_:=mysql_auth("asdasd","zxczxc",ip)
 				if f{
 					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mysql",ip),LightGreen)
@@ -94,7 +97,9 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			return ip,port,nil,nil
 		case 6379:
 			if !notburp{
-				fmt.Println(Yellow("\rStart burp redis : ",ip,":",port))
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp redis : ",ip,":",port))
+				}
 				_,f,_:=redis_auth("","",ip)
 				if f{
 					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","redis",ip),LightGreen)
@@ -109,7 +114,9 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			return ip,port,nil,nil
 		case 1433:
 			if !notburp{
-				fmt.Println(Yellow("\rStart burp mssql : ",ip,":",port))
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp mssql : ",ip,":",port))
+				}
 				startburp:=NewBurp(Password,"sa,admin,Administrator",Userdict,Passdict,ip,mssql_auth,100)
 				relust:=startburp.Run()
 				if relust!=""{
@@ -119,7 +126,9 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			return ip,port,nil,nil
 		case 5432:
 			if !notburp{
-				fmt.Println(Yellow("\rStart burp postgres : ",ip,":",port))
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp postgres : ",ip,":",port))
+				}
 				_,f,_:=postgres_auth("postgres","",ip)
 				if f{
 					Output(fmt.Sprintf("%v burp success:%v No authentication\n","postgres",ip),LightGreen)
@@ -134,7 +143,9 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			return ip,port,nil,nil
 		case 21:
 			if !notburp{
-				fmt.Println(Yellow("\rStart burp ftp : ",ip,":",port))
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp ftp : ",ip,":",port))
+				}
 				_,f,_:=ftp_auth("ftp","asdasd",ip)
 				if f{
 					Output(fmt.Sprintf("%v burp success:%v No authentication\n","ftp",ip),LightGreen)
@@ -149,7 +160,9 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			return ip,port,nil,nil
 		case 27017:
 			if !notburp{
-				fmt.Println(Yellow("\rStart burp mongodb : ",ip,":",port))
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp mongodb : ",ip,":",port))
+				}
 				_,f,_:=mongodb_auth("","",ip)
 				if f{
 					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mongodb",ip),LightGreen)
@@ -164,7 +177,9 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			}
 		case 389:
 			if !notburp{
-				fmt.Println(Yellow("\rStart burp ldap : ",ip))
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp ldap : ",ip))
+				}
 				startburp:=NewBurp(Password,"Administrator",Userdict,Passdict,ip,ldap_auth,burpthread)
 				relust:=startburp.Run()
 				if relust!=""{

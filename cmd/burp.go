@@ -7,7 +7,7 @@ import (
 	"strings"
 	"sync"
 )
-
+//var num int
 type Service func(user string,pass string,addr string)(error,bool,string)
 
 type burp_info struct {
@@ -87,8 +87,10 @@ func (b *Burp) Run() string {
 	}
 	b.wg.Add(1)
 	go b.Gettasklist()
-	//if !Verbose{
-	//	go bar()
+	//if !No_progress_bar{
+	//	if !Verbose{
+	//		go bar()
+	//	}
 	//}
 	for i:=0;i<b.burpthread;i++{
 		b.wg.Add(1)
@@ -146,6 +148,7 @@ func (b *Burp) Check()  {
 			fmt.Println(Yellow(fmt.Sprintf("Test:%v %v %v",task.addr,task.username,task.password)))
 		}
 		err,success,servername:=b.service(task.username,task.password,task.addr)
+		//num+=1
 		if err==nil&&success{
 			if cancelled(b.stop){
 				break
@@ -210,7 +213,7 @@ func cancelled(stop chan int8) bool{
 //func bar()  {
 //	for  {
 //		for _, r := range `-\|/` {
-//			fmt.Printf("\r\t\t\t\t\t%cAlready test:%v times %c", r,num,r)
+//			fmt.Printf("\r%cAlready test:%v times %c", r,num,r)
 //			time.Sleep(200 * time.Millisecond)
 //		}
 //	}

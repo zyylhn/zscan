@@ -24,6 +24,7 @@ var burpthread int
 var Hostfile string
 var Proxy string
 var proxyconn proxy.Dialer
+var No_progress_bar bool
 
 const l1 = "2006-01-02 15:04:05"
 
@@ -44,6 +45,7 @@ func init() {
 	//rootCmd.PersistentFlags().BoolVarP(&Output_result, "output", "o", false, "Whether to enter the results into a file（default ./result.txt),can use --path set")
 	rootCmd.PersistentFlags().StringVarP(&Path_result, "output","o", "result.txt", "the path of result file")
 	rootCmd.PersistentFlags().StringVar(&Proxy, "proxy", "", "Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)")
+	rootCmd.PersistentFlags().BoolVar(&No_progress_bar, "nobar", false, "disable portscan progress bar")
 	//rootCmd.PersistentFlags().BoolVar(&Log, "log", false, "Record the scan results in chronological order，Save path./log.txt")
 }
 
