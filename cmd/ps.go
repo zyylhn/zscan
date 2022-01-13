@@ -7,13 +7,17 @@ import (
 	"sort"
 	"sync"
 	"time"
+	lib "zscan/poccheck"
 )
 
 var httptitle_result sync.Map
+var httpvul_result sync.Map
 var pingbefore bool
 var banner bool
 var syn bool
 var ps_port string
+var webscan bool
+var httpvulscan bool
 var portscanCmd = &cobra.Command{
 	Use:   "ps",
 	Short: "Port Scan",
@@ -94,7 +98,6 @@ func (p *PortScan) Run() map[string]*Openport {
 			go p.bar()
 		}
 	}
-	//time.Sleep(time.Second)  //防止线程开的太低就运行到Wait
 	p.wg.Wait()
 	p.Getresult()
 	return p.result
@@ -200,16 +203,39 @@ func Printresult(r map[string]*Openport)  {
 			}
 		}
 	}
-	Output("============================http result list=============================\n",LightGreen)
-	httptitle_result.Range(func(key, value interface{}) bool {
-		v,ok:=value.(*HostInfo)
-		if ok{
-			OutputHttp(v)
+	if !Mapisnil(httptitle_result){
+		Output("\r\n============================http result list=============================\n",LightGreen)
+		httptitle_result.Range(func(key, value interface{}) bool {
+			v,ok:=value.(*HostInfo)
+			if ok{
+				OutputHttp(v)
+			}
+			return true
+		})
+	}
+	if !Mapisnil(httpvul_result){
+		Output("\r\n=========================http vulnerability list=========================\n",LightGreen)
+		httpvul_result.Range(func(key, value interface{}) bool {
+			v,ok:=value.(*lib.PocResult)
+			if ok {
+				OutputVul(v)
+			}
+			return true
+		})
+	}
+}
+
+func Mapisnil(p sync.Map) bool {
+	is:=true
+	p.Range(func(key, value interface{}) bool {
+		if key!=nil{
+			is=false
+			return false
 		}
 		return true
 	})
+	return is
 }
-
 
 func init() {
 	rootCmd.AddCommand(portscanCmd)
@@ -220,6 +246,8 @@ func init() {
 	portscanCmd.Flags().BoolVar(&pingbefore, "noping", false, "not ping discovery before port scanning")
 	portscanCmd.Flags().BoolVarP(&syn, "syn", "s",false, "use syn scan")
 	portscanCmd.Flags().BoolVarP(&banner, "banner", "b",false, "Return banner information")
+	portscanCmd.Flags().BoolVar(&webscan,"nowebscan",false,"Whether to perform HTTP scanning (httpTitle and HTTP vulnerabilities)(default on)")
+	portscanCmd.Flags().BoolVar(&httpvulscan,"vulscan",false,"Whether to perform HTTP vulnerabilities(default off)")
 	//portscanCmd.MarkFlagRequired("host")
 
 }

@@ -1,6 +1,6 @@
 #              Zscan a scan blasting tool set
 [![Licens](https://img.shields.io/badge/Licens-MIT-orange)](https://github.com/zyylhn/zscan/blob/master/LICENSE)
-[![Releases](https://img.shields.io/badge/Releases-v1.3.1-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.3.1)
+[![Releases](https://img.shields.io/badge/Releases-v1.4.1-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.4.1)
 [![go](https://img.shields.io/badge/Go-1.16.3-blue)](https://github.com/zyylhn/zscan)
 
 📄[English document](https://github.com/zyylhn/zscan/blob/master/README_EN.md)
@@ -23,7 +23,7 @@
 ## 简介🎉
 
 
-​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体可以称为工具包。以主机和内网网段发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh、ldap等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，支持使用ssh私钥遍历主机，所有服务爆破成功之后还可以执行命令（后期会增加服务利用功能例如redis的rce等等）。除了基本的扫描和服务爆破功能之外，还支持webtitle抓取和指纹识别，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
+​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体可以称为工具包。以主机和内网网段发现和端口扫描为基础，可以对mysql、mssql、redis、mongo、postgres、ftp、ssh、ldap等服务进行爆破，还有其他netbios、smb、oxid、socks server（扫描内网中的代理服务器）、snmp、ms17010等扫描功能，支持poc（xray v1格式）单个和批量检测。每个模块还有其独特的功能例如ssh还支持用户名密码和公钥登录，支持使用ssh私钥遍历主机，所有服务爆破成功之后还可以执行命令（后期会增加服务利用功能例如redis的rce等等）。除了基本的扫描和服务爆破功能之外，还支持webtitle抓取和指纹识别，zscan还集成了nc模块（连接和监听）、httpserver模块（支持下载文件、上传文件和身份验证）、socks5模块（启动一个代理服务器）。还存在all模块，在扫描的过程中会调用其他所有的扫描和爆破模块。内置代理功能。
 
 工具体积较大，后期会出精简版
 
@@ -34,7 +34,7 @@ zscan 模块 参数
 ```
 
 ```
-  ______     ______     ______     ______     __   __    
+ ______     ______     ______     ______     __   __    
 /\___  \   /\  ___\   /\  ___\   /\  __ \   /\ "-.\ \   
 \/_/  /__  \ \___  \  \ \ \____  \ \  __ \  \ \ \-.  \  
   /\_____\  \/\_____\  \ \_____\  \ \_\ \_\  \ \_\\"\_\ 
@@ -56,9 +56,11 @@ Available Commands:
   mysql       burp mysql username and password
   nc          A easy nc
   ping        ping scan to find computer
+  poc         poc check
   postgres    burp postgres username and password
   proxyfind   Scan proxy
   ps          Port Scan
+  rdp         burp remote desktop（3389）
   redis       burp redis password
   snmp        snmp scan
   socks5      Create a socks5 server
@@ -68,12 +70,14 @@ Available Commands:
 
 Flags:
   -h, --help            help for zscan
+      --nobar           disable portscan progress bar
   -o, --output string   the path of result file (default "result.txt")
       --proxy string    Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)
   -T, --thread thread   Set thread eg:2000 (default 600)
-  -t, --timeout time    Set timeout(s) eg:5s (default 3s)
+  -t, --timeout time    Set timeout(s) eg:5s (default 5s)
   -v, --verbose         Show verbose information
-  
+
+
 ```
 模块里面的Flag代表当前命令的参数，Global Flags代表全局参数（所有命令都可以用）
 这里的Flags为全局参数，所有模块都可以使用
@@ -136,6 +140,8 @@ zscan ps
 ```
 
 ```
+Port Scan
+
 Usage:
   zscan ps [flags]
 
@@ -145,16 +151,20 @@ Flags:
   -H, --host hosts        Set hosts(The format is similar to Nmap) eg:192.168.1.1/24,172.16.95.1-100,127.0.0.1
       --hostfile string   Set host file
   -i, --icmp              Icmp packets are sent to check whether the host is alive(need root)
-      --noping            Not ping discovery before port scanning
-  -p, --port port         Set port eg:1-1000,3306,3389 
+      --noping            not ping discovery before port scanning
+      --nowebscan         Whether to perform HTTP scanning (httpTitle and HTTP vulnerabilities)(default on)
+  -p, --port port         Set port eg:1-1000,3306,3389 (default)
+  -s, --syn               use syn scan
+      --vulscan           Whether to perform HTTP vulnerabilities(default off)
 
 Global Flags:
-      --log             Record the scan results in chronological order，Save path./log.txt
-  -O, --output          Whether to enter the results into a file（default ./result.txt),can use --path set
-      --path string     the path of result file (default "result.txt")
-  -T, --thread thread   Set thread eg:2000 (default 100)
-  -t, --timeout time    Set timeout(s) eg:5s (default 3s)
+      --nobar           disable portscan progress bar
+  -o, --output string   the path of result file (default "result.txt")
+      --proxy string    Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)
+  -T, --thread thread   Set thread eg:2000 (default 600)
+  -t, --timeout time    Set timeout(s) eg:5s (default 5s)
   -v, --verbose         Show verbose information
+
 ```
 
 --host和--hostfile指定目标
@@ -164,6 +174,10 @@ Global Flags:
 --ping在端口扫描之前先进行ping主机发现
 
 --icmp在使用ping的时候使用icmp包进行主机发现
+
+--nowebscan 参数用来禁止开启web扫描只做端口扫描
+
+--vulscan 参数用来开启poc探测（只有web扫描开启的时候才能使用，不然没有意义）
 
 </details>
 
@@ -175,6 +189,8 @@ zscan all
 ```
 
 ```
+Use all scan mode
+
 Usage:
   zscan all [flags]
 
@@ -183,18 +199,19 @@ Flags:
   -H, --host hosts        Set hosts(The format is similar to Nmap) eg:192.168.1.1/24,172.16.95.1-100,127.0.0.1
       --hostfile string   Set host file
   -i, --icmp              Icmp packets are sent to check whether the host is alive(need root)
+      --noping             Not ping before port scanning
+      --notburp           Set postgres passworddict path
+      --novulscan         disable http vulnerability scan
       --passdict string   Set postgres passworddict path
   -P, --password string   Set postgres password
-      --noping            Not ping discovery before port scanning
   -p, --port port         Set port eg:1-1000,3306,3389 
 
 Global Flags:
-      --log             Record the scan results in chronological order，Save path./log.txt
-  -O, --output          Whether to enter the results into a file（default ./result.txt),can use --path set
-      --path string     the path of result file (default "result.txt")
+      --nobar           disable portscan progress bar
+  -o, --output string   the path of result file (default "result.txt")
       --proxy string    Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)
-  -T, --thread thread   Set thread eg:2000 (default 100)
-  -t, --timeout time    Set timeout(s) eg:5s (default 3s)
+  -T, --thread thread   Set thread eg:2000 (default 600)
+  -t, --timeout time    Set timeout(s) eg:5s (default 5s)
   -v, --verbose         Show verbose information
 
 ```
@@ -202,6 +219,10 @@ Global Flags:
 all模块本质是和ps模块基本相同，只不过all模块扫到对应的端口的时候会在当前线程中进行指纹识别或者用户名密码爆破
 
 all模块参数和ps模块相同，就多了一个密码字典，是用来设置扫到需要爆破的端口时候的字典，其他都一样
+
+--notburp 不进行爆破只进行扫描
+
+--novulscan 由于all模块会调用所有模块，这个参数用于禁止漏洞扫描
 
 有一个--notburp参数，调用all模块的时候只进行扫描不进行爆破
 
@@ -542,6 +563,45 @@ Global Flags:
 
 </details>
 
+<details>
+<summary><b>poc模块:既是一个单独模块也是一个功能在其他模块调用</b></summary>
+```
+poc check
+
+Usage:
+  zscan poc [flags]
+
+Flags:
+  -h, --help             help for poc
+  -l, --listpoc          List built in poc
+      --pocname string   set the poc name
+      --pocpath string   set target url
+      --pocthread int    set poc scan thread (default 500)
+  -u, --url string       set target url
+      --urlfile string   set target file
+
+Global Flags:
+      --nobar           disable portscan progress bar
+  -o, --output string   the path of result file (default "result.txt")
+      --proxy string    Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)
+  -T, --thread thread   Set thread eg:2000 (default 600)
+  -t, --timeout time    Set timeout(s) eg:5s (default 5s)
+  -v, --verbose         Show verbose information
+
+
+-l/--list：列出工具内置的poc
+
+--pocname：其实是一个筛选选项，他会筛选出poc名字中包含指定字段的poc（扫描和查看都可用）
+
+--pocpth：指定目录的话就会使用该目录下所有poc，指定poc的话就会只使用这个poc
+
+--pocthread：poc扫描的线程
+
+--url/--urlfile：指定目标，-u/--url指定单个，可以通过指定txt批量扫描
+
+</details>
+
+
 ## 使用示例🤪
 
 <details>
@@ -562,6 +622,8 @@ zscan ping --discover 192.168.0.0
 
 ```
 zscan ps -H 172.16.95.1-30 [--noping禁用ping]
+zscan ps -H 172.16.95.1-30 --vulsacn  //扫描完http banner之后进行poc探测
+zscan ps -H 172.16.95.1-30 --nowebscan   //只扫描端口，不进行http探测
 ```
 
 ![](image/ps.png)
@@ -612,9 +674,24 @@ zscan winscan -H 172.16.95.1-33
 
 ```
 zscan all -H 172.16.95.1-30
+zscan all -H 172.16.95.1-30 --novulscan //不进行poc探测
 ```
 
 ![](image/all.png)
+
+</details>
+
+<details>
+<summary><b>poc扫描模块:zscan poc -u url</b></summary>
+
+```
+zscan poc -l //列出所有内置poc
+zscan poc -l --pocname weblogic   //列出内置和weblogic有关的poc
+zscan poc -u http://172.16.95.24:8080 //使用所有内置poc扫描目标
+zscan poc -u http://172.16.95.24:8080 --pocname weblogic  //只使用weblogic的poc
+zscan poc -U http://172.16.95.24:8080 --pocpath /root/pocs   //使用整个pocs目录下的poc
+zscan poc --urlfile url.txt --pocpath /root/pocs/weblogic.yml  //使用单个poc批量扫描目标
+```
 
 </details>
 
@@ -671,9 +748,8 @@ https://github.com/k8gege/LadonGo
   
 - [x] ps端口扫描模块
   - [x] 获取http title和状态吗
-  - [ ] 进行简单的http目录扫描
   - [x] http指纹是被
-  - [ ] http poc验证
+  - [x] http poc验证
   - [x] 返回banner信息
   - [x] 先ping再扫
   
@@ -779,7 +855,6 @@ https://github.com/k8gege/LadonGo
   - [ ] Ftp
 - [ ] 出精简版的zscna
   - [ ] 去掉所有数据库的驱动以减少体积，代价是不能执行命令
-  - [ ] 去掉cobra框架，框架本身体积比较大
   - [ ] 去掉不常用的数据库模块，或者没用的数据库模块
 
 感谢老铁的星星🥳
@@ -791,5 +866,4 @@ https://github.com/k8gege/LadonGo
 暂时只能周末更新工具，如果有比较想要的功能可以联系我，优先添加
 
 喜欢用go写工具的同学可以加入我们super_yu@yeah.net😃
-
 

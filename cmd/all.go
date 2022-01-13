@@ -242,7 +242,10 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				return ip, port, nil, []string{nbname.msg}
 			}
 		default:
-			WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout})
+			httpinfo,_:=WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout})
+			if !httpvulscan&&httpinfo!=nil{
+				HttpVulScan(httpinfo)
+			}
 		}
 	}
 	return ip, port, err,r
@@ -259,4 +262,5 @@ func init() {
 	allCmd.Flags().StringVarP(&Password,"password","P","","Set postgres password")
 	allCmd.Flags().StringVarP(&Passdict,"passdict","","","Set postgres passworddict path")
 	allCmd.Flags().BoolVar(&notburp,"notburp",false,"Set postgres passworddict path")
+	allCmd.Flags().BoolVar(&httpvulscan,"novulscan",false,"disable http vulnerability scan")
 }

@@ -253,6 +253,10 @@ var RuleDatas = []RuleData{
 	{"CMS", "code", "(Powered by .*CMS)"},
 	{"editor", "code", "(editor)"},
 	{"ATLASSIAN-Confluence","code","(confluence.)"},
+	{"flink","code","Apache Flink Web Dashboard"},
+	{"drupal","headers","X-Generator: Drupal"},
+	{"drupal","code","content=\"Drupal"},
+	{"drupal","code","jQuery.extend(Drupal.settings"},
 }
 
 var Md5Datas = []Md5Data{
@@ -288,21 +292,23 @@ var Md5Datas = []Md5Data{
 	{"coremail", "ad74ff8f9a2f630fc2c5e6b3aa0a5cb8"},
 }
 
-//var PocDatas = []PocData{
-//	{"致远OA", "seeyon"},
-//	{"泛微OA", "weaver"},
-//	{"通达OA", "tongda"},
-//	{"蓝凌OA", "landray"},
-//	{"ThinkPHP", "thinkphp"},
-//	{"Nexus", "nexus"},
-//	{"齐治堡垒机", "qizhi"},
-//	{"weaver-ebridge", "weaver-ebridge"},
-//	{"weblogic", "weblogic"},
-//	{"zabbix", "zabbix"},
-//	{"VMware vSphere", "vmware"},
-//	{"Jboss", "jboss"},
-//	{"用友", "yongyou"},
-//	{"用友IUFO", "yongyou"},
-//	{"coremail", "coremail"},
-//	{"金山", "kingsoft"},
-//}
+var PocDatas = []PocData{
+	{"致远OA", "seeyon"},
+	{"泛微OA", "weaver"},
+	{"通达OA", "tongda"},
+	{"蓝凌OA", "landray"},
+	{"ThinkPHP", "thinkphp"},
+	{"Nexus", "nexus"},
+	{"齐治堡垒机", "qizhi"},
+	{"weaver-ebridge", "weaver-ebridge"},
+	{"weblogic", "weblogic"},
+	{"zabbix", "zabbix"},
+	{"VMware vSphere", "vmware"},
+	{"Jboss", "jboss"},
+	{"用友", "yongyou"},
+	{"用友IUFO", "yongyou"},
+	{"coremail", "coremail"},
+	{"金山", "kingsoft"},
+	{"GitLab", "gitlib"},
+	{"Hikvision-视频监控","hikvision"},
+}

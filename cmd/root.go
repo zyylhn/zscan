@@ -11,9 +11,7 @@ var Thread int
 var Hosts string
 var Addr string
 var Verbose bool
-var Output_result bool
 var Path_result string
-var Log bool
 var Username string
 var Password string
 var Passdict string
@@ -39,14 +37,12 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().DurationVarP(&Timeout, "timeout", "t", time.Second*3, "Set `time`out(s) eg:5s")
+	rootCmd.PersistentFlags().DurationVarP(&Timeout, "timeout", "t", time.Second*5, "Set `time`out(s) eg:5s")
 	rootCmd.PersistentFlags().IntVarP(&Thread, "thread", "T", 600, "Set `thread` eg:2000")
 	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "Show verbose information")
-	//rootCmd.PersistentFlags().BoolVarP(&Output_result, "output", "o", false, "Whether to enter the results into a file（default ./result.txt),can use --path set")
 	rootCmd.PersistentFlags().StringVarP(&Path_result, "output","o", "result.txt", "the path of result file")
 	rootCmd.PersistentFlags().StringVar(&Proxy, "proxy", "", "Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)")
 	rootCmd.PersistentFlags().BoolVar(&No_progress_bar, "nobar", false, "disable portscan progress bar")
-	//rootCmd.PersistentFlags().BoolVar(&Log, "log", false, "Record the scan results in chronological order，Save path./log.txt")
 }
 
 

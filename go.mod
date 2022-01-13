@@ -8,6 +8,8 @@ require (
 	github.com/go-ldap/ldap/v3 v3.4.1
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-sql-driver/mysql v1.6.0
+	github.com/golang/protobuf v1.5.2
+	github.com/google/cel-go v0.4.2
 	github.com/google/gopacket v1.1.19
 	github.com/gookit/color v1.5.0
 	github.com/gosnmp/gosnmp v1.34.0
@@ -22,7 +24,9 @@ require (
 	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871
 	golang.org/x/net v0.0.0-20211118161319-6a13c67c3ce4
 	golang.org/x/text v0.3.7
+	google.golang.org/genproto v0.0.0-20210831024726-fe130286e0e2
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
 
 replace github.com/tomatome/grdp v0.0.0-20211016064301-f2f15c171086 => github.com/shadow1ng/grdp v1.0.3

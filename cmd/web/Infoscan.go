@@ -24,13 +24,11 @@ func InfoCheck( CheckData []CheckDatas) []string {
 			}
 			if matched == true {
 				infoname = append(infoname, rule.Name)
-				//infoname = append(infoname, rule.Rule)
 			}
 		}
 		flag, name := CalcMd5(data.Body)
 		if flag == true {
 			infoname = append(infoname, name)
-			//infoname = append(infoname, name)
 		}
 	}
 

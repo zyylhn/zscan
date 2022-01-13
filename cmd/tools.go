@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	lib "zscan/poccheck"
 )
 
 var Red = color.FgRed.Render
@@ -32,9 +33,13 @@ func Connect(ip string, port int) (string, int, error,[]string) {
 	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
 	if conn != nil {
 		_ = conn.Close()
-		//fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
 		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
-		WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout*2})
+		if !webscan{
+			httpinfo,_:=WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout*2})
+			if httpvulscan&&httpinfo!=nil{
+				HttpVulScan(httpinfo)
+			}
+		}
 		return ip,port,nil,nil
 	}
 	return ip, port, err,nil
@@ -52,7 +57,12 @@ func Connect_BannerScan(ip string,port int) (string,int,error,[]string) {
 		a:=[]string{s}
 		//fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
 		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
-		WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout*2})
+		if !webscan{
+			httpinfo,_:=WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout*2})
+			if httpvulscan&&httpinfo!=nil{
+				HttpVulScan(httpinfo)
+			}
+		}
 		return ip,port,err,a
 	}
 
@@ -298,7 +308,8 @@ func PrintScanBanner(mode string)  {
 			Checkerr_exit(fmt.Errorf("proxy error"))
 		}
 	}
-	Inithttp(PocInfo{Timeout: Timeout,Num: Thread})
+	Inithttp()
+	lib.Inithttp(Client,ClientNoRedirect)
 	CreatFile(Path_result)
 	output_verbose:= func() {
 		if Verbose {
@@ -315,17 +326,10 @@ func PrintScanBanner(mode string)  {
 		}
 	}
 	output_scan:= func() {
-		Output(fmt.Sprintf("%s\nThe number of threads:%v\nTime delay:%v\nTraget:%v\n", string(time.Now().AppendFormat([]byte("Start time:"), l1)), Thread, Timeout, Hosts),LightCyan)
+		Output(fmt.Sprintf("%s\nThe number of threads:%v\nTime delay:%v\nTraget:%v%v\n", string(time.Now().AppendFormat([]byte("Start time:"), l1)), Thread, Timeout, Hosts,TargetUrl),LightCyan)
 	}
 	output_file:= func() {
-		if Output_result{
-			Output(fmt.Sprintf("Save result file:%v\n",Path_result),LightCyan)
-		}
-	}
-	output_log:= func() {
-		if Log{
-			Output("Save scan log in log.txt\n",LightCyan)
-		}
+		Output(fmt.Sprintf("Save result file:%v\n",Path_result),LightCyan)
 	}
 	output_banner:= func() {
 		if banner{
@@ -340,6 +344,19 @@ func PrintScanBanner(mode string)  {
 	output_burpthread:= func() {
 		Output(fmt.Sprintf("The number of burp threads:%v\n",burpthread),LightCyan)
 	}
+	output_pocscanthread:= func() {
+		Output(fmt.Sprintf("The number of poc scan threads:%v\n",PocThread),LightCyan)
+	}
+	output_pocinfo:= func() {
+		if Pocpath==""{
+			Output("Use built in poc\n",LightCyan)
+		}else {
+			Output(fmt.Sprintf("Use External poc dir: %v\n",Pocpath),LightCyan)
+		}
+		if PocName!=""{
+			Output(fmt.Sprintf("Poc name %v\n",PocName),LightCyan)
+		}
+	}
 	switch mode {
 	case "ps":
 		Output("\nMode:portscan\n",Red)
@@ -348,14 +365,12 @@ func PrintScanBanner(mode string)  {
 		output_pingbefor()
 		output_banner()
 		output_file()
-		output_log()
 		fmt.Println()
 	case "ping":
 		Output("\nMode:ping discover\n",Red)
 		output_scan()
 		output_verbose()
 		output_file()
-		output_log()
 		fmt.Println()
 	case "nc":
 		Output("\nMode:nc\n",Red)
@@ -373,7 +388,6 @@ func PrintScanBanner(mode string)  {
 		output_scan()
 		output_verbose()
 		output_file()
-		output_log()
 		fmt.Println()
 	case "ssh":
 		Output("\nMode:ssh\n",Red)
@@ -384,7 +398,6 @@ func PrintScanBanner(mode string)  {
 		Output(fmt.Sprintf("The number of burp threads: 10 \n"),LightCyan)
 		output_verbose()
 		output_file()
-		output_log()
 		fmt.Println()
 	case "mysql":
 		Output("\nMode:mysql\n",Red)
@@ -392,7 +405,6 @@ func PrintScanBanner(mode string)  {
 		output_burpthread()
 		output_verbose()
 		output_file()
-		output_log()
 		output_command()
 		fmt.Println()
 	case "mssql":
@@ -401,7 +413,6 @@ func PrintScanBanner(mode string)  {
 		output_burpthread()
 		output_verbose()
 		output_file()
-		output_log()
 		output_command()
 		fmt.Println()
 	case "redis":
@@ -410,7 +421,6 @@ func PrintScanBanner(mode string)  {
 		output_burpthread()
 		output_verbose()
 		output_file()
-		output_log()
 		output_command()
 		fmt.Println()
 	case "netbios":
@@ -418,14 +428,12 @@ func PrintScanBanner(mode string)  {
 		output_scan()
 		output_verbose()
 		output_file()
-		output_log()
 		fmt.Println()
 	case "snmp":
 		Output("\nMode:snmp\n",Red)
 		output_scan()
 		output_verbose()
 		output_file()
-		output_log()
 		fmt.Println()
 	case "postgres":
 		Output("\nMode:postgres\n",Red)
@@ -433,7 +441,6 @@ func PrintScanBanner(mode string)  {
 		output_burpthread()
 		output_verbose()
 		output_file()
-		output_log()
 		output_command()
 		fmt.Println()
 	case "all":
@@ -442,7 +449,6 @@ func PrintScanBanner(mode string)  {
 		output_verbose()
 		output_pingbefor()
 		output_file()
-		output_log()
 		fmt.Println()
 	case "ftp":
 		Output("\nMode:ftp\n",Red)
@@ -450,7 +456,6 @@ func PrintScanBanner(mode string)  {
 		output_burpthread()
 		output_verbose()
 		output_file()
-		output_log()
 		output_command()
 		fmt.Println()
 	case "mongodb":
@@ -459,7 +464,6 @@ func PrintScanBanner(mode string)  {
 		output_burpthread()
 		output_verbose()
 		output_file()
-		output_log()
 		output_command()
 		fmt.Println()
 	case "httpserver":
@@ -477,7 +481,6 @@ func PrintScanBanner(mode string)  {
 		output_scan()
 		output_verbose()
 		output_file()
-		output_log()
 		fmt.Println()
 	case "ldap":
 		Output("\nMode:ldap\n",Red)
@@ -485,8 +488,21 @@ func PrintScanBanner(mode string)  {
 		output_burpthread()
 		output_verbose()
 		output_file()
-		output_log()
 		output_command()
+		fmt.Println()
+	case "rdp":
+		Output("\nMode:rdp\n",Red)
+		output_scan()
+		output_burpthread()
+		output_verbose()
+		output_file()
+		fmt.Println()
+	case "poc":
+		Output("\nMode:poc\n",Red)
+		Output(fmt.Sprintf("%s\nHttp time delay:%v(3*Timeout)\nTraget:%v%v\n", string(time.Now().AppendFormat([]byte("Start time:"), l1)), Timeout*3, Hosts,TargetUrl),LightCyan)
+		output_pocscanthread()
+		output_pocinfo()
+		output_file()
 		fmt.Println()
 	}
 }

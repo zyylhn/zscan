@@ -40,32 +40,14 @@ type HostInfo struct {
 	baseinfo *httpresp
 }
 
-type PocInfo struct {
-	Num        int
-	Rate       int
-	Timeout    time.Duration
-	PocName    string
-	PocDir     string
-	Target     string
-	TargetFile string
-	RawFile    string
-	Cookie     string
-	ForceSSL   bool
-	ApiKey     string
-	CeyeDomain string
-}
 
-func WebTitle(info *HostInfo) error {
-	err := GOWebTitle(info)
-	return err
-}
 
 //flag 1 first try
 //flag 2 /favicon.ico
 //flag 3 302
 //flag 4 400 -> https
 //根据协议设置url，进行第一次获取checkdata尝试，如果遇到跳转则跟进再次尝试，如果返回有https则重新设置url再次尝试以上步骤
-func GOWebTitle(info *HostInfo) error {
+func WebTitle(info *HostInfo) (*HostInfo,error) {
 	var CheckData []web.CheckDatas
 	//设置url
 	if info.Url == "" {
@@ -88,7 +70,7 @@ func GOWebTitle(info *HostInfo) error {
 	err, result, CheckData := geturl(info, 1, CheckData)
 	//fmt.Println("第一次",result,string(CheckData[0].Body))
 	if err != nil && !strings.Contains(err.Error(), "EOF") {
-		return err
+		return nil,err
 	}
 
 	//判断是否有跳转,如果有跳转，跟进跳到头，增加一次的CheckData
@@ -98,7 +80,7 @@ func GOWebTitle(info *HostInfo) error {
 			info.Url = redirecturl.String()
 			err, result, CheckData = geturl(info, 3, CheckData)
 			if err != nil {
-				return err
+				return nil,err
 			}
 		}
 	}
@@ -113,32 +95,27 @@ func GOWebTitle(info *HostInfo) error {
 				info.Url = redirecturl.String()
 				err, result, CheckData = geturl(info, 3, CheckData)
 				if err != nil {
-					return err
+					return nil,err
 				}
 			}
 		} else {
 			if err != nil {
-				return err
+				return nil,err
 			}
 		}
 	} else if err != nil {
-		return err
+		return nil,err
 	}
 
 	err, _, CheckData = geturl(info, 2, CheckData)
 	if err != nil {
-		return err
+		return nil,err
 	}
 	//将CheckData送去与指纹库对比
 	info.Infostr = web.InfoCheck(CheckData)
-	//Output(fmt.Sprintf("\r[*]Find http server:%-25v title:[%v]\tlen:%s\tbanner:%s \r\n", info.Url,info.baseinfo.title,info.baseinfo.len, info.Infostr),LightGreen)
-	OutputHttp(info)
+	OutputHttp(info)   //扫描过程中输出titl信息
 	httptitle_result.Store(fmt.Sprintf("%v:%v",info.Host,info.Ports), info)
-	//if true {
-	//	//fmt.Println(info)
-	//	//web.WebScan(info)
-	//}
-	return err
+	return info,err
 }
 
 func geturl(info *HostInfo, flag int, CheckData []web.CheckDatas) (error, string, []web.CheckDatas) {
@@ -332,12 +309,11 @@ func GetProtocol(host string, Timeout time.Duration) string {
 var (
 	Client           *http.Client
 	ClientNoRedirect *http.Client
-	//dialTimout       = Timeout*2
 	keepAlive        = 15 * time.Second
 )
 
-func Inithttp(PocInfo PocInfo) {
-	err := InitHttpClient(PocInfo.Num, PocInfo.Timeout)
+func Inithttp() {
+	err := InitHttpClient(Thread, Timeout)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -361,22 +337,21 @@ func InitHttpClient(ThreadsNum int,Timeout time.Duration) error {
 		TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 		TLSHandshakeTimeout: Timeout*2,
 		DisableKeepAlives:   false,
-		//DialTLSContext: d,
 	}
 	Client = &http.Client{
 		Transport: tr,
-		Timeout:   Timeout,
+		Timeout:   Timeout*3,
 	}
 	ClientNoRedirect = &http.Client{
 		Transport:     tr,
-		Timeout:       Timeout,
+		Timeout:       Timeout*3,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error { return http.ErrUseLastResponse },
 	}
 	return nil
 }
 
 func OutputHttp(v *HostInfo)  {
-	Output("\r"+v.Url,LightGreen)
+	Output("\r"+v.Url,White)
 	if v.baseinfo.code==200{
 		Output(fmt.Sprintf("  code:",),White)
 		Output(fmt.Sprintf("%v",v.baseinfo.code),LightGreen)
