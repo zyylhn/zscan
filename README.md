@@ -7,7 +7,7 @@
 
 更新内容见日志[log](https://github.com/zyylhn/zscan/blob/master/update.log)
 
-![](image/all.svg)
+
 
 <details>
 <summary><b>结果输出格式</b></summary>
