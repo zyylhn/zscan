@@ -13,9 +13,9 @@
 <summary><b>结果输出格式</b></summary>
 -输出的部分结果截图
 
-<img src="image/result.png" style="zoom:50%;" />
+<img src="image/result.jpg" style="zoom:50%;" />
 
-<img src="image/ps_02.png" style="zoom:50%;" />
+<img src="image/ps_02.jpg" style="zoom:50%;" />
 
 </details>
 
@@ -404,6 +404,7 @@ Global Flags:
 
 --listoid列出常见的查询信息
 
+```
 0: 系统基本信息         SysDesc                 GET     1.3.6.1.2.1.1.1.0
 1: 监控时间             sysUptime               GET     1.3.6.1.2.1.1.3.0
 2: 系统联系人           sysContact              GET     1.3.6.1.2.1.1.4.0
@@ -413,6 +414,7 @@ Global Flags:
 6: 系统运行的进程列表   hrSWRunName             WALK    1.3.6.1.2.1.25.4.2.1.2
 7: 系统安装的软件列表   hrSWInstalledName       WALK    1.3.6.1.2.1.25.6.3.1.2
 8: 网络接口列表         ipAdEntAddr             WALK    1.3.6.1.2.1.4.20.1.1
+```
 
 
 可以通过使用--walk和--get进行查询
@@ -501,12 +503,11 @@ Global Flags:
   -T, --thread thread   Set thread eg:2000 (default 100)
   -t, --timeout time    Set timeout(s) eg:5s (default 3s)
   -v, --verbose         Show verbose information
-
+```
 
 可以使用-a指定socks5服务监听的ip和端口
 
 -p和-u指定代理的用户名和密码
-```
 
 </details>
 
@@ -587,6 +588,7 @@ Global Flags:
   -T, --thread thread   Set thread eg:2000 (default 600)
   -t, --timeout time    Set timeout(s) eg:5s (default 5s)
   -v, --verbose         Show verbose information
+```
 
 
 -l/--list：列出工具内置的poc
@@ -612,8 +614,8 @@ zscan ping --discover local或者
 zscan ping --discover 192.168.0.0
 ```
 
-![](image/pingscaning.png)
-![](image/pingscanre.png)
+![](image/pingscaning.jpg)
+![](image/pingscanre.jpg)
 
 </details>
 
@@ -626,9 +628,9 @@ zscan ps -H 172.16.95.1-30 --vulsacn  //扫描完http banner之后进行poc探�
 zscan ps -H 172.16.95.1-30 --nowebscan   //只扫描端口，不进行http探测
 ```
 
-![](image/ps.png)
-![](image/ps_01.png)
-![](image/ps_02.png)
+![](image/ps.jpg)
+![](image/ps_01.jpg)
+![](image/ps_02.jpg)
 
 </details>
 
@@ -640,7 +642,7 @@ zscan ps -H 172.16.95.1-30 --nowebscan   //只扫描端口，不进行http探测
 登录 zscan ssh -H 172.16.95.24 -U root -P 123123
 ```
 
-![](image/ssh.png)
+![](image/ssh.jpg)
 
 </details>
 
@@ -652,9 +654,9 @@ zscan ps -H 172.16.95.1-30 --nowebscan   //只扫描端口，不进行http探测
 登录 zscan redis -H 172.16.95.16 -c cmd
 ```
 
-![](image/redisburp.png)
+![](image/redisburp.jpg)
 
-![](image/redisexec.png)
+![](image/redisexec.jpg)
 
 </details>
 
@@ -665,7 +667,7 @@ zscan ps -H 172.16.95.1-30 --nowebscan   //只扫描端口，不进行http探测
 zscan winscan -H 172.16.95.1-33
 ```
 
-![](image/winscan.png)
+![](image/winscan.jpg)
 
 </details>
 
@@ -677,7 +679,7 @@ zscan all -H 172.16.95.1-30
 zscan all -H 172.16.95.1-30 --novulscan //不进行poc探测
 ```
 
-![](image/all.png)
+![](image/all.jpg)
 
 </details>
 
