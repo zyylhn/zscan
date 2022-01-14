@@ -12,7 +12,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Show version of zscan",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("v1.1.0")
+		fmt.Println("v1.4.2")
 	},
 }
 

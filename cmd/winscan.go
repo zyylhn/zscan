@@ -11,7 +11,7 @@ import (
 )
 
 var netbios bool
-var smb bool
+var smb_scan bool
 var oxid bool
 
 
@@ -100,7 +100,7 @@ var netBiosCmd = &cobra.Command{
 
 func winscan() {
 	GetHost()
-	if !netbios && !smb && !oxid {
+	if !netbios && !smb_scan && !oxid {
 		nbt_smb_oxid()
 		return
 	}
@@ -108,7 +108,7 @@ func winscan() {
 		r1 := netBiosScan()
 		PrintResultNetbios(r1)
 	}
-	if smb {
+	if smb_scan {
 		r2 := smbScan()
 		PrintResultSMB(r2)
 	}
@@ -543,6 +543,6 @@ func init() {
 	netBiosCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	netBiosCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set target")
 	netBiosCmd.Flags().BoolVar(&netbios, "netbios", false, "netbios scan")
-	netBiosCmd.Flags().BoolVar(&smb, "smb", false, "smb scan")
+	netBiosCmd.Flags().BoolVar(&smb_scan, "smb", false, "smb scan")
 	netBiosCmd.Flags().BoolVar(&oxid, "oxid", false, "oxid scan")
 }

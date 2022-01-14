@@ -56,6 +56,9 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 					fmt.Println(Yellow("\rStart burp ssh : ",ip,":",port))
 				}
 				name:="root,admin,ssh"
+				if Username!=""{
+					name=Username
+				}
 				_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
 				if f{
 					Output(fmt.Sprintf("[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
@@ -88,7 +91,11 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mysql",ip),LightGreen)
 					return ip,port,nil,[]string{"No authentication"}
 				}
-				startburp:=NewBurp(Password,"root,mysql",Userdict,Passdict,ip,mysql_auth,100)
+				user:="root,mysql"
+				if Username!=""{
+					user=Username
+				}
+				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,mysql_auth,100)
 				relust:=startburp.Run()
 				if relust!=""{
 					return ip,port,nil,[]string{relust}
@@ -117,7 +124,11 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				if Verbose{
 					fmt.Println(Yellow("\rStart burp mssql : ",ip,":",port))
 				}
-				startburp:=NewBurp(Password,"sa,admin,Administrator",Userdict,Passdict,ip,mssql_auth,100)
+				user:="sa,admin,Administrator"
+				if Username!=""{
+					user=Username
+				}
+				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,mssql_auth,100)
 				relust:=startburp.Run()
 				if relust!=""{
 					return ip,port,nil,[]string{relust}
@@ -129,7 +140,11 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				if Verbose{
 					fmt.Println(Yellow("\rStart burp rdp : ",ip,":",port))
 				}
-				startburp:=NewBurp(Password,"admin,Administrator",Userdict,Passdict,ip,rdp_auth,100)
+				user:="admin,Administrator"
+				if Username!=""{
+					user=Username
+				}
+				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,rdp_auth,50)
 				relust:=startburp.Run()
 				if relust!=""{
 					return ip,port,nil,[]string{relust}
@@ -146,7 +161,11 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 					Output(fmt.Sprintf("%v burp success:%v No authentication\n","postgres",ip),LightGreen)
 					return ip,port,nil,[]string{"No authentication"}
 				}
-				startburp:=NewBurp(Password,"postgres",Userdict,Passdict,ip,postgres_auth,100)
+				user:="postgres"
+				if Username!=""{
+					user=Username
+				}
+				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,postgres_auth,100)
 				relust:=startburp.Run()
 				if relust!=""{
 					return ip,port,nil,[]string{relust}
@@ -163,7 +182,11 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 					Output(fmt.Sprintf("%v burp success:%v No authentication\n","ftp",ip),LightGreen)
 					return ip,port,nil,[]string{"No authentication"}
 				}
-				startburp:=NewBurp(Password,"ftp,anonymous,root",Userdict,Passdict,ip,ftp_auth,burpthread)
+				user:="ftp,anonymous,root"
+				if Username!=""{
+					user=Username
+				}
+				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,ftp_auth,burpthread)
 				relust:=startburp.Run()
 				if relust!=""{
 					return ip,port,nil,[]string{relust}
@@ -180,7 +203,11 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mongodb",ip),LightGreen)
 					return ip,port,nil,[]string{"No authentication"}
 				}
-				startburp:=NewBurp(Password,"mongo,root,mongodb",Userdict,Passdict,ip,mongodb_auth,burpthread)
+				user:="mongo,root,mongodb"
+				if Username!=""{
+					user=Username
+				}
+				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,mongodb_auth,burpthread)
 				relust:=startburp.Run()
 				if relust!=""{
 					return ip,port,nil,[]string{relust}
@@ -192,7 +219,11 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				if Verbose{
 					fmt.Println(Yellow("\rStart burp ldap : ",ip))
 				}
-				startburp:=NewBurp(Password,"Administrator",Userdict,Passdict,ip,ldap_auth,burpthread)
+				user:="Administrator"
+				if Username!=""{
+					user=Username
+				}
+				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,ldap_auth,burpthread)
 				relust:=startburp.Run()
 				if relust!=""{
 					return ip,port,nil,[]string{relust}
@@ -232,6 +263,18 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			for _,i:=range r{
 				smbRes=append(smbRes,i)
 			}
+			if !notburp{
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp rdp : ",ip,":",port))
+				}
+				user:="admin,Administrator"
+				if Username!=""{
+					user=Username
+				}
+				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,smb_auth,100)
+				relust:=startburp.Run()
+				smbRes=append(smbRes,relust)
+			}
 			return ip,port,nil,smbRes
 		case 135:
 			_,oxidres:=oxidIpInfo(conn)
@@ -261,6 +304,7 @@ func init() {
 	allCmd.Flags().BoolVar(&pingbefore, "noping", false, " Not ping before port scanning")
 	allCmd.Flags().StringVarP(&Password,"password","P","","Set postgres password")
 	allCmd.Flags().StringVarP(&Passdict,"passdict","","","Set postgres passworddict path")
+	allCmd.Flags().StringVarP(&Username,"username","U","","Set user name")
 	allCmd.Flags().BoolVar(&notburp,"notburp",false,"Set postgres passworddict path")
 	allCmd.Flags().BoolVar(&httpvulscan,"novulscan",false,"disable http vulnerability scan")
 }

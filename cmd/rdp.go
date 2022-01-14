@@ -17,8 +17,9 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"time"
 )
-
+var rdpburpthread int
 var rdp_port int
 var rdpCmd = &cobra.Command{
 	Use:   "rdp",
@@ -27,6 +28,10 @@ var rdpCmd = &cobra.Command{
 		PrintScanBanner("rdp")
 	},
 	Run: func(cmd *cobra.Command, args []string) {
+		start := time.Now()
+		defer func() {
+			Output_endtime(start)
+		}()
 		rdpmode()
 	},
 }
@@ -52,7 +57,7 @@ func Connectrdp(ip string,port int) (string,int,error,[]string) {
 		_ = conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
 		fmt.Println(Yellow("\rStart burp rdp : ",ip))
-		startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,rdp_auth,burpthread)
+		startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,rdp_auth,rdpburpthread)
 		startburp.Run()
 	}
 	return ip, port, err,nil
@@ -171,7 +176,7 @@ func init() {
 	rdpCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	rdpCmd.Flags().StringVarP(&Hosts,"host","H","","Set rdp server host")
 	rdpCmd.Flags().IntVarP(&rdp_port,"port","p",3389,"Set rdp server port")
-	rdpCmd.Flags().IntVarP(&burpthread,"burpthread","",100,"Set burp password thread(recommend not to change)")
+	rdpCmd.Flags().IntVarP(&rdpburpthread,"burpthread","",50,"Set burp password thread(recommend not to change)")
 	rdpCmd.Flags().StringVarP(&Username,"username","U","","Set rdp username eg:admin,domain/administrator")
 	rdpCmd.Flags().StringVarP(&Password,"password","P","","Set rdp password")
 	rdpCmd.Flags().StringVarP(&Userdict,"userdict","","","Set rdp userdict path")

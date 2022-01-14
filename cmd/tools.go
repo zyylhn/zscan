@@ -504,6 +504,13 @@ func PrintScanBanner(mode string)  {
 		output_pocinfo()
 		output_file()
 		fmt.Println()
+	case "smb":
+		Output("\nMode:smb\n",Red)
+		output_scan()
+		output_burpthread()
+		output_verbose()
+		output_file()
+		fmt.Println()
 	}
 }
 
