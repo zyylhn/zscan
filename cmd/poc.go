@@ -139,6 +139,6 @@ func init() {
 	pocCmd.Flags().StringVar(&Pocpath,"pocpath","","set target url")
 	pocCmd.Flags().StringVar(&PocName,"pocname","","set the poc name")
 	pocCmd.Flags().BoolVarP(&Listpoc,"listpoc","l",false,"List built in poc")
-	pocCmd.Flags().IntVar(&PocThread,"pocthread",500,"set poc scan thread")
+	pocCmd.Flags().IntVar(&PocThread,"pocthread",359,"set poc scan thread")
 	pocCmd.Flags().StringVar(&TargetFile,"urlfile","","set target file")
 }

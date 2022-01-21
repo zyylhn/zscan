@@ -444,7 +444,7 @@ func PrintScanBanner(mode string)  {
 		output_command()
 		fmt.Println()
 	case "all":
-		Output("\nMode:all\n",Red)
+		Output("\nMode:all\ndont't have ssh\n",Red)
 		output_scan()
 		output_verbose()
 		output_pingbefor()

@@ -113,7 +113,7 @@ func WebTitle(info *HostInfo) (*HostInfo,error) {
 	}
 	//将CheckData送去与指纹库对比
 	info.Infostr = web.InfoCheck(CheckData)
-	OutputHttp(info)   //扫描过程中输出titl信息
+	Output(fmt.Sprintf("\r%v\tcode:%v\tlen:%v\ttitle:%v\t%s\n",info.Url,info.baseinfo.code,info.baseinfo.len,info.baseinfo.title,info.Infostr),White)
 	httptitle_result.Store(fmt.Sprintf("%v:%v",info.Host,info.Ports), info)
 	return info,err
 }

@@ -39,6 +39,9 @@ var portscanCmd = &cobra.Command{
 		}
 		ips, err := Parse_IP(Hosts)
 		Checkerr_exit(err)
+		if ps_port=="l"||len(ips)>500{
+			ps_port=little_port
+		}
 		ports, err := Parse_Port(ps_port)
 		Checkerr(err)
 		portscan(ips,ports)
@@ -242,7 +245,7 @@ func init() {
 	portscanCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	portscanCmd.Flags().BoolVarP(&useicmp,"icmp","i",false,"Icmp packets are sent to check whether the host is alive(need root)")
 	portscanCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set `hosts`(The format is similar to Nmap) eg:192.168.1.1/24,172.16.95.1-100,127.0.0.1")
-	portscanCmd.Flags().StringVarP(&ps_port, "port", "p", default_port, "Set `port` eg:1-1000,3306,3389")
+	portscanCmd.Flags().StringVarP(&ps_port, "port", "p", default_port, "Set `port` eg:1-1000,3306,3389 or use \" zscan ps -p l\" ) to scan less port（thirty port）")
 	portscanCmd.Flags().BoolVar(&pingbefore, "noping", false, "not ping discovery before port scanning")
 	portscanCmd.Flags().BoolVarP(&syn, "syn", "s",false, "use syn scan")
 	portscanCmd.Flags().BoolVarP(&banner, "banner", "b",false, "Return banner information")

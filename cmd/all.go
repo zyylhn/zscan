@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"strings"
 	"time"
 )
 
@@ -11,7 +10,7 @@ var notburp bool
 
 var allCmd = &cobra.Command{
 	Use:   "all",
-	Short: "Use all scan mode",
+	Short: "Use all scan mode（don't hava ssh mod）",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		//CreatFile(Output_result,Path_result)
 		PrintScanBanner("all")
@@ -36,6 +35,9 @@ func allmode()  {
 	}
 	ips, err := Parse_IP(Hosts)
 	Checkerr_exit(err)
+	if ps_port=="l"||len(ips)>500{
+		ps_port=little_port
+	}
 	ports, err := Parse_Port(ps_port)
 	Checkerr(err)
 	aliveserver:=NewPortScan(ips,ports,Connectall,true)
@@ -50,37 +52,37 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 		defer conn.Close()
 		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
 		switch port {
-		case 22:
-			if !notburp{
-				if Verbose{
-					fmt.Println(Yellow("\rStart burp ssh : ",ip,":",port))
-				}
-				name:="root,admin,ssh"
-				if Username!=""{
-					name=Username
-				}
-				_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
-				if f{
-					Output(fmt.Sprintf("[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
-					var re []string
-					if strings.Contains(Username,"root"){
-						sl:=strings.Split(Username,",")
-						for _,i:=range sl{
-							if i=="root"{
-								continue
-							}
-							re=append(re,i)
-						}
-					}
-					Username=strings.Join(re,",")
-				}
-				startburp:=NewBurp(Password,name,Userdict,Passdict,ip,ssh_auto,10)
-				relust:=startburp.Run()
-				if relust!=""{
-					return ip,port,nil,[]string{relust}
-				}
-			}
-			return ip,port,nil,nil
+		//case 22:
+		//	if !notburp{
+		//		if Verbose{
+		//			fmt.Println(Yellow("\rStart burp ssh : ",ip,":",port))
+		//		}
+		//		name:="root,admin,ssh"
+		//		if Username!=""{
+		//			name=Username
+		//		}
+		//		_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
+		//		if f{
+		//			Output(fmt.Sprintf("[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
+		//			var re []string
+		//			if strings.Contains(Username,"root"){
+		//				sl:=strings.Split(Username,",")
+		//				for _,i:=range sl{
+		//					if i=="root"{
+		//						continue
+		//					}
+		//					re=append(re,i)
+		//				}
+		//			}
+		//			Username=strings.Join(re,",")
+		//		}
+		//		startburp:=NewBurp(Password,name,Userdict,Passdict,ip,ssh_auto,10)
+		//		relust:=startburp.Run()
+		//		if relust!=""{
+		//			return ip,port,nil,[]string{relust}
+		//		}
+		//	}
+		//	return ip,port,nil,nil
 		case 3306:
 			if !notburp{
 				if Verbose{
@@ -219,7 +221,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				if Verbose{
 					fmt.Println(Yellow("\rStart burp ldap : ",ip))
 				}
-				user:="Administrator"
+				user:="Administrator,admin"
 				if Username!=""{
 					user=Username
 				}
@@ -233,7 +235,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 		case 7890:
 			b,s:=Socks5Find(conn)
 			if b {
-				Output(fmt.Sprintf("%v\t%v:%v \n",s,ip,port),LightGreen)
+				Output(fmt.Sprintf("\r%v\t%v:%v \n",s,ip,port),LightGreen)
 				r=[]string{s}
 				return ip, port, nil,r
 			}else {
@@ -242,7 +244,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 		case 10808:
 			b,s:=Socks5Find(conn)
 			if b {
-				Output(fmt.Sprintf("%v\t%v:%v \n",s,ip,port),LightGreen)
+				Output(fmt.Sprintf("\r%v\t%v:%v \n",s,ip,port),LightGreen)
 				r=[]string{s}
 				return ip, port, nil,r
 			}else {
@@ -251,7 +253,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 		case 1089:
 			b,s:=Socks5Find(conn)
 			if b {
-				Output(fmt.Sprintf("%v\t%v:%v \n",s,ip,port),LightGreen)
+				Output(fmt.Sprintf("\r%v\t%v:%v \n",s,ip,port),LightGreen)
 				r=[]string{s}
 				return ip, port, nil,r
 			}else {
@@ -300,7 +302,7 @@ func init() {
 	allCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	allCmd.Flags().BoolVarP(&useicmp,"icmp","i",false,"Icmp packets are sent to check whether the host is alive(need root)")
 	allCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set `hosts`(The format is similar to Nmap) eg:192.168.1.1/24,172.16.95.1-100,127.0.0.1")
-	allCmd.Flags().StringVarP(&ps_port, "port", "p", default_port, "Set `port` eg:1-1000,3306,3389")
+	allCmd.Flags().StringVarP(&ps_port, "port", "p", default_port, "Set `port` eg:1-1000,3306,3389 or use \" zscan all -p l\" ) to scan less port（thirty port）")
 	allCmd.Flags().BoolVar(&pingbefore, "noping", false, " Not ping before port scanning")
 	allCmd.Flags().StringVarP(&Password,"password","P","","Set postgres password")
 	allCmd.Flags().StringVarP(&Passdict,"passdict","","","Set postgres passworddict path")

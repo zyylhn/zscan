@@ -132,7 +132,7 @@ func ssh_auto( username, password,ip string) (error,bool,string) {
 	//fmt.Println(Red(username,"\t",password,"\t",addr))
 	c,err:=ssh_connect_userpass(fmt.Sprintf("%v:%v",ip,ssh_port),username,password)
 	if err==nil{
-		defer c.Close()
+		c.Close()
 		success=true
 	}
 	return err,success,"ssh"
@@ -191,6 +191,13 @@ func ssh_connect_publickeys(addr,user,key_path string) (*ssh.Client, error) {
 	return ssh.NewClient(c,ch,re), nil
 }
 
+type sshclient struct {
+	c ssh.Conn
+	ch  <-chan ssh.NewChannel
+	re <-chan *ssh.Request
+	err error
+}
+
 //获取账号密码验证的Client
 func ssh_connect_userpass(addr,user,pass string) (*ssh.Client,error) {
 	client_config:=&ssh.ClientConfig{User: user,Auth: []ssh.AuthMethod{ssh.Password(pass)},HostKeyCallback: ssh.InsecureIgnoreHostKey(),Timeout: Timeout}
@@ -198,11 +205,25 @@ func ssh_connect_userpass(addr,user,pass string) (*ssh.Client,error) {
 	if err!=nil{
 		return nil,err
 	}
-	c,ch,re,err:=ssh.NewClientConn(conn,addr,client_config)
-	if err !=nil{
-		return nil,err
+	timeoutch:=make(chan sshclient)
+	go func() {
+		c1,ch1,re1,err1:=ssh.NewClientConn(conn,addr,client_config)
+		timeoutch<-sshclient{c1,ch1,re1,err1}
+	}()
+	//c,ch,re,err:=ssh.NewClientConn(conn,addr,client_config)
+	select{
+	case sshclientdata:=<-timeoutch:
+		if sshclientdata.err!=nil{
+			return nil,sshclientdata.err
+		}
+		return ssh.NewClient(sshclientdata.c,sshclientdata.ch,sshclientdata.re),nil
+	case <-time.After(Timeout):
+		return nil,fmt.Errorf("不是ssh协议或者连接超时")
 	}
-	return ssh.NewClient(c,ch,re), nil
+	//if err !=nil{
+	//	return nil,err
+	//}
+	//return ssh.NewClient(c,ch,re), nil
 }
 
 //利用Client进行交互式登陆

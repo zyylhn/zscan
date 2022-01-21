@@ -262,7 +262,7 @@ var RuleDatas = []RuleData{
 var Md5Datas = []Md5Data{
 	{"BIG-IP", "04d9541338e525258daf47cc844d59f3"},
 	{"蓝凌OA", "302464c3f6207d57240649926cfc7bd4"},
-	{"JBOSS", "799f70b71314a7508326d1d2f68f7519"},
+	{"Jboss", "799f70b71314a7508326d1d2f68f7519"},
 	{"锐捷网络", "d8d7c9138e93d43579ebf2e384745ba8"},
 	{"锐捷网络", "9c21df9129aeec032df8ac15c84e050d"},
 	{"锐捷网络", "a45883b12d753bc87aff5bddbef16ab3"},
