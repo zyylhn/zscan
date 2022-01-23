@@ -1,6 +1,6 @@
 #              Zscan a scan blasting tool set
 [![Licens](https://img.shields.io/badge/Licens-MIT-orange)](https://github.com/zyylhn/zscan/blob/master/LICENSE)
-[![Releases](https://img.shields.io/badge/Releases-v1.4.2-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.4.2)
+[![Releases](https://img.shields.io/badge/Releases-v1.4.3-brightgreen)](https://github.com/zyylhn/zscan/releases/tag/1.4.3)
 [![go](https://img.shields.io/badge/Go-1.16.3-blue)](https://github.com/zyylhn/zscan)
 
 📄[English document](https://github.com/zyylhn/zscan/blob/master/README_EN.md)
@@ -713,7 +713,7 @@ zscan poc --urlfile url.txt --pocpath /root/pocs/weblogic.yml  //使用单个poc
 
 ## 源码编译👨
 
-建议自己编译，relese有时候可能没有更新
+建议自己编译，relese有时候可能没有更新,由于某种原因，现在不提供编译好的zscan，编译命令在下面自取
 
 ```
 go get github.com/zyylhn/zscan
