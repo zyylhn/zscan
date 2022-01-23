@@ -7,11 +7,9 @@
 
 更新内容见日志[log](https://github.com/zyylhn/zscan/blob/master/update.log)
 
-![](image/all.svg)
-
 <details>
 <summary><b>结果输出格式</b></summary>
--输出的部分结果截图
+-输出的部分结果截图，分两个阶段，第一阶段是扫描过程中的输出，从主机存活探测结束开始，第二个阶段是将所有扫描的结果做整理，从输出port result list开始
 
 <img src="image/result.jpg" style="zoom:50%;" />
 

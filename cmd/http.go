@@ -113,7 +113,11 @@ func WebTitle(info *HostInfo) (*HostInfo,error) {
 	}
 	//将CheckData送去与指纹库对比
 	info.Infostr = web.InfoCheck(CheckData)
-	Output(fmt.Sprintf("\r%v\tcode:%v\tlen:%v\ttitle:%v\t%s\n",info.Url,info.baseinfo.code,info.baseinfo.len,info.baseinfo.title,info.Infostr),White)
+	if info.Infostr!=nil{
+		Output(fmt.Sprintf("\r%v\tcode:%v\tlen:%v\ttitle:%v\tbanner:%s\n",info.Url,info.baseinfo.code,info.baseinfo.len,info.baseinfo.title,info.Infostr),LightGreen)
+	}else {
+		Output(fmt.Sprintf("\r%v\tcode:%v\tlen:%v\ttitle:%v\t\n",info.Url,info.baseinfo.code,info.baseinfo.len,info.baseinfo.title),White)
+	}
 	httptitle_result.Store(fmt.Sprintf("%v:%v",info.Host,info.Ports), info)
 	return info,err
 }
@@ -320,11 +324,6 @@ func Inithttp() {
 }
 
 func InitHttpClient(ThreadsNum int,Timeout time.Duration) error {
-	//dialer := &net.Dialer{
-	//	Timeout:   dialTimout,
-	//	KeepAlive: keepAlive,
-	//
-	//}
 	d:= func(ctx context.Context,network,addr string)(net.Conn,error) {
 		return Getconn(addr)
 	}

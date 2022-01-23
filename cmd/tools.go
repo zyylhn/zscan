@@ -249,10 +249,11 @@ func Parse_Port(selection string) ([]int, error) {
 //输出
 func Output(s string,c Mycolor) {
 	fmt.Print(c(s))
-	file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
-	defer file.Close()
-	Checkerr(err)
-	file.Write([]byte(s))
+	//file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
+	//defer file.Close()
+	//Checkerr(err)
+	//file.Write([]byte(s))
+	OutputChan<-s
 }
 
 //创建文件
@@ -311,6 +312,19 @@ func PrintScanBanner(mode string)  {
 	Inithttp()
 	lib.Inithttp(Client,ClientNoRedirect)
 	CreatFile(Path_result)
+	OutputChan=make(chan string,1024)
+	go func() {
+		file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
+		defer file.Close()
+		Checkerr(err)
+		for outputre:=range OutputChan{
+			file.Write([]byte(outputre))
+			if strings.Contains(outputre,"consuming"){
+				stopchan<-1
+				return
+			}
+		}
+	}()
 	output_verbose:= func() {
 		if Verbose {
 			Output("Verbose:Show verbose\n",LightCyan)

@@ -12,6 +12,7 @@ import (
 
 var httptitle_result sync.Map
 var httpvul_result sync.Map
+var interested_result sync.Map
 var pingbefore bool
 var banner bool
 var syn bool
@@ -140,7 +141,9 @@ func (p *PortScan) Saveresult(ip string, port int, err error,banner []string) er
 	}
 	v, ok := p.portscan_result.Load(ip)
 	if ok {
+		psresultlock.Lock()
 		ports, ok1 := v.(map[int][]string)
+		psresultlock.Unlock()
 		if ok1 {
 			ports[port]=banner
 			p.portscan_result.Store(ip, ports)
@@ -207,14 +210,28 @@ func Printresult(r map[string]*Openport)  {
 		}
 	}
 	if !Mapisnil(httptitle_result){
+		var titlelist []*HostInfo
+		var nulltitlelist []*HostInfo
 		Output("\r\n============================http result list=============================\n",LightGreen)
 		httptitle_result.Range(func(key, value interface{}) bool {
 			v,ok:=value.(*HostInfo)
 			if ok{
-				OutputHttp(v)
+				if v.Infostr!=nil{
+					OutputHttp(v)
+				}else if v.baseinfo.title!=""{
+					titlelist=append(titlelist,v)
+				}else {
+					nulltitlelist=append(nulltitlelist,v)
+				}
 			}
 			return true
 		})
+		for _,re:=range titlelist{
+			OutputHttp(re)
+		}
+		for _,re:=range nulltitlelist{
+			OutputHttp(re)
+		}
 	}
 	if !Mapisnil(httpvul_result){
 		Output("\r\n=========================http vulnerability list=========================\n",LightGreen)
@@ -222,6 +239,18 @@ func Printresult(r map[string]*Openport)  {
 			v,ok:=value.(*lib.PocResult)
 			if ok {
 				OutputVul(v)
+			}
+			return true
+		})
+	}
+	if !Mapisnil(interested_result){
+		Output("\r\n=========================That might be of interest========================\n",LightGreen)
+		interested_result.Range(func(key, value interface{}) bool {
+			//fmt.Println(key,value)
+			v,ok:=value.(string)
+			if ok {
+				Output(fmt.Sprintf("%v\t",key),White)
+				Output(fmt.Sprintf("%v\n",v),LightGreen)
 			}
 			return true
 		})

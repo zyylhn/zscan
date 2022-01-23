@@ -157,7 +157,7 @@ func (b *Burp) Check()  {
 				if cancelled(b.stop) {
 					break
 				}
-				b.burpresult=fmt.Sprintf("Username:%v\tPassword:%v",task.username,task.password)
+				b.burpresult=fmt.Sprintf("%v\tUsername:%v\tPassword:%v",servername,task.username,task.password)
 				close(b.stop)
 				break
 			}

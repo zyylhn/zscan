@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"golang.org/x/net/proxy"
+	"sync"
 	"time"
 )
 
@@ -23,6 +24,9 @@ var Hostfile string
 var Proxy string
 var proxyconn proxy.Dialer
 var No_progress_bar bool
+var OutputChan chan string
+var stopchan chan int
+var psresultlock sync.RWMutex
 
 const l1 = "2006-01-02 15:04:05"
 
@@ -32,8 +36,9 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
+	stopchan=make(chan int)
 	cobra.CheckErr(rootCmd.Execute())
-
+	<-stopchan
 }
 
 func init() {

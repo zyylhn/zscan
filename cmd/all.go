@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"strings"
 	"time"
 )
 
@@ -50,6 +51,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
 	if conn != nil {
 		defer conn.Close()
+		addr:=fmt.Sprintf("%v:%v",ip,port)
 		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
 		switch port {
 		//case 22:
@@ -91,6 +93,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				_,f,_:=mysql_auth("asdasd","zxczxc",ip)
 				if f{
 					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mysql",ip),LightGreen)
+					interested_result.Store(addr,"mysql no authentication")
 					return ip,port,nil,[]string{"No authentication"}
 				}
 				user:="root,mysql"
@@ -100,6 +103,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,mysql_auth,100)
 				relust:=startburp.Run()
 				if relust!=""{
+					interested_result.Store(addr,relust)
 					return ip,port,nil,[]string{relust}
 				}
 			}
@@ -112,11 +116,13 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				_,f,_:=redis_auth("","",ip)
 				if f{
 					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","redis",ip),LightGreen)
+					interested_result.Store(addr,"resis no authentication")
 					return ip,port,nil,[]string{"No authentication"}
 				}
 				startburp:=NewBurp(Password,"","",Passdict,ip,redis_auth,100)
 				relust:=startburp.Run()
 				if relust!=""{
+					interested_result.Store(addr,relust)
 					return ip,port,nil,[]string{relust}
 				}
 			}
@@ -133,6 +139,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,mssql_auth,100)
 				relust:=startburp.Run()
 				if relust!=""{
+					interested_result.Store(addr,relust)
 					return ip,port,nil,[]string{relust}
 				}
 			}
@@ -148,7 +155,8 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				}
 				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,rdp_auth,50)
 				relust:=startburp.Run()
-				if relust!=""{
+				if relust!="" {
+					interested_result.Store(addr,relust)
 					return ip,port,nil,[]string{relust}
 				}
 			}
@@ -161,6 +169,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				_,f,_:=postgres_auth("postgres","",ip)
 				if f{
 					Output(fmt.Sprintf("%v burp success:%v No authentication\n","postgres",ip),LightGreen)
+					interested_result.Store(addr,"postgres no authentication")
 					return ip,port,nil,[]string{"No authentication"}
 				}
 				user:="postgres"
@@ -170,6 +179,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,postgres_auth,100)
 				relust:=startburp.Run()
 				if relust!=""{
+					interested_result.Store(ip,relust)
 					return ip,port,nil,[]string{relust}
 				}
 			}
@@ -182,6 +192,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				_,f,_:=ftp_auth("ftp","asdasd",ip)
 				if f{
 					Output(fmt.Sprintf("%v burp success:%v No authentication\n","ftp",ip),LightGreen)
+					interested_result.Store(addr,"ftp no authentication")
 					return ip,port,nil,[]string{"No authentication"}
 				}
 				user:="ftp,anonymous,root"
@@ -191,6 +202,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,ftp_auth,burpthread)
 				relust:=startburp.Run()
 				if relust!=""{
+					interested_result.Store(addr,relust)
 					return ip,port,nil,[]string{relust}
 				}
 			}
@@ -203,6 +215,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				_,f,_:=mongodb_auth("","",ip)
 				if f{
 					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mongodb",ip),LightGreen)
+					interested_result.Store(addr,"mongodb no authentication")
 					return ip,port,nil,[]string{"No authentication"}
 				}
 				user:="mongo,root,mongodb"
@@ -212,31 +225,35 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,mongodb_auth,burpthread)
 				relust:=startburp.Run()
 				if relust!=""{
+					interested_result.Store(addr,relust)
 					return ip,port,nil,[]string{relust}
 				}
 				return ip,port,nil,nil
 			}
 		case 389:
-			if !notburp{
-				if Verbose{
-					fmt.Println(Yellow("\rStart burp ldap : ",ip))
-				}
-				user:="Administrator,admin"
-				if Username!=""{
-					user=Username
-				}
-				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,ldap_auth,burpthread)
-				relust:=startburp.Run()
-				if relust!=""{
-					return ip,port,nil,[]string{relust}
-				}
-			}
+			interested_result.Store(addr,"It may be a domain controller")
+			//if !notburp{
+			//	if Verbose{
+			//		fmt.Println(Yellow("\rStart burp ldap : ",ip))
+			//	}
+			//	user:="Administrator,admin"
+			//	if Username!=""{
+			//		user=Username
+			//	}
+			//	startburp:=NewBurp(Password,user,Userdict,Passdict,ip,ldap_auth,burpthread)
+			//	relust:=startburp.Run()
+			//	if relust!=""{
+			//		interested_result.Store(addr,relust)
+			//		return ip,port,nil,[]string{relust}
+			//	}
+			//}
 			return ip,port,nil,nil
 		case 7890:
 			b,s:=Socks5Find(conn)
 			if b {
 				Output(fmt.Sprintf("\r%v\t%v:%v \n",s,ip,port),LightGreen)
 				r=[]string{s}
+				interested_result.Store(addr,s)
 				return ip, port, nil,r
 			}else {
 				return ip,port,nil,nil
@@ -246,6 +263,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			if b {
 				Output(fmt.Sprintf("\r%v\t%v:%v \n",s,ip,port),LightGreen)
 				r=[]string{s}
+				interested_result.Store(addr,s)
 				return ip, port, nil,r
 			}else {
 				return ip,port,nil,nil
@@ -255,6 +273,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			if b {
 				Output(fmt.Sprintf("\r%v\t%v:%v \n",s,ip,port),LightGreen)
 				r=[]string{s}
+				interested_result.Store(addr,s)
 				return ip, port, nil,r
 			}else {
 				return ip,port,nil,nil
@@ -263,6 +282,9 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			_,smbRes:=smbinfo(conn)
 			_,_,_,r=Connect17010(ip,port)
 			for _,i:=range r{
+				if strings.Contains(i,"MS17-010"){
+					interested_result.Store(addr,i)
+				}
 				smbRes=append(smbRes,i)
 			}
 			if !notburp{
@@ -307,6 +329,6 @@ func init() {
 	allCmd.Flags().StringVarP(&Password,"password","P","","Set postgres password")
 	allCmd.Flags().StringVarP(&Passdict,"passdict","","","Set postgres passworddict path")
 	allCmd.Flags().StringVarP(&Username,"username","U","","Set user name")
-	allCmd.Flags().BoolVar(&notburp,"notburp",false,"Set postgres passworddict path")
+	allCmd.Flags().BoolVar(&notburp,"noburp",false,"Set postgres passworddict path")
 	allCmd.Flags().BoolVar(&httpvulscan,"novulscan",false,"disable http vulnerability scan")
 }
