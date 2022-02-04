@@ -8,17 +8,17 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 var httpserveraddr string
 var dir string
 var maxupload int
-var allowupload bool
+//var allowupload bool
 
 var httpserverCmd = &cobra.Command{
 	Use:   "httpserver",
@@ -31,38 +31,31 @@ var httpserverCmd = &cobra.Command{
 	},
 }
 
-func httpserver()  {
-	if allowupload{
-		http.HandleFunc("/u", uploadFileHandler())
-	}
-	fs := http.FileServer(http.Dir(dir))
-	if Username==""&&Password==""{
-		http.Handle("/", http.StripPrefix("/", fs))
-	}else {
-		http.Handle("/",SimpleBasicAuth(Username, Password)(http.FileServer(http.Dir(dir))))
-	}
-	log.Fatal(http.ListenAndServe(httpserveraddr, nil))
+type logger struct {
+	httplog http.Handler
+	//update http.Handler
 }
 
-//文件上传监听
-func uploadFileHandler() http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		maxUploadSize:=maxupload*1024*1024
-		if r.Method == "GET" {
-			var urlip string
-			var urlport string
-			if a:=strings.Split(httpserveraddr,":");a[0]=="0.0.0.0"{
-				urlip="127.0.0.1"
-				urlport=a[1]
-			}else {
-				urlip=a[0]
-				urlport=a[1]
-			}
-			w.Write([]byte(fmt.Sprintf("<html>\n<head>\n\t<title>Upload file</title>\n</head>\n<body>\n<form enctype=\"multipart/form-data\" action=\"http://%v:%v/u\" method=\"post\">\n\t<input type=\"file\" name=\"uploadFile\" />\n\t<input type=\"submit\" value=\"upload\" />\n</form>\n</body>\n</html>",urlip,urlport)))
-			return
-		}
+func (l *logger) ServeHTTP(w http.ResponseWriter,req *http.Request)  {
+	l.httplog.ServeHTTP(w,req)
+	//log.Println(req.RemoteAddr," request ",req.URL)
+	Output(string(time.Now().AppendFormat([]byte("\r"), l1))+" "+req.RemoteAddr+" request "+req.URL.String()+"\n",White)
+	maxUploadSize:=maxupload*1024*1024
+	//if req.Method == "GET" {
+	var urlip string
+	var urlport string
+	if a:=strings.Split(httpserveraddr,":");a[0]=="0.0.0.0"{
+		urlip="127.0.0.1"
+		urlport=a[1]
+	}else {
+		urlip=a[0]
+		urlport=a[1]
+	}
 
-		file, fileHeader, err := r.FormFile("uploadFile")
+	w.Write([]byte(fmt.Sprintf("<html>\n<head>\n\t<title>Upload file</title>\n</head>\n<body>\n<form enctype=\"multipart/form-data\" action=\"http://%v:%v/\" method=\"post\">\n\t<input type=\"file\" name=\"uploadFile\" />\n\t<input type=\"submit\" value=\"upload\" />\n</form>\n</body>\n</html>",urlip,urlport)))
+	//}
+	if req.Method=="POST"{
+		file, fileHeader, err := req.FormFile("uploadFile")
 		if err != nil {
 			renderError(w, "INVALID_FILE", http.StatusBadRequest)
 			return
@@ -82,7 +75,12 @@ func uploadFileHandler() http.HandlerFunc {
 			return
 		}
 		fileName := fileHeader.Filename
+		fmt.Println(req.URL)
 		newPath := filepath.Join(dir, fileName)
+		if !filepath.IsAbs(newPath){
+			newPath,err=filepath.Abs(newPath)
+			Checkerr(err)
+		}
 		newFile, err := os.Create(newPath)
 		if err != nil {
 			renderError(w, "CANT_WRITE_FILE", http.StatusInternalServerError)
@@ -93,8 +91,21 @@ func uploadFileHandler() http.HandlerFunc {
 			renderError(w, "CANT_WRITE_FILE", http.StatusInternalServerError)
 			return
 		}
-		w.Write([]byte("SUCCESS UPLOAD"))
-	})
+		successmessage:=fmt.Sprintf("SUCCESS UPLOAD  Save to %v",newFile.Name())
+		Output(successmessage,White)
+		w.Write([]byte(successmessage))
+	}
+}
+
+func httpserver()  {
+	fs := http.FileServer(http.Dir(dir))
+	var l logger
+	if Username==""&&Password==""{
+		l=logger{http.StripPrefix("/", fs)}
+	}else {
+		l=logger{SimpleBasicAuth(Username, Password)(http.FileServer(http.Dir(dir)))}
+	}
+	http.ListenAndServe(httpserveraddr, &l)
 }
 
 func renderError(w http.ResponseWriter, message string, statusCode int) {
@@ -198,7 +209,7 @@ func SimpleBasicAuth(user, password string) func(http.Handler) http.Handler {
 func init() {
 	rootCmd.AddCommand(httpserverCmd)
 	httpserverCmd.Flags().IntVarP(&maxupload,"size","s",20,"set max upload files size(mb)")
-	httpserverCmd.Flags().BoolVarP(&allowupload,"upload","u",false,"allow upload,/u indicates the file upload path（Unauthorized authorization exists，finished off）")
+	//httpserverCmd.Flags().BoolVarP(&allowupload,"upload","u",false,"allow upload,/u indicates the file upload path（Unauthorized authorization exists，finished off）")
 	httpserverCmd.Flags().StringVarP(&httpserveraddr,"addr","a","0.0.0.0:7001","set http server addr")
 	httpserverCmd.Flags().StringVarP(&Username,"user","U","","Set the authentication user")
 	httpserverCmd.Flags().StringVarP(&Password,"pass","P","","Set the authentication password")

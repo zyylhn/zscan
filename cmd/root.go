@@ -27,6 +27,7 @@ var No_progress_bar bool
 var OutputChan chan string
 var stopchan chan int
 var psresultlock sync.RWMutex
+var runmod bool
 
 const l1 = "2006-01-02 15:04:05"
 
@@ -36,9 +37,13 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
+	runmod=false
 	stopchan=make(chan int)
 	cobra.CheckErr(rootCmd.Execute())
-	<-stopchan
+	if runmod{
+		<-stopchan
+	}
+
 }
 
 func init() {

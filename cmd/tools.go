@@ -320,6 +320,7 @@ func PrintScanBanner(mode string)  {
 		for outputre:=range OutputChan{
 			file.Write([]byte(outputre))
 			if strings.Contains(outputre,"consuming"){
+				runmod=true
 				stopchan<-1
 				return
 			}
