@@ -256,16 +256,16 @@ func Output(s string,c Mycolor) {
 	OutputChan<-s
 }
 
-//创建文件
+//创建文件,如果没有指定要存的文件名默认用host名存
 func CreatFile(filename string)  {
 	if Hosts!=""&&Path_result=="result.txt"{
 		new_filename:=filename_filter(Hosts)+".txt"
 		Path_result=new_filename
-		filename=new_filename
 	}
+	//如果文件不存在则创建文件
 	_,err:=os.Stat(Path_result)
 	if err!=nil{
-		file,err:=os.Create(filename)
+		file,err:=os.Create(Path_result)
 		Checkerr(err)
 		defer file.Close()
 		}
@@ -312,7 +312,7 @@ func PrintScanBanner(mode string)  {
 	Inithttp()
 	lib.Inithttp(Client,ClientNoRedirect)
 	CreatFile(Path_result)
-	OutputChan=make(chan string,1024)
+	OutputChan=make(chan string)
 	go func() {
 		file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
 		defer file.Close()

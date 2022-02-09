@@ -43,7 +43,6 @@ func Execute() {
 	if runmod{
 		<-stopchan
 	}
-
 }
 
 func init() {
