@@ -47,7 +47,7 @@ func burp_ftp()  {
 }
 
 func Connectftp(ip string,port int) (string,int,error,[]string) {
-	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, ftp_port))
+	conn, err := Getconn(ip, ftp_port)
 	defer func() {
 		if conn != nil {
 			_ = conn.Close()
@@ -61,7 +61,7 @@ func Connectftp(ip string,port int) (string,int,error,[]string) {
 }
 
 func ftp_auth(username,password,ip string) (error,bool,string) {
-	c,err:=Getconn(fmt.Sprintf("%s:%d", ip, ftp_port))
+	c,err:=Getconn(ip, ftp_port)
 	if err!=nil{
 		return err,false,"ftp"
 	}

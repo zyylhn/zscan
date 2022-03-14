@@ -49,7 +49,7 @@ func burp_postgres()  {
 }
 
 func Connectpostgres(ip string, port int) (string, int, error,[]string) {
-	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, port))
+	conn, err := Getconn( ip, port)
 	if conn != nil {
 		_ = conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))

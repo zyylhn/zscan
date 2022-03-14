@@ -8,12 +8,16 @@ import (
 	"github.com/google/gopacket/layers"
 	"github.com/gookit/color"
 	"github.com/malfunkt/iprange"
+	"github.com/projectdiscovery/cdncheck"
 	"golang.org/x/net/proxy"
+	"log"
 	"net"
 	"os"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 	lib "zscan/poccheck"
 )
@@ -30,7 +34,7 @@ type Connect_method func(ip string ,port int) (string,int,error,[]string)//用�
 
 //建立tcp连接检测端口开放情况
 func Connect(ip string, port int) (string, int, error,[]string) {
-	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
+	conn,err:=Getconn(ip,port)
 	if conn != nil {
 		_ = conn.Close()
 		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
@@ -47,7 +51,7 @@ func Connect(ip string, port int) (string, int, error,[]string) {
 
 
 func Connect_BannerScan(ip string,port int) (string,int,error,[]string) {
-	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
+	conn,err:=Getconn(ip,port)
 	if conn!=nil{
 		conn.SetReadDeadline((time.Now().Add(Timeout)))
 		reader:=bufio.NewReader(conn)
@@ -182,22 +186,44 @@ func Proxyconn() (proxy.Dialer,error) {
 	return nil,fmt.Errorf("proxy error")
 }
 
-func Getconn(addr string) (net.Conn,error) {
-	if proxyconn!=nil{
-		return proxyconn.Dial("tcp",addr)
+func Getconn(ip string,port int) (net.Conn,error) {
+	if port==0{
+		if proxyconn!=nil{
+			return proxyconn.Dial("tcp",ip)
+		}else {
+			return net.DialTimeout("tcp",ip,Timeout)
+		}
 	}else {
-		return net.DialTimeout("tcp",addr,Timeout)
+		if proxyconn!=nil{
+			return proxyconn.Dial("tcp",fmt.Sprintf("%v:%v",ip,port))
+		}else {
+			return net.DialTimeout("tcp",fmt.Sprintf("%v:%v",ip,port),Timeout)
+		}
 	}
 }
 
 //解析ip返回IP类型列表
-func Parse_IP(ip_string string) ([]net.IP, error) {
+func Parse_IP(ip_string string) ([]string, error) {
+	var re []string
 	list, err := iprange.ParseList(ip_string)
-	if err != nil {
-		return nil, fmt.Errorf("IP format error,check the entered IP address")
+	if err != nil {                   //解析不了的ip先根据逗号拆分在判断是不是ipv6
+		if strings.Contains(ip_string,","){
+			iplist:=strings.Split(ip_string,",")
+			if isIPv6(iplist[0]){
+				return Parse_IPv6(ip_string),nil
+			}
+		}else {
+			if isIPv6(ip_string){
+				return Parse_IPv6(ip_string),nil
+			}
+		}
+		return nil, fmt.Errorf("IP format error,check the entered IP address:%v",ip_string)
 	}
 	iplist := list.Expand()
-	return iplist, nil
+	for _,i:=range iplist{
+		re= append(re, i.String())
+	}
+	return re, nil
 }
 
 //解析端口
@@ -245,19 +271,14 @@ func Parse_Port(selection string) ([]int, error) {
 	return ports, nil
 }
 
-
 //输出
 func Output(s string,c Mycolor) {
 	fmt.Print(c(s))
-	//file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
-	//defer file.Close()
-	//Checkerr(err)
-	//file.Write([]byte(s))
 	OutputChan<-s
 }
 
 //创建文件,如果没有指定要存的文件名默认用host名存
-func CreatFile(filename string)  {
+func CreatFile()  {
 	if Hosts!=""&&Path_result=="result.txt"{
 		new_filename:=filename_filter(Hosts)+".txt"
 		Path_result=new_filename
@@ -311,7 +332,7 @@ func PrintScanBanner(mode string)  {
 	}
 	Inithttp()
 	lib.Inithttp(Client,ClientNoRedirect)
-	CreatFile(Path_result)
+	CreatFile()
 	OutputChan=make(chan string)
 	go func() {
 		file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
@@ -534,15 +555,99 @@ func GetHost()  {
 	case Hostfile!=""&&Hosts!="":
 		hostlist,err:=ReadFile(Hostfile)
 		Checkerr_exit(err)
+		hostlist=RemoveRepByMap(hostlist)
+		if len(hostlist)!=0{
+			if isDomain(hostlist[0]){
+				hostlist=Getiplistfromurl(hostlist)
+			}
+		}
 		Hosts=Hosts+","+strings.Join(hostlist,",")
-	case Hostfile!="":
+	case Hostfile!=""&&Hosts=="":
 		hostlist,err:=ReadFile(Hostfile)
 		Checkerr_exit(err)
+		hostlist=RemoveRepByMap(hostlist)
+		if len(hostlist)!=0{
+			if isDomain(hostlist[0]){
+				hostlist=Getiplistfromurl(hostlist)
+			}
+		}
 		Hosts=strings.Join(hostlist,",")
+	case Hosts!=""&&Hostfile=="":
+		if strings.Contains(Hosts,","){
+			hostlist:=strings.Split(Hosts,",")
+			if isDomain(hostlist[0]){
+				hostlist=Getiplistfromurl(hostlist)
+				Hosts=strings.Join(hostlist,",")
+			}
+		}else {
+			if isDomain(Hosts){
+				hostlist:=Getiplistfromurl([]string{Hosts})
+				if len(hostlist)!=0{
+					Hosts=strings.Join(hostlist,",")
+				}
+			}
+		}
 	case Hosts==""&&Hostfile=="":
 		Checkerr_exit(fmt.Errorf("This module must be required --host or --hostfile\nUse \"zscan modename -h\" get some help"))
 	default:
 	}
+}
+
+func Getiplistfromurl(list []string) []string {
+	Output("Start resolving domain names\n",LightCyan)
+	client, err := cdncheck.NewWithCache()
+	if err != nil {
+		log.Fatal(err)
+	}
+	var re []string
+	var result []string
+	var wg sync.WaitGroup
+	listchan:=make(chan string,100)
+	for i:=0;i<Thread;i++{
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for l:=range listchan{
+				iplist,err:=net.LookupHost(l)
+				Checkerr(err)
+				if iplist!=nil{
+					for _,ip:=range iplist{
+						re=append(re,ip)
+						Output(fmt.Sprintf("%v : %v\n",l,ip),White)
+					}
+				}
+			}
+		}()
+	}
+	for _,domain:=range list{
+		if strings.Contains(domain,"http://"){
+			domain=strings.TrimPrefix(domain,"http://")
+		}
+		if strings.Contains(domain,"https://"){
+			domain=strings.TrimPrefix(domain,"https://")
+		}
+		listchan<-domain
+	}
+	close(listchan)
+	wg.Wait()
+	re=RemoveRepByMap(re)
+	Output("Start to remove known CDNS\n",LightCyan)
+	for _,ip:=range re{
+		success:=FilterCdn(ip,client)
+		if success!=""&&!strings.Contains(ip,":"){
+			result= append(result, success)
+		}else {
+			Output(fmt.Sprintf("%v is cdn\n",ip),Yellow)
+		}
+	}
+	return result
+}
+
+func FilterCdn(ip string,client *cdncheck.Client) string {
+	if found,_ ,err := client.Check(net.ParseIP(ip)); found && err == nil {
+		return ""
+	}
+	return ip
 }
 
 
@@ -600,4 +705,39 @@ func RemoveRepByMap(slc []string) []string {
 		}
 	}
 	return result
+}
+
+func Parse_IPv6(ipstring string) []string {
+	var ipv6list []string
+	var ipv6result []string
+	if strings.Contains(ipstring,","){
+		ipv6list=strings.Split(ipstring,",")
+	}else {
+		ipv6list=append(ipv6list,ipstring)
+	}
+	for _,ipv6:=range ipv6list{
+		if ip:=net.ParseIP(ipv6);ip!=nil{
+			ipv6result=append(ipv6result,"["+ip.String()+"]")
+		}
+	}
+	return ipv6result
+}
+
+func isDomain(domian string) bool {
+	var rege = regexp.MustCompile(`^[a-z][a-zA-Z0-9:/]*\.[a-zA-Z0-9]*`)
+	return rege.MatchString(domian)
+}
+
+func isIPv6(ipv6 string) bool {
+	ip:=net.ParseIP(ipv6)
+	if ip==nil{
+		return false
+	}
+	for i:=0;i<len(ipv6);i++{
+		if ipv6[i]==':'{
+			return true
+		}
+		continue
+	}
+	return false
 }

@@ -51,7 +51,7 @@ func burp_smb()  {
 }
 
 func Connectsmbburp(ip string,port int) (string,int,error,[]string) {
-	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, port))
+	conn, err := Getconn( ip, port)
 	if conn != nil {
 		_ = conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
@@ -273,7 +273,7 @@ func NewSession(opt Options, debug bool) (s *Session, err error) {
 	}
 
 	//conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", opt.Host, opt.Port))
-	conn,err:=Getconn(fmt.Sprintf("%s:%d", opt.Host, opt.Port))
+	conn,err:=Getconn(opt.Host, opt.Port)
 	if err != nil {
 		return
 	}

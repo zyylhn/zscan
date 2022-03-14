@@ -50,7 +50,7 @@ func burp_mssql()  {
 }
 
 func Connectmssql(ip string, port int) (string, int, error,[]string) {
-	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, port))
+	conn, err := Getconn( ip, port)
 	defer func() {
 		if conn != nil {
 			_ = conn.Close()

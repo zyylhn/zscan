@@ -1,117 +1,0 @@
-
-Mode:all
-dont't have ssh
-Start time:2022-02-08 16:14:34
-The number of threads:1000
-Time delay:5s
-Traget:
-Verbose:Don't show verbose
-Ping befor portscan
-Save result file:result.txt
-
-=========================living ip result list==========================
-[ping] Find '172.16.95.1' aliving
-[ping] Find '172.16.95.34' aliving
-[ping] Find '172.16.95.24' aliving
-[ping] Find '172.16.95.255' aliving
-A total of 4 IP addresses were discovered
-Find port 172.16.95.34:80
-Find port 172.16.95.24:22
-Find port 172.16.95.24:21
-Find port 172.16.95.24:80
-Find port 172.16.95.34:88
-Find port 172.16.95.34:445
-Find port 172.16.95.34:135
-Find port 172.16.95.34:389
-Find port 172.16.95.34:139
-Find port 172.16.95.1:7000
-Find port 172.16.95.34:3389
-Find port 172.16.95.34:49153
-Find port 172.16.95.34:49152
-Find port 172.16.95.34:49154
-Find port 172.16.95.1:5000
-Find port 172.16.95.34:3306
-Find port 172.16.95.34:5985
-Find port 172.16.95.24:6379
-Find port 172.16.95.1:8080
-Find port 172.16.95.1:7890
-Find Socks5 Server	No authentication required	172.16.95.1:7890 
-redis_version:4.0.8
-os:Linux 5.10.0-kali3-amd64 x86_64
-arch_bits:64
-executable:/root/redis-4.0.8/src/./redis-server
-config_file:/root/redis-4.0.8/redis.conf
-[+]redis burp success:172.16.95.24 No authentication
-http://172.16.95.34	code:200	len:2307	title:站点创建成功-phpstudy for windows	
-http://172.16.95.24	code:200	len:10701	title:Apache2 Debian Default Page: It works	
-[+]mysql burp success:172.16.95.34 root 123123
-[+]172.16.95.34    Find MS17-010	(Windows Server 2012 R2 Standard 9600)
-http://172.16.95.34:5985	code:404	len:315	title:Not Found	
-http://172.16.95.1:7000	code:403	len:0	title:	
-http://172.16.95.1:5000	code:403	len:0	title:	
-http://172.16.95.1:8080	code:200	len:1409	title:Burp Suite Professional	
-
-============================port result list=============================
-There are 3 IP addresses in total
-Traget:172.16.95.1
-  5000
-  7000
-  7890 	Find Socks5 Server	No authentication required
-  8080
-Traget:172.16.95.24
-  21
-  22
-  80
-  6379 	No authentication
-Traget:172.16.95.34
-  80
-  88
-  135 	dc
-	1.1.1.100
-	172.16.95.34
-	fd15:4ba5:5a2b:1008:85ed:7914:e64:f060
-  139 	DC              U Workstation Service
-	LHN             G Domain Name
-	LHN             G Domain Controllers
-	DC              U Server Service
-	LHN             U Domain Master Browser
-	LHN             G Browser Service Elections
-	LHN             U Master Browser
-	__MSBROWSE__ G
-	-------------------------------------------
-	Windows Server 2012 R2 Standard 9600|Windows Server 2012 R2 Standard 6.3
-	NetBIOS domain name   : LHN
-	NetBIOS computer name : DC
-	DNS domain name       : lhn.com
-	DNS computer name     : dc.lhn.com
-	DNS tree name         : lhn.com
-  389
-  445 	domain: LHN
-	hostname: DC
-	Find MS17-010	(Windows Server 2012 R2 Standard 9600)
-	
-  3306 	mysql	Username:root	Password:123123
-  3389
-  5985
-  49152
-  49153
-  49154
-
-============================http result list=============================
-http://172.16.95.34  code:200  len:2307  title:站点创建成功-phpstudy for windows  banner:
-http://172.16.95.24  code:200  len:10701  title:Apache2 Debian Default Page: It works  banner:
-http://172.16.95.34:5985  code:404  len:315  title:Not Found  banner:
-http://172.16.95.1:8080  code:200  len:1409  title:Burp Suite Professional  banner:
-http://172.16.95.1:7000  code:403  len:0  title:  banner:
-http://172.16.95.1:5000  code:403  len:0  title:  banner:
-
-=========================That might be of interest========================
-172.16.95.34:389	It may be a domain controller
-172.16.95.1:7890	Find Socks5 Server	No authentication required
-172.16.95.24:6379	resis no authentication
-172.16.95.34:445	Find MS17-010	(Windows Server 2012 R2 Standard 9600)
-172.16.95.34:3306	mysql	Username:root	Password:123123
-
-End time:2022-02-08 16:15:01
-Time consuming:26.943291564s
-

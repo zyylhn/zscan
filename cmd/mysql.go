@@ -54,7 +54,7 @@ func burp_mysql()  {
 }
 
 func Connectmysql(ip string, port int) (string, int, error,[]string) {
-	conn, err := Getconn(fmt.Sprintf("%v:%v",ip,port))
+	conn, err := Getconn(ip,port)
 	if conn != nil {
 		defer conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
@@ -74,7 +74,7 @@ func mysql_auth(username,password,ip string) (error,bool,string) {
 	DSN := fmt.Sprintf("%s:%s@tcp(%s:%v)/?charset=utf8&timeout=%v", username, password, ip,mysql_port,Timeout)
 	//注册一个tcp网络，根据是否设置代理返回不同的conn
 	mysql.RegisterDialContext("tcp", func(ctx context.Context,network string) (net.Conn, error) {
-		return Getconn(network)
+		return Getconn(network,0)
 	})
 	db, err := sql.Open("mysql", DSN)
 	if err == nil {

@@ -36,19 +36,23 @@ func allmode()  {
 	}
 	ips, err := Parse_IP(Hosts)
 	Checkerr_exit(err)
-	if ps_port=="l"||len(ips)>500{
+	//if len(ips)>500&&ps_port==default_port{
+	//	ps_port=little_port
+	//}
+	if ps_port=="l"{
 		ps_port=little_port
 	}
 	ports, err := Parse_Port(ps_port)
 	Checkerr(err)
 	aliveserver:=NewPortScan(ips,ports,Connectall,true)
+	Output("Start port scan\n",LightCyan)
 	r:=aliveserver.Run()
 	Printresult(r)
 }
 
 func Connectall(ip string, port int) (string, int, error,[]string) {
 	var r []string //返回从该端口获取的信息
-	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
+	conn,err:=Getconn(ip,port)
 	if conn != nil {
 		defer conn.Close()
 		addr:=fmt.Sprintf("%v:%v",ip,port)
@@ -283,7 +287,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 			_,_,_,r=Connect17010(ip,port)
 			for _,i:=range r{
 				if strings.Contains(i,"MS17-010"){
-					interested_result.Store(addr,i)
+					interested_result.Store("17010："+addr,i)
 				}
 				smbRes=append(smbRes,i)
 			}
@@ -297,6 +301,9 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				}
 				startburp:=NewBurp(Password,user,Userdict,Passdict,ip,smb_auth,100)
 				relust:=startburp.Run()
+				if relust!=""{
+					interested_result.Store("smb："+addr,relust)
+				}
 				smbRes=append(smbRes,relust)
 			}
 			return ip,port,nil,smbRes

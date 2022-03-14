@@ -47,7 +47,7 @@ func burp_ldap()  {
 }
 
 func Connectldap(ip string,port int) (string,int,error,[]string) {
-	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, port))
+	conn, err := Getconn( ip, port)
 	if conn != nil {
 		_ = conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
@@ -60,7 +60,7 @@ func Connectldap(ip string,port int) (string,int,error,[]string) {
 
 func ldap_auth(username,password,ip string) (error,bool,string) {
 	//l, err := ldap.Dial("tcp", fmt.Sprintf("%s:%d", addr, ldap_port))
-	conn,err:=Getconn(fmt.Sprintf("%s:%d",ip, ldap_port))
+	conn,err:=Getconn(ip, ldap_port)
 	l:=ldap.NewConn(conn,false)
 	l.Start()
 	if err==nil{

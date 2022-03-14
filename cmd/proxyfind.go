@@ -37,7 +37,7 @@ func proxyfind()  {
 }
 
 func Connect_SocksScan(ip string,port int) (string,int,error,[]string) {
-	conn, err := Getconn(fmt.Sprintf("%v:%v",ip,port))
+	conn, err := Getconn(ip,port)
 	if conn!=nil{
 		result:=""
 		switch proxy_type {

@@ -325,7 +325,7 @@ func Inithttp() {
 
 func InitHttpClient(ThreadsNum int,Timeout time.Duration) error {
 	d:= func(ctx context.Context,network,addr string)(net.Conn,error) {
-		return Getconn(addr)
+		return Getconn(addr,0)
 	}
 	tr := &http.Transport{
 		DialContext:         d,

@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 	"net"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 	lib "zscan/poccheck"
@@ -40,7 +41,10 @@ var portscanCmd = &cobra.Command{
 		}
 		ips, err := Parse_IP(Hosts)
 		Checkerr_exit(err)
-		if ps_port=="l"||len(ips)>500{
+		//if len(ips)>500&&ps_port==default_port{
+		//		ps_port=little_port
+		//}
+		if ps_port=="l"{
 			ps_port=little_port
 		}
 		ports, err := Parse_Port(ps_port)
@@ -50,7 +54,7 @@ var portscanCmd = &cobra.Command{
 }
 
 
-func portscan(ips []net.IP,ports []int)  {
+func portscan(ips []string,ports []int)  {
 	var port_scan *PortScan
 	if banner{
 		port_scan=NewPortScan(ips,ports,Connect_BannerScan,true)
@@ -59,8 +63,8 @@ func portscan(ips []net.IP,ports []int)  {
 	} else {
 		port_scan=NewPortScan(ips,ports,Connect,true)
 	}
+	Output("Start port scan\n",LightCyan)
 	r:=port_scan.Run()
-	//getHttptitle(r)
 	Printresult(r)
 
 }
@@ -73,7 +77,7 @@ type Openport struct {
 
 
 type PortScan struct {
-	iplist []net.IP
+	iplist []string
 	ports []int
 	wg sync.WaitGroup
 	taskch chan map[string]int
@@ -85,7 +89,7 @@ type PortScan struct {
 	percent bool
 }
 
-func NewPortScan(iplist []net.IP,ports []int,connect Connect_method,p bool) *PortScan {
+func NewPortScan(iplist []string,ports []int,connect Connect_method,p bool) *PortScan {
 	return &PortScan{iplist: iplist,ports: ports,taskch: make(chan map[string]int,Thread*2),tcpconn: connect,result: make(map[string]*Openport),tasknum: float64(len(iplist)*len(ports)),percent: p}
 }
 
@@ -113,7 +117,7 @@ func (p *PortScan) Gettasklist()  {
 	for _, port := range p.ports  {
 		for _, ip := range p.iplist  {
 			//fmt.Println(ip)
-			ipPort := map[string]int{ip.String(): port}
+			ipPort := map[string]int{ip: port}
 			//fmt.Println(ipPort)
 			p.taskch <- ipPort
 		}
@@ -138,6 +142,9 @@ func (p *PortScan) Startscan()  {
 func (p *PortScan) Saveresult(ip string, port int, err error,banner []string) error {
 	if err != nil ||port==0{
 		return err
+	}
+	if strings.HasPrefix(ip,"[")&&strings.HasSuffix(ip,"]"){
+		ip=strings.Trim(ip,"[]")
 	}
 	v, ok := p.portscan_result.Load(ip)
 	if ok {
@@ -190,7 +197,7 @@ func (p *PortScan)bar()  {
 
 //格式化输出ps模块的结果
 func Printresult(r map[string]*Openport)  {
-	Output("\n\r============================port result list=============================\n",LightGreen)
+	Output("\r\n============================port result list=============================\n",LightGreen)
 	Output(fmt.Sprintf("There are %v IP addresses in total\n",len(r)),LightGreen)
 	realIPs := make([]net.IP, 0, len(r))
 	for ip,_:=range r{

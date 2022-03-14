@@ -52,7 +52,7 @@ func burp_rdp()  {
 }
 
 func Connectrdp(ip string,port int) (string,int,error,[]string) {
-	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, port))
+	conn, err := Getconn( ip, port)
 	if conn != nil {
 		_ = conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
@@ -64,8 +64,8 @@ func Connectrdp(ip string,port int) (string,int,error,[]string) {
 }
 
 func rdp_auth(username,password,ip string) (error,bool,string) {
-	target := fmt.Sprintf("%s:%d", ip, rdp_port)
-	g := NewClient(target, glog.NONE)
+	//target := fmt.Sprintf("%s:%d", ip, rdp_port)
+	g := NewClient(ip, glog.NONE)
 	domain,user:=getusername(username)
 	err := g.Login(domain, user, password)
 	if err == nil {
@@ -84,7 +84,7 @@ func getusername(username string) (string,string) {
 }
 
 type Rdpclient struct {
-	Host string // ip:port
+	Host string // ip
 	tpkt *tpkt.TPKT
 	x224 *x224.X224
 	mcs  *t125.MCSClient
@@ -103,7 +103,7 @@ func NewClient(host string, logLevel glog.LEVEL) *Rdpclient {
 }
 
 func (g *Rdpclient) Login(domain, user, pwd string) error {
-	conn, err := Getconn(g.Host)
+	conn, err := Getconn(g.Host,rdp_port)
 	if err != nil {
 		return fmt.Errorf("[dial err] %v", err)
 	}

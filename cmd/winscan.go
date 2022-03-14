@@ -136,7 +136,7 @@ func nbt_smb_oxi_scan(ip string,port int) (string,int,error,[]string) {
 			return ip, port, nil, []string{nbname.msg}
 		}
 	case 445:
-		conn, err := Getconn(fmt.Sprintf("%v:%v",ip,port))
+		conn, err := Getconn(ip,port)
 		if err != nil {
 			return ip, port, err, nil
 		}
@@ -148,7 +148,7 @@ func nbt_smb_oxi_scan(ip string,port int) (string,int,error,[]string) {
 			return ip,port,ok,nil
 		}
 	case 135:
-		conn, err := Getconn(fmt.Sprintf("%v:%v",ip,port))
+		conn, err := Getconn(ip,port)
 		if err != nil {
 			return ip, port, err, nil
 		}
@@ -195,8 +195,7 @@ func netBIOS(host string) (nbname NbnsName, err error) {
 		payload0 = append(payload0, name...)
 		payload0 = append(payload0, []byte("\x00 EOENEBFACACACACACACACACACACACACA\x00")...)
 	}
-	realhost := fmt.Sprintf("%s:%v", host, 139)
-	conn, err := Getconn(realhost)
+	conn, err := Getconn(host,139)
 	defer func() {
 		if conn != nil {
 			conn.Close()
@@ -446,7 +445,7 @@ func smbinfo(conn net.Conn) (error,[]string) {
 }
 
 func Connectsmb(ip string, port int) (string, int, error, []string) {
-	conn, err := Getconn(fmt.Sprintf("%v:%v", ip, port))
+	conn, err := Getconn(ip, port)
 	if err != nil {
 		return ip, port, err, nil
 	}
@@ -479,7 +478,7 @@ func oxidScan() map[string]*Openport {
 }
 
 func Connectoxid(ip string,port int) (string, int, error, []string) {
-	conn, err := Getconn(fmt.Sprintf("%v:%v", ip, port))
+	conn, err := Getconn( ip, port)
 	if err != nil {
 		return ip, port, err, nil
 	}

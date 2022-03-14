@@ -40,7 +40,7 @@ func ms17010()  {
 
 
 func Connect17010(ip string,port int) (string,int,error,[]string) {
-	conn, err := Getconn(fmt.Sprintf("%v:%v",ip,port))
+	conn, err := Getconn(ip,port)
 	if conn != nil{
 		defer conn.Close()
 		_,r:=ms17010info(conn,ip)

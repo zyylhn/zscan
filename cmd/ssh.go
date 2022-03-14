@@ -48,20 +48,19 @@ func Ssh()  {
 			burp_ssh()
 		}
 	}else {
-		addr:=fmt.Sprintf("%v:%v",Hosts,ssh_port)
 		if Username==""{
 			Checkerr(fmt.Errorf("login mode must set username\nif want burp need add \"-b\""))
 			os.Exit(0)
 		}
 		if login_key{
-			client,err:=ssh_connect_publickeys(addr,Username,key_path)
+			client,err:=ssh_connect_publickeys(Hosts,Username,key_path)
 			Checkerr_exit(err)
 			ssh_login(client)
 		}else {
 			if Password==""{
 				Checkerr(fmt.Errorf("Musst set password"))
 				os.Exit(0)}
-			client,err:=ssh_connect_userpass(addr,Username,Password)
+			client,err:=ssh_connect_userpass(Hosts,Username,Password)
 			Checkerr_exit(err)
 			ssh_login(client)
 		}
@@ -95,7 +94,7 @@ func burp_sshwithprivatekey()  {
 
 
 func Connectssh(ip string, port int) (string, int, error,[]string) {
-	conn,err:=Getconn(fmt.Sprintf("%v:%v",ip,port))
+	conn,err:=Getconn(ip,port)
 	if conn != nil {
 		_ = conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
@@ -111,6 +110,9 @@ func Connectssh(ip string, port int) (string, int, error,[]string) {
 						continue
 					}
 					re=append(re,i)
+				}
+				if !strings.Contains(Username,",")&&Username=="root"{
+					Username=""
 				}
 			}
 			Username=strings.Join(re,",")
@@ -150,7 +152,7 @@ func ssh_auto_key(user,keypath,ip string) (error,bool,string) {
 }
 
 //获取公钥认证Client
-func ssh_connect_publickeys(addr,user,key_path string) (*ssh.Client, error) {
+func ssh_connect_publickeys(ip,user,key_path string) (*ssh.Client, error) {
 	var (
 		err  error
 		home_path string
@@ -182,9 +184,9 @@ func ssh_connect_publickeys(addr,user,key_path string) (*ssh.Client, error) {
 		Timeout:         Timeout,
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
-	conn,err:=Getconn(addr)
+	conn,err:=Getconn(ip,ssh_port)
 	Checkerr_exit(err)
-	c,ch,re,err:=ssh.NewClientConn(conn,addr,clientConfig)
+	c,ch,re,err:=ssh.NewClientConn(conn,fmt.Sprintf("%v:%v",ip,ssh_port),clientConfig)
 	if err !=nil{
 		return nil,err
 	}
@@ -199,15 +201,15 @@ type sshclient struct {
 }
 
 //获取账号密码验证的Client
-func ssh_connect_userpass(addr,user,pass string) (*ssh.Client,error) {
+func ssh_connect_userpass(ip,user,pass string) (*ssh.Client,error) {
 	client_config:=&ssh.ClientConfig{User: user,Auth: []ssh.AuthMethod{ssh.Password(pass)},HostKeyCallback: ssh.InsecureIgnoreHostKey(),Timeout: Timeout}
-	conn,err:=Getconn(addr)
+	conn,err:=Getconn(ip,ssh_port)
 	if err!=nil{
 		return nil,err
 	}
 	timeoutch:=make(chan sshclient)
 	go func() {
-		c1,ch1,re1,err1:=ssh.NewClientConn(conn,addr,client_config)
+		c1,ch1,re1,err1:=ssh.NewClientConn(conn,fmt.Sprintf("%v:%v",ip,ssh_port),client_config)
 		timeoutch<-sshclient{c1,ch1,re1,err1}
 	}()
 	//c,ch,re,err:=ssh.NewClientConn(conn,addr,client_config)

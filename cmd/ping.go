@@ -77,7 +77,7 @@ func ping()  {
 	}
 }
 
-func ICMPRun(hostslist []net.IP, Ping bool) []string {
+func ICMPRun(hostslist []string, Ping bool) []string {
 	Output("\n\r=========================living ip result list==========================\n",LightGreen)
 	chanHosts := make(chan string, len(hostslist))
 	go func() {
@@ -116,7 +116,7 @@ func ICMPRun(hostslist []net.IP, Ping bool) []string {
 	return AliveHosts
 }
 
-func RunIcmp(hostslist []net.IP, conn *icmp.PacketConn, chanHosts chan string) {
+func RunIcmp(hostslist []string, conn *icmp.PacketConn, chanHosts chan string) {
 	endflag := false
 	go func() {
 		for {
@@ -133,8 +133,8 @@ func RunIcmp(hostslist []net.IP, conn *icmp.PacketConn, chanHosts chan string) {
 	}()
 
 	for _, host := range hostslist {
-		dst, _ := net.ResolveIPAddr("ip", host.String())
-		IcmpByte := makemsg(host.String())
+		dst, _ := net.ResolveIPAddr("ip", host)
+		IcmpByte := makemsg(host)
 		conn.WriteTo(IcmpByte, dst)
 	}
 	start := time.Now()
@@ -160,7 +160,7 @@ func RunIcmp(hostslist []net.IP, conn *icmp.PacketConn, chanHosts chan string) {
 }
 
 
-func RunPing(hostslist []net.IP, chanHosts chan string) {
+func RunPing(hostslist []string, chanHosts chan string) {
 	var bsenv = ""
 	if OS != "windows" {
 		bsenv = "/bin/bash"
@@ -177,7 +177,7 @@ func RunPing(hostslist []net.IP, chanHosts chan string) {
 			}
 			<-limiter
 			wg.Done()
-		}(host.String())
+		}(host)
 	}
 	wg.Wait()
 }
@@ -248,9 +248,9 @@ func genIdentifier(host string) (byte, byte) {
 	return host[0], host[1]
 }
 
-func IsContain(items []net.IP, item string) bool {
+func IsContain(items []string, item string) bool {
 	for _, eachItem := range items {
-		if eachItem.String() == item {
+		if eachItem == item {
 			return true
 		}
 	}
@@ -279,15 +279,15 @@ func getlocalnet() []string {
 	return localnet
 }
 
-func gettasklist(network []string) []net.IP {
-	var re []net.IP
+func gettasklist(network []string) []string {
+	var re []string
 	for _,i:=range network{
 		for j:=0;j<256;j++{
 			ip:=strings.Split(i,".")
-			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,0)))
-			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,1)))
-			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,2)))
-			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,255)))
+			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,0)).String())
+			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,1)).String())
+			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,2)).String())
+			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,255)).String())
 		}
 	}
 	return re
@@ -372,6 +372,6 @@ func init() {
 	pingCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	pingCmd.Flags().BoolVarP(&useicmp,"icmp","i",false,"Icmp packets are sent to check whether the host is alive(need root)")
 	pingCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set `hosts`(The format is similar to Nmap)")
-	pingCmd.Flags().StringVarP(&discover, "discover", "d", "", "Live network segment found,ocal parameter uses the local NIC information。eg:zscan ping -d local/zscan ping -d 172.18.0.0,172.19.0.0")
+	pingCmd.Flags().StringVarP(&discover, "discover", "d", "", "Live network segment found,local parameter uses the local NIC information。eg:zscan ping -d local/zscan ping -d 172.18.0.0,172.19.0.0")
 	//pingCmd.MarkFlagRequired("host")
 }

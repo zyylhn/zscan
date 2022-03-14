@@ -48,7 +48,7 @@ func burp_mongodb()  {
 }
 
 func Connectmongodb(ip string, port int) (string, int, error,[]string) {
-	conn, err := Getconn(fmt.Sprintf("%s:%d", ip, port))
+	conn, err := Getconn(ip, port)
 	defer func() {
 		if conn != nil {
 			_ = conn.Close()
@@ -70,7 +70,7 @@ func mongodb_auth(username,password,ip string) (error,bool,string) {
 
 	dialInfo := &mgo.DialInfo{
 		DialServer: func(addr *mgo.ServerAddr) (net.Conn, error) {
-			return Getconn(fmt.Sprintf("%s:%d", ip, mongodb_port))
+			return Getconn(ip, mongodb_port)
 		},
 		Addrs:     []string{fmt.Sprintf("%s:%d", ip, mongodb_port)},
 		Direct:    false,
