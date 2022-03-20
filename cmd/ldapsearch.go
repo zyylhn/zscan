@@ -14,7 +14,7 @@ var SizeLimit int
 var Or bool
 var Listcmd bool
 var ldapsearchCmd = &cobra.Command{
-	Use:   "ldapsearch",
+	Use:   "ldap",
 	Short: "Ldap queries",
 	Run: func(cmd *cobra.Command, args []string) {
 		ldapSearch()
