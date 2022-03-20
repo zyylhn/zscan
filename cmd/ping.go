@@ -368,7 +368,7 @@ func Print_network(re []string)  {
 }
 
 func init() {
-	rootCmd.AddCommand(pingCmd)
+	RootCmd.AddCommand(pingCmd)
 	pingCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	pingCmd.Flags().BoolVarP(&useicmp,"icmp","i",false,"Icmp packets are sent to check whether the host is alive(need root)")
 	pingCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set `hosts`(The format is similar to Nmap)")

@@ -132,7 +132,7 @@ func OutputVul(re *lib.PocResult)  {
 }
 
 func init() {
-	rootCmd.AddCommand(pocCmd)
+	scanCmd.AddCommand(pocCmd)
 	pocCmd.Flags().StringVarP(&TargetUrl,"url","u","","set target url")
 	pocCmd.Flags().StringVar(&Pocpath,"pocpath","","set target url")
 	pocCmd.Flags().StringVar(&PocName,"pocname","","set the poc name")

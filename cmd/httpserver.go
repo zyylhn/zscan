@@ -207,7 +207,7 @@ func SimpleBasicAuth(user, password string) func(http.Handler) http.Handler {
 }
 
 func init() {
-	rootCmd.AddCommand(httpserverCmd)
+	serverCmd.AddCommand(httpserverCmd)
 	httpserverCmd.Flags().IntVarP(&maxupload,"size","s",20,"set max upload files size(mb)")
 	//httpserverCmd.Flags().BoolVarP(&allowupload,"upload","u",false,"allow upload,/u indicates the file upload path（Unauthorized authorization exists，finished off）")
 	httpserverCmd.Flags().StringVarP(&httpserveraddr,"addr","a","0.0.0.0:7001","set http server addr")

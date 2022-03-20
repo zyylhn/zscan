@@ -17,12 +17,12 @@ require (
 	github.com/jlaffaye/ftp v0.0.0-20211117213618-11820403398b
 	github.com/lib/pq v1.10.4
 	github.com/malfunkt/iprange v0.9.0
-	github.com/olekukonko/tablewriter v0.0.5
 	github.com/projectdiscovery/cdncheck v0.0.3
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca
 	github.com/spf13/cobra v1.2.1
 	github.com/stacktitan/smb v0.0.0-20190531122847-da9a425dceb8
 	github.com/tomatome/grdp v0.0.0-20211016064301-f2f15c171086
+	github.com/zyylhn/redis_rce v0.1.0
 	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871
 	golang.org/x/net v0.0.0-20211118161319-6a13c67c3ce4
 	golang.org/x/text v0.3.7

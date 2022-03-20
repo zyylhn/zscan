@@ -30,13 +30,6 @@ func ldapmode()  {
 
 func burp_ldap()  {
 	GetHost()
-	if Command!=""{
-		err,_,_:=ldap_auth(Username,Password,Hosts)
-		if err!=nil{
-			fmt.Println(err)
-		}
-		return
-	}
 	if Username==""{
 		Username="Administrator"
 	}
@@ -59,32 +52,35 @@ func Connectldap(ip string,port int) (string,int,error,[]string) {
 }
 
 func ldap_auth(username,password,ip string) (error,bool,string) {
-	//l, err := ldap.Dial("tcp", fmt.Sprintf("%s:%d", addr, ldap_port))
+	_,err:=LoginBind(username,password,ip)
+	if err!=nil{
+		return err,false,"ldap"
+	}else {
+		return nil,true,"ldap"
+	}
+}
+
+func LoginBind(ldapUser, ldapPassword string,ip string) (*ldap.Conn, error) {
 	conn,err:=Getconn(ip, ldap_port)
 	l:=ldap.NewConn(conn,false)
 	l.Start()
-	if err==nil{
-		defer l.Close()
-		err = l.Bind(username,password)
-		if err==nil{
-			if Command!=""{
-				fmt.Println("exec command")
-			}
-			return nil,true,"ldap"
-		}
-		return nil,false,"ldap"
+	if err != nil {
+		return nil, err
 	}
-	return err,false,"ldap"
+	err = l.Bind(ldapUser,ldapPassword)
+	if err != nil {
+		return nil, err
+	}
+	return l, nil
 }
 
 func init() {
-	rootCmd.AddCommand(ldapCmd)
+	blastCmd.AddCommand(ldapCmd)
 	ldapCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	ldapCmd.Flags().StringVarP(&Hosts,"host","H","","Set ldap server host")
 	ldapCmd.Flags().IntVarP(&ldap_port,"port","p",389,"Set ldap server port")
 	ldapCmd.Flags().IntVarP(&burpthread,"burpthread","",100,"Set burp password thread(recommend not to change)")
 	ldapCmd.Flags().StringVarP(&Username,"username","U","","Set ldap username")
-	ldapCmd.Flags().StringVarP(&Command,"command","c","","Set the command you want to sql_execute")
 	ldapCmd.Flags().StringVarP(&Password,"password","P","","Set ldap password")
 	ldapCmd.Flags().StringVarP(&Userdict,"userdict","","","Set ldap userdict path")
 	ldapCmd.Flags().StringVarP(&Passdict,"passdict","","","Set ldap passworddict path")

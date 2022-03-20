@@ -7,7 +7,6 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/spf13/cobra"
 	"net"
-	"strings"
 	"time"
 )
 
@@ -30,16 +29,7 @@ var redisCmd = &cobra.Command{
 }
 
 func Redis()  {
-	switch  {
-	case Command!="":
-		if err,f,_:=redis_auth("",Password,Hosts);f{
-			redis_exec(Command,redis_client(Username,Password,Hosts))
-		}else {fmt.Println(Red(err))}
-	default:
-		//iplist,err:=Parse_IP(Hosts)
-		//Checkerr_exit(err)
-		burp_redis()
-	}
+	burp_redis()
 }
 
 func burp_redis()  {
@@ -78,7 +68,6 @@ func redis_client(user,pass,ip string) (*redis.Client) {
 		return nil
 	}
 	dialer:= func(ctx context.Context,network,addr string)(net.Conn,error) {
-
 		return Getconn(addr,0)
 	}
 	opt.Dialer=dialer
@@ -95,97 +84,16 @@ func redis_auth(user,pass,ip string) (error,bool,string) {
 	if err!=nil{
 		return err,false,"redis"
 	}
-	Output(getinfomation(rbd),LightCyan)
 	return nil,true,"redis"
 }
 
-//命令执行模块的执行函数
-func redis_exec(cmd string,client *redis.Client)  {
-	ctx:=context.Background()
-	args:=strings.Fields(cmd)
-	switch len(args) {
-	case 1:
-		val, err := client.Do(ctx, args[0]).Result()
-		redis_checkerr(val, err)
-	case 2:
-		val, err := client.Do(ctx, args[0], args[1]).Result()
-		redis_checkerr(val, err)
-	case 3:
-		val, err := client.Do(ctx, args[0], args[1], args[2]).Result()
-		redis_checkerr(val, err)
-	case 4:
-		val, err := client.Do(ctx, args[0], args[1], args[2], args[3]).Result()
-		redis_checkerr(val, err)
-	case 5:
-		val, err := client.Do(ctx, args[0], args[1], args[2], args[3], args[4]).Result()
-		redis_checkerr(val, err)
-	default:
-		fmt.Println(Yellow("Too many args"))
-	}
-}
-
-//命令执行模块的检查和输出函数
-func redis_checkerr(val interface{},err error)  {
-	if err != nil {
-		if err == redis.Nil {
-			fmt.Println(Red("Key does not exits"))
-			return
-		}
-		fmt.Println(Yellow(err))
-	}
-	switch v:=val.(type){
-	case string:
-		fmt.Println(v)
-	case []string:
-		fmt.Println(strings.Join(v," "))
-	default:
-		fmt.Println(v)
-	}
-}
-
-//获取redis基本信息
-func getinfomation(client *redis.Client) string {
-	var redis_version string
-	var os string
-	var arch string
-	var executable string
-	var configfile string
-
-	val,err:=client.Do(context.Background(),"info").Result()
-	Checkerr(err)
-	info:=val.(string)
-	info_list:=strings.Split(info,"\r\n")
-	info_list=info_list[0:23]
-	for _,v:=range info_list{
-		switch  {
-		case strings.Contains(v,"redis_version:"):
-			redis_version=v
-		case strings.Contains(v,"os:"):
-			os=v
-		case strings.Contains(v,"arch_bits:"):
-			arch=v
-		case strings.Contains(v,"executable:"):
-			executable=v
-		case strings.Contains(v,"config_file:"):
-			configfile=v
-		default:
-		}
-	}
-	return fmt.Sprintf("%v\n%v\n%v\n%v\n%v\n",redis_version,os,arch,executable,configfile)
-}
-
-
-
 func init() {
-	rootCmd.AddCommand(redisCmd)
+	blastCmd.AddCommand(redisCmd)
 	redisCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	redisCmd.Flags().StringVarP(&Hosts,"host","H","","Set redis server host")
 	redisCmd.Flags().IntVarP(&redis_port,"port","p",6379,"Set redis server port")
 	redisCmd.Flags().IntVarP(&burpthread,"burpthread","",100,"Set burp password thread(recommend not to change)")
-	//redisCmd.Flags().StringVarP(&Username,"username","U","root","Set redis username")
 	redisCmd.Flags().StringVarP(&Command,"command","c","","Set the command you want to execute")
 	redisCmd.Flags().StringVarP(&Password,"password","P","","Set redis password")
-	//redisCmd.Flags().StringVarP(&Userdict,"userdict","","","Set redis userdict path")
 	redisCmd.Flags().StringVarP(&Passdict,"passdict","","","Set redis passworddict path")
-	//redisCmd.MarkFlagRequired("host")
 }

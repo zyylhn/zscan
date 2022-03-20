@@ -2,15 +2,14 @@
 package cmd
 
 import (
-	"bytes"
 	"context"
 	"database/sql"
 	"fmt"
 	"github.com/go-sql-driver/mysql"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"net"
 	"time"
+	"zscan/config"
 )
 
 var mysql_port int
@@ -37,15 +36,8 @@ func mysqlmode()  {
 
 func burp_mysql()  {
 	GetHost()
-	if Command!=""{
-		err,_,_:=mysql_auth(Username,Password,Hosts)
-		if err!=nil{
-			fmt.Println(err)
-		}
-		return
-	}
 	if Username==""{
-		Username="root,mysql"
+		Username=config.Mysqluser
 	}
 	ips, err := Parse_IP(Hosts)
 	Checkerr(err)
@@ -80,10 +72,6 @@ func mysql_auth(username,password,ip string) (error,bool,string) {
 	if err == nil {
 		err = db.Ping()
 		if err == nil {
-			if Command!=""{
-				r,_:=sql_execute(db,Command)
-				Output(fmt.Sprintf("\n%v",r),LightGreen)
-			}
 			return nil,true,"mysql"
 		}
 		db.Close()
@@ -92,76 +80,14 @@ func mysql_auth(username,password,ip string) (error,bool,string) {
 }
 
 
-func sql_execute(db *sql.DB,q string) (*Results, error) {
-	if q == "" {
-		return nil, nil
-	}
-	rows, err := db.Query(q)
-	if err != nil {
-		return nil, err
-	}
-	columns, err := rows.Columns()
-	if err != nil {
-		return nil, err
-	}
-
-	var results [][]string
-	for rows.Next() {
-		rs := make([]sql.NullString, len(columns))
-		rsp := make([]interface{}, len(columns))
-		for i := range rs {
-			rsp[i] = &rs[i]
-		}
-		if err = rows.Scan(rsp...); err != nil {
-			break
-		}
-		_rs := make([]string, len(columns))
-		for i := range rs {
-			_rs[i] = rs[i].String
-		}
-		results = append(results, _rs)
-	}
-	if closeErr := rows.Close(); closeErr != nil {
-		return nil, closeErr
-	}
-	if err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return &Results{
-		Columns: columns,
-		Rows:    results,
-	}, nil
-}
-
-type Results struct {
-	Columns []string
-	Rows    [][]string
-}
-
-func (r *Results) String() string {
-	buf := bytes.NewBufferString("")
-	table := tablewriter.NewWriter(buf)
-	table.SetHeader(r.Columns)
-	table.AppendBulk(r.Rows)
-	table.Render()
-	return buf.String()
-}
-
-
 func init() {
-	rootCmd.AddCommand(mysqlCmd)
+	blastCmd.AddCommand(mysqlCmd)
 	mysqlCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	mysqlCmd.Flags().StringVarP(&Hosts,"host","H","","Set mysql server host")
 	mysqlCmd.Flags().IntVarP(&mysql_port,"port","p",3306,"Set mysql server port")
 	mysqlCmd.Flags().IntVarP(&burpthread,"burpthread","",100,"Set burp password thread(recommend not to change)")
 	mysqlCmd.Flags().StringVarP(&Username,"username","U","","Set mysql username")
-	mysqlCmd.Flags().StringVarP(&Command,"command","c","","Set the command you want to sql_execute")
 	mysqlCmd.Flags().StringVarP(&Password,"password","P","","Set mysql password")
 	mysqlCmd.Flags().StringVarP(&Userdict,"userdict","","","Set mysql userdict path")
 	mysqlCmd.Flags().StringVarP(&Passdict,"passdict","","","Set mysql passworddict path")
-	//mysqlCmd.Flags().BoolVarP(&burp,"burp","b",false,"Use burp mode default login mode")
-	//mysqlCmd.MarkFlagRequired("host")
 }

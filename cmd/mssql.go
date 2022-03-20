@@ -63,16 +63,11 @@ func Connectmssql(ip string, port int) (string, int, error,[]string) {
 	return ip, port, err,nil
 }
 func mssql_auth(user ,pass ,addr string) ( error,bool,string) {
-	//fmt.Println(user,pass,addr)
 	connString := fmt.Sprintf("sqlserver://%v:%v@%v:%v/?connection+timeout=%v&encrypt=disable", user, pass,addr,mssql_port,5)
 	db, err := sql.Open("mssql", connString)
 	if err == nil {
 		err = db.Ping()
 		if err == nil {
-			if Command!=""{
-				r,_:=sql_execute(db,Command)
-				Output(fmt.Sprintf("\n%v",r),LightGreen)
-			}
 			return nil,true,"mssql"
 		}
 		db.Close()
@@ -81,13 +76,12 @@ func mssql_auth(user ,pass ,addr string) ( error,bool,string) {
 }
 
 func init() {
-	rootCmd.AddCommand(mssqlCmd)
+	blastCmd.AddCommand(mssqlCmd)
 	mssqlCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	mssqlCmd.Flags().StringVarP(&Hosts,"host","H","","Set mysql server host")
 	mssqlCmd.Flags().IntVarP(&mssql_port,"port","p",1433,"Set mysql server port")
 	mssqlCmd.Flags().IntVarP(&burpthread,"burpthread","",100,"Set burp password thread(recommend not to change)")
 	mssqlCmd.Flags().StringVarP(&Username,"username","U","","Set mysql username")
-	mssqlCmd.Flags().StringVarP(&Command,"command","c","","Set the command you want to execute")
 	mssqlCmd.Flags().StringVarP(&Password,"password","P","","Set mysql password")
 	mssqlCmd.Flags().StringVarP(&Userdict,"userdict","","","Set mysql userdict path")
 	mssqlCmd.Flags().StringVarP(&Passdict,"passdict","","","Set mysql passworddict path")

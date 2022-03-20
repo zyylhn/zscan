@@ -118,7 +118,7 @@ func PrintResult_Socks(r map[string]*Openport)  {
 
 
 func init() {
-	rootCmd.AddCommand(SocksServerScanCmd)
+	scanCmd.AddCommand(SocksServerScanCmd)
 	SocksServerScanCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	SocksServerScanCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set `hosts`(The format is similar to Nmap) eg:192.168.1.1/24,172.16.95.1-100,127.0.0.1")
 	SocksServerScanCmd.Flags().StringVarP(&proxy_port, "ports", "p", "1080,1089,8080,7890,10808", "Set `port` eg:1-1000,3306,3389")

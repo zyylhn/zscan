@@ -158,7 +158,7 @@ func ms17010info(conn net.Conn,ip string) (error,[]string) {
 
 
 func init() {
-	rootCmd.AddCommand(ms17010Cmd)
+	scanCmd.AddCommand(ms17010Cmd)
 	ms17010Cmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	ms17010Cmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set target")
 }

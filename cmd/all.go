@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 	"strings"
 	"time"
+	"zscan/config"
 )
 
 var notburp bool
@@ -40,7 +41,7 @@ func allmode()  {
 	//	ps_port=little_port
 	//}
 	if ps_port=="l"{
-		ps_port=little_port
+		ps_port=config.Little_port
 	}
 	ports, err := Parse_Port(ps_port)
 	Checkerr(err)
@@ -58,37 +59,37 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 		addr:=fmt.Sprintf("%v:%v",ip,port)
 		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
 		switch port {
-		//case 22:
-		//	if !notburp{
-		//		if Verbose{
-		//			fmt.Println(Yellow("\rStart burp ssh : ",ip,":",port))
-		//		}
-		//		name:="root,admin,ssh"
-		//		if Username!=""{
-		//			name=Username
-		//		}
-		//		_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
-		//		if f{
-		//			Output(fmt.Sprintf("[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
-		//			var re []string
-		//			if strings.Contains(Username,"root"){
-		//				sl:=strings.Split(Username,",")
-		//				for _,i:=range sl{
-		//					if i=="root"{
-		//						continue
-		//					}
-		//					re=append(re,i)
-		//				}
-		//			}
-		//			Username=strings.Join(re,",")
-		//		}
-		//		startburp:=NewBurp(Password,name,Userdict,Passdict,ip,ssh_auto,10)
-		//		relust:=startburp.Run()
-		//		if relust!=""{
-		//			return ip,port,nil,[]string{relust}
-		//		}
-		//	}
-		//	return ip,port,nil,nil
+		case 22:
+			if !notburp{
+				if Verbose{
+					fmt.Println(Yellow("\rStart burp ssh : ",ip,":",port))
+				}
+				name:="root,admin,ssh"
+				if Username!=""{
+					name=Username
+				}
+				_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
+				if f{
+					Output(fmt.Sprintf("[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
+					var re []string
+					if strings.Contains(Username,"root"){
+						sl:=strings.Split(Username,",")
+						for _,i:=range sl{
+							if i=="root"{
+								continue
+							}
+							re=append(re,i)
+						}
+					}
+					Username=strings.Join(re,",")
+				}
+				startburp:=NewBurp(Password,name,Userdict,Passdict,ip,ssh_auto,10)
+				relust:=startburp.Run()
+				if relust!=""{
+					return ip,port,nil,[]string{relust}
+				}
+			}
+			return ip,port,nil,nil
 		case 3306:
 			if !notburp{
 				if Verbose{
@@ -327,11 +328,11 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 
 
 func init() {
-	rootCmd.AddCommand(allCmd)
+	RootCmd.AddCommand(allCmd)
 	allCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	allCmd.Flags().BoolVarP(&useicmp,"icmp","i",false,"Icmp packets are sent to check whether the host is alive(need root)")
 	allCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set `hosts`(The format is similar to Nmap) eg:192.168.1.1/24,172.16.95.1-100,127.0.0.1")
-	allCmd.Flags().StringVarP(&ps_port, "port", "p", default_port, "Set `port` eg:1-1000,3306,3389 or use \" zscan all -p l\" ) to scan less port（thirty port）")
+	allCmd.Flags().StringVarP(&ps_port, "port", "p", config.Default_port, "Set `port` eg:1-1000,3306,3389 or use \" zscan all -p l\" ) to scan less port（thirty port）")
 	allCmd.Flags().BoolVar(&pingbefore, "noping", false, " Not ping before port scanning")
 	allCmd.Flags().StringVarP(&Password,"password","P","","Set postgres password")
 	allCmd.Flags().StringVarP(&Passdict,"passdict","","","Set postgres passworddict path")

@@ -22,7 +22,7 @@ import (
 var smb_port int
 var smbCmd = &cobra.Command{
 	Use:   "smb",
-	Short: "burp smb by host usernamae and password",
+	Short: "burp smb usernamae and password",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		PrintScanBanner("smb")
 	},
@@ -784,7 +784,7 @@ func validateOptions(opt Options) error {
 
 
 func init() {
-	rootCmd.AddCommand(smbCmd)
+	blastCmd.AddCommand(smbCmd)
 	smbCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	smbCmd.Flags().StringVarP(&Hosts,"host","H","","Set smb server host")
 	smbCmd.Flags().IntVarP(&smb_port,"port","p",445,"Set smb server port")

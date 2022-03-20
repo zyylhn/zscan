@@ -16,13 +16,11 @@ import (
 var ssh_port int
 var login_key bool
 var key_path string
-//var sshiplist []string
-//var ssh_bar = &pb.ProgressBar{}
 
 
 var sshCmd = &cobra.Command{
 	Use:   "ssh",
-	Short: "ssh client support username password burp",
+	Short: "burp ssh username password or traverse the key",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		PrintScanBanner("ssh")
 	},
@@ -36,34 +34,15 @@ var sshCmd = &cobra.Command{
 }
 
 func Ssh()  {
-	if burp{
-		if login_key{
-			if key_path==""{
-				Output("must set private key",Red)
-				return
-			}else {
-				burp_sshwithprivatekey()
-			}
+	if login_key{
+		if key_path==""{
+			Output("must set private key",Red)
+			return
 		}else {
-			burp_ssh()
+			burp_sshwithprivatekey()
 		}
 	}else {
-		if Username==""{
-			Checkerr(fmt.Errorf("login mode must set username\nif want burp need add \"-b\""))
-			os.Exit(0)
-		}
-		if login_key{
-			client,err:=ssh_connect_publickeys(Hosts,Username,key_path)
-			Checkerr_exit(err)
-			ssh_login(client)
-		}else {
-			if Password==""{
-				Checkerr(fmt.Errorf("Musst set password"))
-				os.Exit(0)}
-			client,err:=ssh_connect_userpass(Hosts,Username,Password)
-			Checkerr_exit(err)
-			ssh_login(client)
-		}
+		burp_ssh()
 	}
 }
 
@@ -131,8 +110,7 @@ func Connectssh(ip string, port int) (string, int, error,[]string) {
 //爆破：返回是否连接成功
 func ssh_auto( username, password,ip string) (error,bool,string) {
 	success := false
-	//fmt.Println(Red(username,"\t",password,"\t",addr))
-	c,err:=ssh_connect_userpass(fmt.Sprintf("%v:%v",ip,ssh_port),username,password)
+	c,err:=ssh_connect_userpass(ip,username,password)
 	if err==nil{
 		c.Close()
 		success=true
@@ -143,7 +121,7 @@ func ssh_auto( username, password,ip string) (error,bool,string) {
 func ssh_auto_key(user,keypath,ip string) (error,bool,string) {
 	success := false
 	//fmt.Println(Red(username,"\t",password,"\t",addr))
-	c,err:=ssh_connect_publickeys(fmt.Sprintf("%v:%v",ip,ssh_port),user,keypath)
+	c,err:=ssh_connect_publickeys(ip,user,keypath)
 	if err==nil{
 		defer c.Close()
 		success=true
@@ -258,7 +236,7 @@ func ssh_login (client *ssh.Client)  {
 }
 
 func init() {
-	rootCmd.AddCommand(sshCmd)
+	blastCmd.AddCommand(sshCmd)
 	sshCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	sshCmd.Flags().StringVarP(&Hosts,"host","H","","Set ssh server host")
 	sshCmd.Flags().IntVarP(&ssh_port,"port","p",22,"Set ssh server port")
@@ -266,7 +244,6 @@ func init() {
 	sshCmd.Flags().StringVarP(&Password,"password","P","","Set ssh password")
 	sshCmd.Flags().StringVarP(&Userdict,"userdict","","","Set ssh userdict path")
 	sshCmd.Flags().StringVarP(&Passdict,"passdict","","","Set ssh passworddict path")
-	sshCmd.Flags().BoolVarP(&burp,"burp","b",false,"Use burp mode default login mode")
 	sshCmd.Flags().BoolVarP(&login_key,"login_key","k",false,"Use public key login")
 	sshCmd.Flags().StringVarP(&key_path,"keypath","d","","Set public key path")
 	//sshCmd.MarkFlagRequired("host")

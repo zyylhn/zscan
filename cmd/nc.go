@@ -86,7 +86,7 @@ func getin(wg *sync.WaitGroup, c *net.TCPConn) {
 }
 
 func init() {
-	rootCmd.AddCommand(ncCmd)
+	toolsCmd.AddCommand(ncCmd)
 	ncCmd.Flags().StringVarP(&Addr, "addr", "a", "", "listen/connect host address eg(listen):-a 0.0.0.0:4444  eg(connect):-a 172.16.95.1:4444")
 	ncCmd.Flags().BoolVarP(&listen, "listen", "l", false, "listen mode(default connect)")
 	ncCmd.MarkFlagRequired("addr")

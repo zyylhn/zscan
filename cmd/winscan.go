@@ -538,7 +538,7 @@ func PrintResultOxid(r map[string]*Openport) {
 }
 
 func init() {
-	rootCmd.AddCommand(netBiosCmd)
+	scanCmd.AddCommand(netBiosCmd)
 	netBiosCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	netBiosCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set target")
 	netBiosCmd.Flags().BoolVar(&netbios, "netbios", false, "netbios scan")

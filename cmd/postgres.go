@@ -71,10 +71,6 @@ func postgres_auth(username,password,ip string) (error, bool,string) {
 	if err == nil {
 		err = db.Ping()
 		if err == nil {
-			if Command!=""{
-				r,_:=sql_execute(db,Command)
-				Output(fmt.Sprintf("\n%v",r),LightGreen)
-			}
 			return nil,true,"postgres"
 		}
 
@@ -84,13 +80,12 @@ func postgres_auth(username,password,ip string) (error, bool,string) {
 }
 
 func init() {
-	rootCmd.AddCommand(postgresCmd)
+	blastCmd.AddCommand(postgresCmd)
 	postgresCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	postgresCmd.Flags().StringVarP(&Hosts,"host","H","","Set postgres server host")
 	postgresCmd.Flags().IntVarP(&postgre_port,"port","p",5432,"Set postgres server port")
 	postgresCmd.Flags().IntVarP(&burpthread,"burpthread","",100,"Set burp password thread(recommend not to change)")
 	postgresCmd.Flags().StringVarP(&Username,"username","U","","Set postgres username")
-	postgresCmd.Flags().StringVarP(&Command,"command","c","","Set the command you want to execute")
 	postgresCmd.Flags().StringVarP(&Password,"password","P","","Set postgres password")
 	postgresCmd.Flags().StringVarP(&Userdict,"userdict","","","Set postgres userdict path")
 	postgresCmd.Flags().StringVarP(&Passdict,"passdict","","","Set postgres passworddict path")

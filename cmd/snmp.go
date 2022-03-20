@@ -133,10 +133,9 @@ func printSnmpResult() {
 }
 
 func init() {
-	rootCmd.AddCommand(snmpCmd)
+	scanCmd.AddCommand(snmpCmd)
 	snmpCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	snmpCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set target")
-	//snmpCmd.MarkFlagRequired("host")
 	snmpCmd.Flags().IntVarP(&snmpPort, "port", "p", 161, "Set `port`")
 	snmpCmd.Flags().BoolVarP(&listoid, "listoid", "l", false, "List commonly used OIDs")
 	snmpCmd.Flags().StringVar(&snmpPassword, "password", "public", "set a password")

@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"zscan/config"
 )
 //var num int
 type Service func(user string,pass string,addr string)(error,bool,string)
@@ -79,19 +80,14 @@ func (b *Burp) Run() string {
 			close(b.password_ch)
 		}
 	default:
-		b.password_ch=make(chan string,len(pass_dict))
-		for _,i:=range pass_dict{
+		b.password_ch=make(chan string,len(config.Pass_dict))
+		for _,i:=range config.Pass_dict{
 			b.password_ch<-i
 		}
 		close(b.password_ch)
 	}
 	b.wg.Add(1)
 	go b.Gettasklist()
-	//if !No_progress_bar{
-	//	if !Verbose{
-	//		go bar()
-	//	}
-	//}
 	for i:=0;i<b.burpthread;i++{
 		b.wg.Add(1)
 		go b.Check()
@@ -103,9 +99,7 @@ func (b *Burp) Run() string {
 
 //读取密码到缓冲信道中
 func (b *Burp) Getpass()  {
-	//fmt.Println(LightCyan("Begin read pass"))
 	b.readdict_To_Ch(b.passdict,&b.password_ch)
-	//fmt.Println(LightCyan("Stop read pass"))
 }
 
 //读取用户名到列表中
@@ -144,9 +138,9 @@ func (b *Burp) Check()  {
 		if cancelled(b.stop) {
 			break
 		}
-		//if Verbose{
-		//	fmt.Println(Yellow(fmt.Sprintf("Test:%v %v %v",task.addr,task.username,task.password)))
-		//}
+		if Verbose{
+			fmt.Println(Yellow(fmt.Sprintf("Test:%v %v %v",task.addr,task.username,task.password)))
+		}
 		err,success,servername:=b.service(task.username,task.password,task.addr)
 		//num+=1
 		if err==nil&&success{

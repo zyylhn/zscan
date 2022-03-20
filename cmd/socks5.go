@@ -46,7 +46,7 @@ func Socks5(addr string)  {
 }
 
 func init() {
-	rootCmd.AddCommand(socks5Cmd)
+	serverCmd.AddCommand(socks5Cmd)
 	socks5Cmd.Flags().StringVarP(&Addr,"addr","a","0.0.0.0:1080","Specify the IP address and port of the Socks5 service")
 	socks5Cmd.Flags().StringVarP(&Username,"username","U","","Set the socks5 service authentication user name")
 	socks5Cmd.Flags().StringVarP(&Password,"password","P","","Set the socks5 service authentication password")

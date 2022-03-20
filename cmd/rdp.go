@@ -172,7 +172,7 @@ func (g *Rdpclient) Login(domain, user, pwd string) error {
 
 
 func init() {
-	rootCmd.AddCommand(rdpCmd)
+	blastCmd.AddCommand(rdpCmd)
 	rdpCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	rdpCmd.Flags().StringVarP(&Hosts,"host","H","","Set rdp server host")
 	rdpCmd.Flags().IntVarP(&rdp_port,"port","p",3389,"Set rdp server port")
