@@ -133,7 +133,7 @@ func printSnmpResult() {
 }
 
 func init() {
-	scanCmd.AddCommand(snmpCmd)
+	exploitCmd.AddCommand(snmpCmd)
 	snmpCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
 	snmpCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set target")
 	snmpCmd.Flags().IntVarP(&snmpPort, "port", "p", 161, "Set `port`")

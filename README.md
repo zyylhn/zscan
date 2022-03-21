@@ -862,7 +862,7 @@ https://github.com/k8gege/LadonGo
     - [x] ldap
     - [x] smb
     - [x] rdp
-- [ ] scan模块
+- [x] scan模块
     - [x] 扫描代理服务器模块
         - [x] socks5代理服务器扫描
     - [x] winscan模块@https://github.com/shenzhibuqins
@@ -893,15 +893,14 @@ https://github.com/k8gege/LadonGo
     - [x] sshloin模块
         - [x] 用户名密码登录功能（交互式）
         - [x] 密钥登录功能（交互式）
-
     - [x] redis模块
         - [x] 执行redis密令
         - [x] lua沙箱逃逸漏洞
         - [x] 主从复制rce
-
     - [x] ladp查询
+    - [ ] snmp查询
     - [ ] wmi模块
-
+    
 - [ ] ..........
 
 ### 工具本身功能
