@@ -31,8 +31,7 @@ var ms17010Cmd = &cobra.Command{
 
 func ms17010()  {
 	GetHost()
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips:= Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{445},Connect17010,true)
 	r:=aliveserver.Run()
 	Printresult(r)

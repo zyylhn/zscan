@@ -18,7 +18,6 @@ var Password string
 var Passdict string
 var Userdict string
 var Command string
-//var burp bool
 var burpthread int
 var Hostfile string
 var Proxy string

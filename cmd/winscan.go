@@ -119,8 +119,7 @@ func winscan() {
 }
 
 func nbt_smb_oxid()  {
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips:= Parse_IP(Hosts)
 	aliveserver := NewPortScan(ips, []int{139,445,135}, nbt_smb_oxi_scan,true)
 	r := aliveserver.Run()
 	PrintResultNetbios(r)
@@ -161,8 +160,7 @@ func nbt_smb_oxi_scan(ip string,port int) (string,int,error,[]string) {
 }
 
 func netBiosScan() map[string]*Openport {
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips := Parse_IP(Hosts)
 	aliveserver := NewPortScan(ips, []int{139}, netBiosIpInfo,true)
 	r := aliveserver.Run()
 	return r
@@ -411,8 +409,7 @@ func netbiosEncode(name string) (output []byte) {
 }
 
 func smbScan() map[string]*Openport {
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips := Parse_IP(Hosts)
 	aliveserver1 := NewPortScan(ips, []int{445}, Connectsmb,true)
 	r1 := aliveserver1.Run()
 	//PrintResultSMB(r1)
@@ -469,8 +466,7 @@ func PrintResultSMB(r map[string]*Openport) {
 }
 
 func oxidScan() map[string]*Openport {
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips:= Parse_IP(Hosts)
 	aliveserver := NewPortScan(ips, []int{135}, Connectoxid,true)
 	r := aliveserver.Run()
 	return r

@@ -45,8 +45,7 @@ func ping()  {
 	switch discover {
 	case "":
 		GetHost()
-		host,err:=Parse_IP(Hosts)
-		Checkerr_exit(err)
+		host:=Parse_IP(Hosts)
 		ICMPRun(host,!useicmp)
 	case "local":
 		localnet:=getlocalnet()   //[192.168.0.0 172.16.0.0]
@@ -295,8 +294,7 @@ func gettasklist(network []string) []string {
 
 //先进行ping扫描，将存活的ip以字符串
 func ping_discover() string {
-	host,err:=Parse_IP(Hosts)
-	Checkerr_exit(err)
+	host:=Parse_IP(Hosts)
 	return strings.Join(ICMPRun(host,!useicmp),",")
 }
 
@@ -315,8 +313,7 @@ func oxid_discover(netlist []string) []string {
 	Output("Begin oxid find\n",Yellow)
 	for _,i:=range netlist{
 		fmt.Printf("Start scan %v network\n",i)
-		ips, err := Parse_IP(i)
-		Checkerr(err)
+		ips:= Parse_IP(i)
 		aliveserver := NewPortScan(ips, []int{135}, Connectoxid,false)
 		r := aliveserver.Run()
 		for _, data := range r {

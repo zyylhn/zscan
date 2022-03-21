@@ -39,8 +39,7 @@ func burp_mysql()  {
 	if Username==""{
 		Username=config.Mysqluser
 	}
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips := Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{mysql_port},Connectmysql,true)
 	_=aliveserver.Run()
 }

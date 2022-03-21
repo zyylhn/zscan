@@ -52,8 +52,7 @@ func burp_ssh()  {
 		Username="root,admin,ssh"
 	}
 	burpthread=10
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips:= Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{ssh_port},Connectssh,true)
 	_=aliveserver.Run()
 }
@@ -65,8 +64,7 @@ func burp_sshwithprivatekey()  {
 		return
 	}
 	burpthread=10
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips := Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{ssh_port},Connectssh,true)
 	_=aliveserver.Run()
 }

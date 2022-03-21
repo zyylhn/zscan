@@ -43,8 +43,7 @@ func burp_mssql()  {
 	if Username==""{
 		Username="sa,Admin,Administrator"
 	}
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips:= Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{mssql_port},Connectmssql,true)
 	_=aliveserver.Run()
 }

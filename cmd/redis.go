@@ -34,8 +34,7 @@ func Redis()  {
 
 func burp_redis()  {
 	GetHost()
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips := Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{redis_port},Connectredis,true)
 	_=aliveserver.Run()
 }

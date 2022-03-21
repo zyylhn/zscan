@@ -35,11 +35,7 @@ func allmode()  {
 		Output("Don't have living host,can use --noping test",Red)
 		return
 	}
-	ips, err := Parse_IP(Hosts)
-	Checkerr_exit(err)
-	//if len(ips)>500&&ps_port==default_port{
-	//	ps_port=little_port
-	//}
+	ips:= Parse_IP(Hosts)
 	if ps_port=="l"{
 		ps_port=config.Little_port
 	}

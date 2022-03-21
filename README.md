@@ -23,7 +23,7 @@
 ## 简介🎉
 
 
-​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体可以称为工具包。以内网网段发现、主机发现和端口扫描为基础，可以在blast模块中对mysql、mssql、redis、mongo、postgres、ftp、ssh、ldap、rdp、smb等服务进行爆破，在scan模块中进行netbios、smb、oxid、socks server（扫描代理服务器）、ms17010、http的poc扫描等扫描功能，默认会抓取http的title和指纹信息。在server模块中可以开启http（可以上传下载文件）和socks5服务器（代理服务器），tools模块中集成实用的小工具暂时只有nc。最新添加exploit模块，可以针对爆破成功的服务进行利用，可进行ssh交互式登陆（用户名密码或者密钥），redis主从复制和Lua沙箱逃逸（上传文件和执行命令），ldap查询（内置常见查询语句）。还有all模块，扫描的时候调用所有的扫描和爆破模块
+​	Zscan是一个开源的内网端口扫描器、爆破工具和其他实用工具的集合体可以称为工具包。以内网网段发现、主机发现和端口扫描为基础，可以在blast模块中对mysql、mssql、redis、mongo、postgres、ftp、ssh、ldap、rdp、smb等服务进行爆破，在scan模块中进行netbios、smb、oxid、socks server（扫描代理服务器）、ms17010、http的poc扫描等扫描功能，默认会抓取http的title和指纹信息。在server模块中可以开启http（可以上传下载文件）和socks5服务器（代理服务器），tools模块中集成实用的小工具暂时只有nc。最新添加exploit模块，可以针对爆破成功的服务进行利用，可进行ssh交互式登陆（用户名密码或者密钥），redis主从复制和Lua沙箱逃逸（上传文件和执行命令），ldap查询（内置常见查询语句）。还有all模块，扫描的时候调用所有的扫描和爆破模块。支持ipv6扫描，支持域名输入并自动识别cdn。
 
 工具体积较大，后期会出精简版，模块化设计，拆分掉不需要的功能很方便
 

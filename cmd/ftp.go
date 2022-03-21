@@ -40,8 +40,7 @@ func burp_ftp()  {
 	if Username==""{
 		Username="ftp,anonymous,root"
 	}
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips:= Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{ftp_port},Connectftp,true)
 	_=aliveserver.Run()
 }

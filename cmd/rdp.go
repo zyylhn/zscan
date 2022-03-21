@@ -45,8 +45,7 @@ func burp_rdp()  {
 	if Username==""{
 		Username="Administrator,admin"
 	}
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips := Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{rdp_port},Connectrdp,true)
 	_=aliveserver.Run()
 }

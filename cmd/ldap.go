@@ -33,8 +33,7 @@ func burp_ldap()  {
 	if Username==""{
 		Username="Administrator"
 	}
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips := Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{ldap_port},Connectldap,true)
 	_=aliveserver.Run()
 }

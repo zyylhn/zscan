@@ -59,7 +59,6 @@ func Connect_BannerScan(ip string,port int) (string,int,error,[]string) {
 		s=strings.Replace(s,"\n","",-1)
 		s="Banner:"+s
 		a:=[]string{s}
-		//fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
 		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
 		if !webscan{
 			httpinfo,_:=WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout*2})
@@ -203,21 +202,37 @@ func Getconn(ip string,port int) (net.Conn,error) {
 }
 
 //解析ip返回IP类型列表
-func Parse_IP(ip_string string) ([]string, error) {
+func Parse_IP(ip_string string) []string {
 	var re []string
-	list, err := iprange.ParseList(ip_string)
-	if err != nil {                   //解析不了的ip先根据逗号拆分在判断是不是ipv6
-		if strings.Contains(ip_string,","){
-			iplist:=strings.Split(ip_string,",")
-			if isIPv6(iplist[0]){
-				return Parse_IPv6(ip_string),nil
-			}
-		}else {
-			if isIPv6(ip_string){
-				return Parse_IPv6(ip_string),nil
+	if strings.Contains(ip_string,","){
+		iplist:=strings.Split(ip_string,",")
+		for _,v:=range iplist{
+			ip,err:=iprangeParse(v)
+			if err!=nil{
+				fmt.Println(Red(err))
+			}else {
+				re= append(re, ip...)
 			}
 		}
-		return nil, fmt.Errorf("IP format error,check the entered IP address:%v",ip_string)
+	}else {
+		ip,err:=iprangeParse(ip_string)
+		if err!=nil{
+			fmt.Println(Red(err))
+		}else {
+			re= append(re, ip...)
+		}
+	}
+	return re
+}
+
+func iprangeParse(ip string) ([]string,error) {
+	var re []string
+	list, err := iprange.ParseList(ip)
+	if err != nil {                   //解析不了的ip先判断是不是ipv6
+		if isIPv6(ip){
+			return []string{Parse_IPv6(ip)},nil
+		}
+		return nil, fmt.Errorf("IP format error,check the entered IP address:%v",ip)
 	}
 	iplist := list.Expand()
 	for _,i:=range iplist{
@@ -607,20 +622,22 @@ func Getiplistfromurl(list []string) []string {
 			for l:=range listchan{
 				iplist,err:=net.LookupHost(l)
 				Checkerr(err)
-				if iplist!=nil{
+				if iplist!=nil&&len(iplist)==1{
 					for _,ip:=range iplist{
 						re=append(re,ip)
 						Output(fmt.Sprintf("%v : %v\n",l,ip),White)
 					}
+				}else if len(iplist)>1 {
+					Output(fmt.Sprintf("%v has cdn\n",l),Yellow)
 				}
 			}
 		}()
 	}
 	for _,domain:=range list{
-		if strings.Contains(domain,"http://"){
+		if strings.HasPrefix(domain,"http://"){
 			domain=strings.TrimPrefix(domain,"http://")
 		}
-		if strings.Contains(domain,"https://"){
+		if strings.HasPrefix(domain,"https://"){
 			domain=strings.TrimPrefix(domain,"https://")
 		}
 		listchan<-domain
@@ -636,6 +653,10 @@ func Getiplistfromurl(list []string) []string {
 		}else {
 			Output(fmt.Sprintf("%v is cdn\n",ip),Yellow)
 		}
+	}
+	Output("all target\n",LightCyan)
+	for _,v:=range result{
+		Output(v+"\n",White)
 	}
 	return result
 }
@@ -704,25 +725,23 @@ func RemoveRepByMap(slc []string) []string {
 	return result
 }
 
-func Parse_IPv6(ipstring string) []string {
-	var ipv6list []string
-	var ipv6result []string
-	if strings.Contains(ipstring,","){
-		ipv6list=strings.Split(ipstring,",")
-	}else {
-		ipv6list=append(ipv6list,ipstring)
+func Parse_IPv6(ipstring string) string {
+	var ipv6 string
+	if ip:=net.ParseIP(ipstring);ip!=nil{
+		ipv6="["+ip.String()+"]"
 	}
-	for _,ipv6:=range ipv6list{
-		if ip:=net.ParseIP(ipv6);ip!=nil{
-			ipv6result=append(ipv6result,"["+ip.String()+"]")
-		}
-	}
-	return ipv6result
+	return ipv6
 }
 
-func isDomain(domian string) bool {
-	var rege = regexp.MustCompile(`^[a-z][a-zA-Z0-9:/]*\.[a-zA-Z0-9]*`)
-	return rege.MatchString(domian)
+func isDomain(domain string) bool {
+	var rege = regexp.MustCompile(`[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+.?`)
+	if strings.HasPrefix(domain,"http"){
+		return true
+	}
+	if net.ParseIP(domain)!=nil{
+		return false
+	}
+	return rege.MatchString(domain)
 }
 
 func isIPv6(ipv6 string) bool {

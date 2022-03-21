@@ -40,8 +40,7 @@ var portscanCmd = &cobra.Command{
 			Output("Don't have living host,can use --noping test",Red)
 			return
 		}
-		ips, err := Parse_IP(Hosts)
-		Checkerr_exit(err)
+		ips:= Parse_IP(Hosts)
 		if ps_port=="l"{
 			ps_port=config.Little_port
 		}

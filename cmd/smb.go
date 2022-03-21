@@ -44,8 +44,7 @@ func burp_smb()  {
 	if Username==""{
 		Username="Administrator,admin"
 	}
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips := Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{smb_port},Connectsmbburp,true)
 	_=aliveserver.Run()
 }

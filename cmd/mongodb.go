@@ -41,8 +41,7 @@ func burp_mongodb()  {
 	if Username==""{
 		Username="amdin,mongodb"
 	}
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips:= Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{mongodb_port},Connectmongodb,true)
 	_=aliveserver.Run()
 }

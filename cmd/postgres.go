@@ -42,8 +42,7 @@ func burp_postgres()  {
 	if Username==""{
 		Username="postgres"
 	}
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips:= Parse_IP(Hosts)
 	aliveserver:=NewPortScan(ips,[]int{postgre_port},Connectpostgres,true)
 	_=aliveserver.Run()
 }

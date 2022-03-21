@@ -27,8 +27,7 @@ var SocksServerScanCmd = &cobra.Command{
 
 func proxyfind()  {
 	GetHost()
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips:= Parse_IP(Hosts)
 	ports, err := Parse_Port(proxy_port)
 	Checkerr(err)
 	aliveserver:=NewPortScan(ips,ports,Connect_SocksScan,true)

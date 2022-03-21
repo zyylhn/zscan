@@ -44,8 +44,7 @@ func snmpScan() {
 		fmt.Println("8: 网络接口列表    \tipAdEntAddr         \tWALK\t1.3.6.1.2.1.4.20.1.1")
 		return
 	}
-	ips, err := Parse_IP(Hosts)
-	Checkerr(err)
+	ips := Parse_IP(Hosts)
 	aliveserver := NewPortScan(ips, []int{161}, snmpIpInfo,true)
 	aliveserver.Run()
 	printSnmpResult()
