@@ -14,6 +14,7 @@ var mongodbCmd = &cobra.Command{
 	Use:   "mongo",
 	Short: "burp mongodb username and password",
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SaveInit()
 		PrintScanBanner("mongodb")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

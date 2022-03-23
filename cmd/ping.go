@@ -28,6 +28,7 @@ var pingCmd = &cobra.Command{
 	TraverseChildren: true,
 	Short:            "ping scan to find computer",
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SaveInit()
 		PrintScanBanner("ping")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

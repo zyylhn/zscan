@@ -19,7 +19,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-	lib "zscan/poccheck"
 )
 
 var Red = color.FgRed.Render
@@ -337,16 +336,7 @@ func Output_endtime(start time.Time)  {
 	Output(fmt.Sprintf("\n%v\nTime consuming:%v\n\n", string(time.Now().AppendFormat([]byte("\rEnd time:"), l1)), time.Since(start)),LightCyan)
 }
 
-//输出扫描信息
-func PrintScanBanner(mode string)  {
-	if Proxy!=""{
-		proxyconn,_=Proxyconn()
-		if proxyconn==nil{
-			Checkerr_exit(fmt.Errorf("proxy error"))
-		}
-	}
-	Inithttp()
-	lib.Inithttp(Client,ClientNoRedirect)
+func SaveInit()  {
 	CreatFile()
 	OutputChan=make(chan string)
 	go func() {
@@ -362,6 +352,9 @@ func PrintScanBanner(mode string)  {
 			}
 		}
 	}()
+}
+//输出扫描信息
+func PrintScanBanner(mode string)  {
 	output_verbose:= func() {
 		if Verbose {
 			Output("Verbose:Show verbose\n",LightCyan)
@@ -423,14 +416,6 @@ func PrintScanBanner(mode string)  {
 		output_verbose()
 		output_file()
 		fmt.Println()
-	//case "nc":
-	//	Output("\nMode:nc\n",Red)
-	//	Output(fmt.Sprintf("%s\n", string(time.Now().AppendFormat([]byte("Start time:"), l1))),LightCyan)
-	//	if tools.listen {
-	//		Output(fmt.Sprintf("Listen on %v\n\n", Addr),LightCyan)
-	//	} else {
-	//		Output(fmt.Sprintf("Connect to %v\n\n", Addr),LightCyan)
-	//	}
 	case "socks":
 		Output("\nMode:Socks5 server\n",Red)
 		Output(fmt.Sprintf("Listen addr: %v\n\n",Addr),LightCyan)
@@ -741,6 +726,10 @@ func isDomain(domain string) bool {
 	if net.ParseIP(domain)!=nil{
 		return false
 	}
+	if _,err:=iprangeParse(domain);err==nil{
+		return false
+	}
+
 	return rege.MatchString(domain)
 }
 

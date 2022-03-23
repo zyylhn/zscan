@@ -14,7 +14,7 @@ var allCmd = &cobra.Command{
 	Use:   "all",
 	Short: "Use all scan mode（don't hava ssh mod）",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		//CreatFile(Output_result,Path_result)
+		SaveInit()
 		PrintScanBanner("all")
 	},
 	Run: func(cmd *cobra.Command, args []string) {
@@ -66,7 +66,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				}
 				_,f,_:=ssh_auto("root","Ksdvfjsxc",ip)
 				if f{
-					Output(fmt.Sprintf("[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
+					Output(fmt.Sprintf("\r[-]%v Don't allow root login:%v \n","ssh",ip),Yellow)
 					var re []string
 					if strings.Contains(Username,"root"){
 						sl:=strings.Split(Username,",")
@@ -82,6 +82,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				startburp:=NewBurp(Password,name,Userdict,Passdict,ip,ssh_auto,10)
 				relust:=startburp.Run()
 				if relust!=""{
+					interested_result.Store(addr,relust)
 					return ip,port,nil,[]string{relust}
 				}
 			}
@@ -93,7 +94,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				}
 				_,f,_:=mysql_auth("asdasd","zxczxc",ip)
 				if f{
-					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mysql",ip),LightGreen)
+					Output(fmt.Sprintf("\r[+]%v burp success:%v No authentication\n","mysql",ip),LightGreen)
 					interested_result.Store(addr,"mysql no authentication")
 					return ip,port,nil,[]string{"No authentication"}
 				}
@@ -116,7 +117,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				}
 				_,f,_:=redis_auth("","",ip)
 				if f{
-					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","redis",ip),LightGreen)
+					Output(fmt.Sprintf("\r[+]%v burp success:%v No authentication\n","redis",ip),LightGreen)
 					interested_result.Store(addr,"resis no authentication")
 					return ip,port,nil,[]string{"No authentication"}
 				}
@@ -169,7 +170,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				}
 				_,f,_:=postgres_auth("postgres","",ip)
 				if f{
-					Output(fmt.Sprintf("%v burp success:%v No authentication\n","postgres",ip),LightGreen)
+					Output(fmt.Sprintf("\r%v burp success:%v No authentication\n","postgres",ip),LightGreen)
 					interested_result.Store(addr,"postgres no authentication")
 					return ip,port,nil,[]string{"No authentication"}
 				}
@@ -192,7 +193,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				}
 				_,f,_:=ftp_auth("ftp","asdasd",ip)
 				if f{
-					Output(fmt.Sprintf("%v burp success:%v No authentication\n","ftp",ip),LightGreen)
+					Output(fmt.Sprintf("\r[+]%v burp success:%v No authentication\n","ftp",ip),LightGreen)
 					interested_result.Store(addr,"ftp no authentication")
 					return ip,port,nil,[]string{"No authentication"}
 				}
@@ -215,7 +216,7 @@ func Connectall(ip string, port int) (string, int, error,[]string) {
 				}
 				_,f,_:=mongodb_auth("","",ip)
 				if f{
-					Output(fmt.Sprintf("[+]%v burp success:%v No authentication\n","mongodb",ip),LightGreen)
+					Output(fmt.Sprintf("\r[+]%v burp success:%v No authentication\n","mongodb",ip),LightGreen)
 					interested_result.Store(addr,"mongodb no authentication")
 					return ip,port,nil,[]string{"No authentication"}
 				}

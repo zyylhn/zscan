@@ -22,6 +22,7 @@ var sshCmd = &cobra.Command{
 	Use:   "ssh",
 	Short: "burp ssh username password or traverse the key",
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SaveInit()
 		PrintScanBanner("ssh")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

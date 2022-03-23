@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	"golang.org/x/net/proxy"
 	"sync"
 	"time"
+	lib "zscan/poccheck"
 )
 
 var Timeout time.Duration
@@ -51,6 +53,14 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&Path_result, "output","o", "result.txt", "the path of result file")
 	RootCmd.PersistentFlags().StringVar(&Proxy, "proxy", "", "Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)")
 	RootCmd.PersistentFlags().BoolVar(&No_progress_bar, "nobar", false, "disable portscan progress bar")
+	if Proxy!=""{
+		proxyconn,_=Proxyconn()
+		if proxyconn==nil{
+			Checkerr_exit(fmt.Errorf("proxy error"))
+		}
+	}
+	Inithttp()
+	lib.Inithttp(Client,ClientNoRedirect)
 }
 
 

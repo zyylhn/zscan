@@ -24,6 +24,7 @@ var smbCmd = &cobra.Command{
 	Use:   "smb",
 	Short: "burp smb usernamae and password",
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SaveInit()
 		PrintScanBanner("smb")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

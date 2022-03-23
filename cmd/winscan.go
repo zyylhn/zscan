@@ -87,6 +87,7 @@ var netBiosCmd = &cobra.Command{
 	Use:   "winscan",
 	Short: "netbios、smb、oxid scan",
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SaveInit()
 		PrintScanBanner("netbios")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

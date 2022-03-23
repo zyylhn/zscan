@@ -13,6 +13,7 @@ var ftpCmd = &cobra.Command{
 	Use:   "ftp",
 	Short: "burp ftp username and password ",
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SaveInit()
 		PrintScanBanner("ftp")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

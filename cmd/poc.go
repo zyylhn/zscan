@@ -25,6 +25,7 @@ var pocCmd = &cobra.Command{
 	Use:   "poc",
 	Short: "poc check",
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SaveInit()
 		PrintScanBanner("poc")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

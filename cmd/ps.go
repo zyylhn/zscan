@@ -25,6 +25,7 @@ var portscanCmd = &cobra.Command{
 	Use:   "ps",
 	Short: "Port Scan",
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SaveInit()
 		PrintScanBanner("ps")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

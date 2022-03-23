@@ -14,6 +14,7 @@ var SocksServerScanCmd = &cobra.Command{
 	Use:   "proxyfind",
 	Short: "Scan proxy",
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SaveInit()
 		PrintScanBanner("SocksScan")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

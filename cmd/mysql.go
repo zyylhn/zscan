@@ -19,6 +19,7 @@ var mysqlCmd = &cobra.Command{
 	Use:   "mysql",
 	Short: "burp mysql username and password",
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SaveInit()
 		PrintScanBanner("mysql")
 	},
 	Run: func(cmd *cobra.Command, args []string) {

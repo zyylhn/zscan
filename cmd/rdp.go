@@ -25,6 +25,7 @@ var rdpCmd = &cobra.Command{
 	Use:   "rdp",
 	Short: "burp remote desktop（3389）",
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SaveInit()
 		PrintScanBanner("rdp")
 	},
 	Run: func(cmd *cobra.Command, args []string) {
