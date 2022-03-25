@@ -257,6 +257,7 @@ var RuleDatas = []RuleData{
 	{"drupal","headers","X-Generator: Drupal"},
 	{"drupal","code","content=\"Drupal"},
 	{"drupal","code","jQuery.extend(Drupal.settings"},
+	{"向日葵","code","Verification"},
 }
 
 var Md5Datas = []Md5Data{

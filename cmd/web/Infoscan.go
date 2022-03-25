@@ -17,10 +17,10 @@ func InfoCheck( CheckData []CheckDatas) []string {
 	//遍历checkdata和rule
 	for _, data := range CheckData {
 		for _, rule := range RuleDatas {
-			if rule.Type == "code" {
-				matched, _ = regexp.MatchString(rule.Rule, string(data.Body))
-			} else {
+			if rule.Type == "headers" {
 				matched, _ = regexp.MatchString(rule.Rule, data.Headers)
+			} else {
+				matched, _ = regexp.MatchString(rule.Rule, string(data.Body))
 			}
 			if matched == true {
 				infoname = append(infoname, rule.Name)
