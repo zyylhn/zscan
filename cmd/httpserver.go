@@ -21,7 +21,7 @@ var maxupload int
 //var allowupload bool
 
 var httpserverCmd = &cobra.Command{
-	Use:   "httpserver",
+	Use:   "http",
 	Short: "Start an authentication HTTP server",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		PrintScanBanner("httpserver")
@@ -33,7 +33,6 @@ var httpserverCmd = &cobra.Command{
 
 type logger struct {
 	httplog http.Handler
-	//update http.Handler
 }
 
 func (l *logger) ServeHTTP(w http.ResponseWriter,req *http.Request)  {

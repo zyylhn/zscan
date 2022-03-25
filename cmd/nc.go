@@ -32,15 +32,15 @@ func Listen(ladd string) {
 	var wg sync.WaitGroup
 	wg.Add(2)
 	tcpip, err := net.ResolveTCPAddr("tcp", ladd)
-	Checkerr(err)
+	Checkerr_exit(err)
 	tcplisten, err := net.ListenTCP("tcp", tcpip)
 	defer tcplisten.Close()
-	Checkerr(err)
+	Checkerr_exit(err)
 	fmt.Println(Yellow("Waiting for connection"))
 	for {
 		c, err := tcplisten.AcceptTCP()
 		Checkerr(err)
-		fmt.Println(Yellow("Success connect from " + c.RemoteAddr().String()))
+		fmt.Println(LightGreen("Success connect from " + c.RemoteAddr().String()))
 		go output(&wg, c)
 		go getin(&wg, c)
 		wg.Wait()

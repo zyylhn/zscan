@@ -288,7 +288,9 @@ func Parse_Port(selection string) ([]int, error) {
 //输出
 func Output(s string,c Mycolor) {
 	fmt.Print(c(s))
-	OutputChan<-s
+	if isinitfile{
+		OutputChan<-s
+	}
 }
 
 //创建文件,如果没有指定要存的文件名默认用host名存
@@ -338,7 +340,6 @@ func Output_endtime(start time.Time)  {
 
 func SaveInit()  {
 	CreatFile()
-	OutputChan=make(chan string)
 	go func() {
 		file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
 		defer file.Close()

@@ -29,6 +29,7 @@ var OutputChan chan string
 var stopchan chan int
 var psresultlock sync.RWMutex
 var runmod bool
+var isinitfile bool
 
 const l1 = "2006-01-02 15:04:05"
 
@@ -38,6 +39,7 @@ var RootCmd = &cobra.Command{
 }
 
 func Execute() {
+	OutputChan=make(chan string)
 	runmod=false
 	stopchan=make(chan int)
 	cobra.CheckErr(RootCmd.Execute())

@@ -12,7 +12,7 @@ var notburp bool
 
 var allCmd = &cobra.Command{
 	Use:   "all",
-	Short: "Use all scan mode（don't hava ssh mod）",
+	Short: "Use all scan and blast mode",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		SaveInit()
 		PrintScanBanner("all")
