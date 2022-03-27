@@ -49,13 +49,16 @@
   		--->ssh
   server      start http server or socks5 server
   		--->http服务器（可上传下载文件）
-  		--->socks5服务器（可启动一个代理服务器）
+  		--->socks5服务器（可启动一个代理服务器，支持身份验证）
   exploit     漏洞利用模块
   		--->ldap查询
   		--->redis组从复制上传文件执行命令，lua沙箱逃逸RCE
   		--->snmp查询
   		--->ssh登陆
   		--->sunlogin向日葵RCE
+  tools   实用工具模块
+  		--->nc简单的nc，可以开放端口连接端口
+  		--->searchfile支持多线程正则搜索文件
 ```
 
 使用格式为
