@@ -579,11 +579,66 @@ Global Flags:
 
 </details>
 
+<details>
+<summary><b>searchfile模块:多线程搜索文件，并支持正则</b></summary>
+```
+Search files that support regular matching
+
+Usage:
+  zscan tools searchfile [flags]
+
+Flags:
+  -d, --dir string           set search base Dir
+  -f, --file stringArray     set filename eg:zscan tools searchfile -d ./ -f pass.txt -f user.txt
+  -h, --help                 help for searchfile
+  -r, --regexp stringArray   Specifies the re matching parameters
+      --walk int             Traversal turns on multithreading depth(Try not to go above 5) (default 3)
+
+Global Flags:
+      --nobar           disable portscan progress bar
+  -o, --output string   the path of result file (default "result.txt")
+      --proxy string    Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)
+  -T, --thread thread   Set thread eg:2000 (default 600)
+  -t, --timeout time    Set timeout(s) eg:5s (default 5s)
+  -v, --verbose         Show verbose information
+```
+
+-d指定搜索的根目录，linux可以使用相对路径，winsows上需要绝对路径
+
+-f指定要搜索的文件名，可以使用-f 文件名1 -f 文件名2 来搜索多个文件
+
+-r是使用正则，其实本质上-f也是使用正则只不过给替换成`^文件名$`
+
+--walk是指遍历开启线程的目录深度：逻辑上是在给定的目录下面遍历有多少文件夹，然后开启多少线程去遍历这些子文件夹，所有这个深度不要太高，虽然越深越快，但是会导致cpu利用过高（三层其实就已经会占用很高了，所以特殊场景建议使用1）
+
+</details>
+
 </details>
 
 <details>
 <summary><b>exploit模块:服务爆破成功之后的利用模块</b></summary>
+```
+Usage:
+  zscan exploit [command]
 
+Available Commands:
+  ldap        Ldap queries
+  redis       Redis utilizes modules
+  snmp        snmp scan
+  sshlogin    Login using a user name, password, or key
+  sunlogin    sunlogin RCE CNVD-2022-10270
+
+Flags:
+  -h, --help   help for exploit
+
+Global Flags:
+      --nobar           disable portscan progress bar
+  -o, --output string   the path of result file (default "result.txt")
+      --proxy string    Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)
+  -T, --thread thread   Set thread eg:2000 (default 600)
+  -t, --timeout time    Set timeout(s) eg:5s (default 5s)
+  -v, --verbose         Show verbose information
+```
 
 
 <details>
@@ -724,13 +779,38 @@ Global Flags:
 
 </details>
 
+<details>
+<summary><b>sunlogin模块:向日葵RCE的利用模块</b></summary>
+```
+sunlogin RCE CNVD-2022-10270
+
+Usage:
+  zscan exploit sunlogin [flags]
+
+Flags:
+  -c, --command string   command you want to execute
+  -h, --help             help for sunlogin
+  -H, --host string      Set redis server host
+  -p, --port int         Set RCE port
+
+Global Flags:
+      --nobar           disable portscan progress bar
+  -o, --output string   the path of result file (default "result.txt")
+      --proxy string    Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)
+  -T, --thread thread   Set thread eg:2000 (default 600)
+  -t, --timeout time    Set timeout(s) eg:5s (default 5s)
+  -v, --verbose         Show verbose information
+```
+
+漏洞发现可以使用ps模块或者all模块对40000-65535进行扫描，可以自动识别出漏洞端口
+
+可以使用-c执行一条命令，不使用-c进入交互式（伪交互式）按照输入执行命令
+
+-p指定端口
+
 </details>
 
-
-
-
-
-
+</details>
 
 ## 使用示例🤪
 
@@ -917,7 +997,10 @@ https://github.com/k8gege/LadonGo
         - [x] 监听端口功能
         - [x] 连接端口功能
 
-    - [ ] 搜索文件功能
+    - [x] 搜索文件功能
+        - [x] 同时搜索多个文件，多线程
+        - [x] 正则搜索
+        - [ ] 搜索文件内容
     - [ ] 打包文件夹功能
 
 - [x] exploit模块
@@ -931,7 +1014,7 @@ https://github.com/k8gege/LadonGo
     - [x] ladp查询
     - [ ] snmp查询
     - [ ] wmi模块
-    
+
 - [ ] ..........
 
 ### 工具本身功能
