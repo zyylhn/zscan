@@ -16,6 +16,7 @@ import (
 var ssh_port int
 var login_key bool
 var key_path string
+var sshCommand string
 
 
 var sshCmd = &cobra.Command{
@@ -111,6 +112,19 @@ func ssh_auto( username, password,ip string) (error,bool,string) {
 	success := false
 	c,err:=ssh_connect_userpass(ip,username,password)
 	if err==nil{
+		if sshCommand!=""{
+			session, err := c.NewSession()
+			if err != nil {
+				Output(fmt.Sprintf("\r创建ssh session 失败:%v",err),Red)
+			}
+			defer session.Close()
+			//执行远程命令
+			combo,err := session.CombinedOutput(sshCommand)
+			if err != nil {
+				Output(fmt.Sprintf("\r远程执行cmd 失败:%v",err),Red)
+			}
+			Output(fmt.Sprintf("\r命令执行成功:目标:%v,命令:%v,结果:%v",ip,sshCommand,string(combo)),LightGreen)
+		}
 		c.Close()
 		success=true
 	}
@@ -245,5 +259,6 @@ func init() {
 	sshCmd.Flags().StringVarP(&Passdict,"passdict","","","Set ssh passworddict path")
 	sshCmd.Flags().BoolVarP(&login_key,"login_key","k",false,"Use public key login")
 	sshCmd.Flags().StringVarP(&key_path,"keypath","d","","Set public key path")
+	sshCmd.Flags().StringVarP(&sshCommand,"command","c","id","command want to exec")
 	//sshCmd.MarkFlagRequired("host")
 }
