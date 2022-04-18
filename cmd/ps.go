@@ -144,11 +144,10 @@ func (p *PortScan) Saveresult(ip string, port int, err error,banner []string) er
 	if strings.HasPrefix(ip,"[")&&strings.HasSuffix(ip,"]"){
 		ip=strings.Trim(ip,"[]")
 	}
+	psresultlock.Lock()
 	v, ok := p.portscan_result.Load(ip)
 	if ok {
-		psresultlock.Lock()
 		ports, ok1 := v.(map[int][]string)
-		psresultlock.Unlock()
 		if ok1 {
 			ports[port]=banner
 			p.portscan_result.Store(ip, ports)
@@ -160,6 +159,7 @@ func (p *PortScan) Saveresult(ip string, port int, err error,banner []string) er
 		p.portscan_result.Store(ip, ports)
 		//fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port))) //扫描过程中输出扫描信息
 	}
+	psresultlock.Unlock()
 	return err
 }
 
