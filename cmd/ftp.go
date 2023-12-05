@@ -65,6 +65,9 @@ func ftp_auth(username,password,ip string) (error,bool,string) {
 	if err!=nil{
 		return err,false,"ftp"
 	}
+	defer func() {
+		c.Close()
+	}()
 	conn, err := ftp.Dial(fmt.Sprintf("%s:%d", ip, ftp_port), ftp.DialWithNetConn(c))
 	if err == nil {
 		err = conn.Login(username, password)

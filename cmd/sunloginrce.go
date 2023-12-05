@@ -83,7 +83,6 @@ func RunCmd(cmd string,addr string,verify string) string {
 	}
 	str ,_:= io.ReadAll(resp.Body)
 	str, _ = simplifiedchinese.GBK.NewDecoder().Bytes(str)
-	//fmt.Println(string(str))
 	return string(str)
 }
 

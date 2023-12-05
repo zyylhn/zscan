@@ -10,7 +10,6 @@ import (
 	"github.com/malfunkt/iprange"
 	"github.com/projectdiscovery/cdncheck"
 	"golang.org/x/net/proxy"
-	"log"
 	"net"
 	"os"
 	"regexp"
@@ -19,6 +18,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	lib "zscan/poccheck"
 )
 
 var Red = color.FgRed.Render
@@ -26,46 +26,45 @@ var Yellow = color.FgLightYellow.Render
 var LightBlue = color.FgLightBlue.Render
 var LightGreen = color.FgLightGreen.Render
 var LightCyan = color.FgLightCyan.Render
-var White=color.FgLightWhite.Render
+var White = color.FgLightWhite.Render
 
-type Mycolor func(a ...interface{}) string  //color类型，用于指定输出颜色
-type Connect_method func(ip string ,port int) (string,int,error,[]string)//用于指定tcp连接函数（所有端口连接框架都用的portscan的，传入不同的connect方法来达到我们想要的目的
+type Mycolor func(a ...interface{}) string                                   //color类型，用于指定输出颜色
+type Connect_method func(ip string, port int) (string, int, error, []string) //用于指定tcp连接函数（所有端口连接框架都用的portscan的，传入不同的connect方法来达到我们想要的目的
 
-//建立tcp连接检测端口开放情况
-func Connect(ip string, port int) (string, int, error,[]string) {
-	conn,err:=Getconn(ip,port)
+// 建立tcp连接检测端口开放情况
+func Connect(ip string, port int) (string, int, error, []string) {
+	conn, err := Getconn(ip, port)
 	if conn != nil {
 		_ = conn.Close()
-		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
-		if !webscan{
-			httpinfo,_:=WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout*2})
-			if httpvulscan&&httpinfo!=nil{
+		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port), White)
+		if !webscan {
+			httpinfo, _ := WebTitle(&HostInfo{Host: ip, Ports: fmt.Sprintf("%v", port), Timeout: Timeout * 2})
+			if httpvulscan && httpinfo != nil {
 				HttpVulScan(httpinfo)
 			}
 		}
-		return ip,port,nil,nil
+		return ip, port, nil, nil
 	}
-	return ip, port, err,nil
+	return ip, port, err, nil
 }
 
-
-func Connect_BannerScan(ip string,port int) (string,int,error,[]string) {
-	conn,err:=Getconn(ip,port)
-	if conn!=nil{
+func Connect_BannerScan(ip string, port int) (string, int, error, []string) {
+	conn, err := Getconn(ip, port)
+	if conn != nil {
 		conn.SetReadDeadline((time.Now().Add(Timeout)))
-		reader:=bufio.NewReader(conn)
-		s,_:=reader.ReadString('\r')
-		s=strings.Replace(s,"\n","",-1)
-		s="Banner:"+s
-		a:=[]string{s}
-		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port),White)
-		if !webscan{
-			httpinfo,_:=WebTitle(&HostInfo{Host: ip,Ports: fmt.Sprintf("%v",port),Timeout: Timeout*2})
-			if httpvulscan&&httpinfo!=nil{
+		reader := bufio.NewReader(conn)
+		s, _ := reader.ReadString('\r')
+		s = strings.Replace(s, "\n", "", -1)
+		s = "Banner:" + s
+		a := []string{s}
+		Output(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port), White)
+		if !webscan {
+			httpinfo, _ := WebTitle(&HostInfo{Host: ip, Ports: fmt.Sprintf("%v", port), Timeout: Timeout * 2})
+			if httpvulscan && httpinfo != nil {
 				HttpVulScan(httpinfo)
 			}
 		}
-		return ip,port,err,a
+		return ip, port, err, a
 	}
 
 	defer func() {
@@ -73,14 +72,14 @@ func Connect_BannerScan(ip string,port int) (string,int,error,[]string) {
 			_ = conn.Close()
 		}
 	}()
-	return ip, port, err,nil
+	return ip, port, err, nil
 }
 
-func ConnectSyn(dstIp string,dstPort int) (string,int,error,[]string) {
+func ConnectSyn(dstIp string, dstPort int) (string, int, error, []string) {
 	srcIp, srcPort, err := localIPPort(net.ParseIP(dstIp))
 	dstAddrs, err := net.LookupIP(dstIp)
 	if err != nil {
-		return dstIp, 0, err,nil
+		return dstIp, 0, err, nil
 	}
 
 	dstip := dstAddrs[0].To4()
@@ -109,29 +108,29 @@ func ConnectSyn(dstIp string,dstPort int) (string,int,error,[]string) {
 	}
 
 	if err := gopacket.SerializeLayers(buf, opts, tcp); err != nil {
-		return dstIp, 0, err,nil
+		return dstIp, 0, err, nil
 	}
 
 	conn, err := net.ListenPacket("ip4:tcp", "0.0.0.0")
 	if err != nil {
-		return dstIp, 0, err,nil
+		return dstIp, 0, err, nil
 	}
 	defer conn.Close()
 
 	if _, err := conn.WriteTo(buf.Bytes(), &net.IPAddr{IP: dstip}); err != nil {
-		return dstIp, 0, err,nil
+		return dstIp, 0, err, nil
 	}
 
 	// Set deadline so we don't wait forever.
 	if err := conn.SetDeadline(time.Now().Add(Timeout)); err != nil {
-		return dstIp, 0, err,nil
+		return dstIp, 0, err, nil
 	}
 
 	for {
 		b := make([]byte, 4096)
 		n, addr, err := conn.ReadFrom(b)
 		if err != nil {
-			return dstIp, 0, err,nil
+			return dstIp, 0, err, nil
 		} else if addr.String() == dstip.String() {
 			// Decode a packet
 			packet := gopacket.NewPacket(b[:n], layers.LayerTypeTCP, gopacket.Default)
@@ -141,10 +140,10 @@ func ConnectSyn(dstIp string,dstPort int) (string,int,error,[]string) {
 
 				if tcp.DstPort == srcport {
 					if tcp.SYN && tcp.ACK {
-						Output(fmt.Sprintf("\rFind port %v:%v\r\n", dstIp, dstPort),White)
-						return dstIp, dstPort, err,nil
+						Output(fmt.Sprintf("\rFind port %v:%v\r\n", dstIp, dstPort), White)
+						return dstIp, dstPort, err, nil
 					} else {
-						return dstIp, 0, err,nil
+						return dstIp, 0, err, nil
 					}
 				}
 			}
@@ -167,81 +166,149 @@ func localIPPort(dstip net.IP) (net.IP, int, error) {
 	return nil, -1, err
 }
 
-func Proxyconn() (proxy.Dialer,error) {
-	if strings.ContainsAny(Proxy,"@")&&strings.Count(Proxy,"@")==1{
-		info:=strings.Split(Proxy,"@")
-		userpass:=strings.Split(info[0],":")
-		auth:= proxy.Auth {userpass[0],userpass[1]}
-		dialer,err:=proxy.SOCKS5("tcp",info[1],&auth,proxy.Direct)
-		return dialer,err
-	}else {
-		if strings.ContainsAny(Proxy,":")&&strings.Count(Proxy,":")==1{
-			dialer,err:=proxy.SOCKS5("tcp",Proxy,nil,proxy.Direct)
+func Proxyconn() (proxy.Dialer, error) {
+	if strings.ContainsAny(Proxy, "@") && strings.Count(Proxy, "@") == 1 {
+		info := strings.Split(Proxy, "@")
+		userpass := strings.Split(info[0], ":")
+		auth := proxy.Auth{userpass[0], userpass[1]}
+		dialer, err := proxy.SOCKS5("tcp", info[1], &auth, proxy.Direct)
+		return dialer, err
+	} else {
+		if strings.ContainsAny(Proxy, ":") && strings.Count(Proxy, ":") == 1 {
+			dialer, err := proxy.SOCKS5("tcp", Proxy, nil, proxy.Direct)
 			//Inithttp(PocInfo{Timeout: Timeout,Num: Thread,Proxy: "http://"+Proxy})
-			return dialer,err
-			}
-		}
-	return nil,fmt.Errorf("proxy error")
-}
-
-func Getconn(ip string,port int) (net.Conn,error) {
-	if port==0{
-		if proxyconn!=nil{
-			return proxyconn.Dial("tcp",ip)
-		}else {
-			return net.DialTimeout("tcp",ip,Timeout)
-		}
-	}else {
-		if proxyconn!=nil{
-			return proxyconn.Dial("tcp",fmt.Sprintf("%v:%v",ip,port))
-		}else {
-			return net.DialTimeout("tcp",fmt.Sprintf("%v:%v",ip,port),Timeout)
+			return dialer, err
 		}
 	}
+	return nil, fmt.Errorf("proxy error")
 }
 
-//解析ip返回IP类型列表
+func Getconn(ip string, port int) (net.Conn, error) {
+	var conn net.Conn
+	var err error
+	if port == 0 {
+		if proxyconn != nil {
+			conn, err = proxyconn.Dial("tcp", ip)
+		} else {
+			conn, err = net.DialTimeout("tcp", ip, Timeout)
+		}
+	} else {
+		if proxyconn != nil {
+			conn, err = proxyconn.Dial("tcp", fmt.Sprintf("%v:%v", ip, port))
+		} else {
+			conn, err = net.DialTimeout("tcp", fmt.Sprintf("%v:%v", ip, port), Timeout)
+		}
+	}
+	if err != nil {
+		return nil, err
+	}
+	err = conn.SetDeadline(time.Now().Add(Timeout * 2))
+	if err != nil {
+		return nil, err
+	}
+	return conn, err
+}
+
+// 解析ip返回IP类型列表
 func Parse_IP(ip_string string) []string {
 	var re []string
-	if strings.Contains(ip_string,","){
-		iplist:=strings.Split(ip_string,",")
-		for _,v:=range iplist{
-			ip,err:=iprangeParse(v)
-			if err!=nil{
+	if strings.Contains(ip_string, ",") {
+		iplist := strings.Split(ip_string, ",")
+		for _, v := range iplist {
+			ip, err := iprangeParse(v)
+			if err != nil {
 				fmt.Println(Red(err))
-			}else {
-				re= append(re, ip...)
+			} else {
+				re = append(re, ip...)
 			}
 		}
-	}else {
-		ip,err:=iprangeParse(ip_string)
-		if err!=nil{
+	} else {
+		ip, err := iprangeParse(ip_string)
+		if err != nil {
 			fmt.Println(Red(err))
-		}else {
-			re= append(re, ip...)
+		} else {
+			re = append(re, ip...)
 		}
+	}
+	if WriteListIp != "" {
+		ip, err := iprangeParse(WriteListIp)
+		if err != nil {
+			fmt.Println(Red(err))
+		}
+		re = RemoveWriteList(re, ip)
 	}
 	return re
 }
 
-func iprangeParse(ip string) ([]string,error) {
+func RemoveWriteList(target []string, writelist []string) []string {
+	for _, w := range writelist {
+		target = DeleteSliceIP(target, w)
+	}
+	return target
+}
+
+func DeleteSliceIP(a []string, r string) []string {
+	j := 0
+	for _, val := range a {
+		if val != r {
+			a[j] = val
+			j++
+		}
+	}
+	return a[:j]
+}
+
+func RemoveWriteLisPortt(target []int, writelist []int) []int {
+	for _, w := range writelist {
+		target = DeleteSlicePort(target, w)
+	}
+	return target
+}
+
+func DeleteSlicePort(a []int, r int) []int {
+	j := 0
+	for _, val := range a {
+		if val != r {
+			a[j] = val
+			j++
+		}
+	}
+	return a[:j]
+}
+
+func iprangeParse(ip string) ([]string, error) {
 	var re []string
 	list, err := iprange.ParseList(ip)
-	if err != nil {                   //解析不了的ip先判断是不是ipv6
-		if isIPv6(ip){
-			return []string{Parse_IPv6(ip)},nil
+	if err != nil { //解析不了的ip先判断是不是ipv6
+		if isIPv6(ip) {
+			return []string{Parse_IPv6(ip)}, nil
 		}
-		return nil, fmt.Errorf("IP format error,check the entered IP address:%v",ip)
+		return nil, fmt.Errorf("IP format error,check the entered IP address:%v", ip)
 	}
 	iplist := list.Expand()
-	for _,i:=range iplist{
-		re= append(re, i.String())
+	for _, i := range iplist {
+		re = append(re, i.String())
 	}
 	return re, nil
 }
 
-//解析端口
+// 解析端口
 func Parse_Port(selection string) ([]int, error) {
+	ports, err := parse_port(selection)
+	if err != nil {
+		return nil, err
+	}
+	if WriteListPort != "" {
+		writeports, err := parse_port(WriteListPort)
+		if err != nil {
+			return nil, err
+		}
+		ports = RemoveWriteLisPortt(ports, writeports)
+	}
+	return ports, nil
+}
+
+func parse_port(selection string) ([]int, error) {
 	ports := make([]int, 0)
 	if selection == "" {
 		return ports, nil
@@ -285,41 +352,41 @@ func Parse_Port(selection string) ([]int, error) {
 	return ports, nil
 }
 
-//输出
-func Output(s string,c Mycolor) {
+// 输出
+func Output(s string, c Mycolor) {
 	fmt.Print(c(s))
-	if isinitfile{
-		OutputChan<-s
+	if isinitfile {
+		OutputChan <- s
 	}
 }
 
-//创建文件,如果没有指定要存的文件名默认用host名存
-func CreatFile()  {
-	if Hosts!=""&&Path_result=="result.txt"{
-		new_filename:=filename_filter(Hosts)+".txt"
-		Path_result=new_filename
+// 创建文件,如果没有指定要存的文件名默认用host名存
+func CreatFile() {
+	if Hosts != "" && Path_result == "result.txt" {
+		new_filename := filename_filter(Hosts) + ".txt"
+		Path_result = new_filename
 	}
 	//如果文件不存在则创建文件
-	_,err:=os.Stat(Path_result)
-	if err!=nil{
-		file,err:=os.Create(Path_result)
-		Checkerr(err)
+	_, err := os.Stat(Path_result)
+	if err != nil {
+		file, err := os.Create(Path_result)
+		Checkerr_exit(err)
 		defer file.Close()
-		}
+	}
 }
 
-func filename_filter(filename string)string{
-	f:= func(c rune) rune{
-		special:="\\/:*?<>|"
-		if strings.Contains(special,string(c)){
+func filename_filter(filename string) string {
+	f := func(c rune) rune {
+		special := "\\/:*?<>|"
+		if strings.Contains(special, string(c)) {
 			return '_'
 		}
 		return c
 	}
-	return strings.Map(f,filename)
+	return strings.Map(f, filename)
 }
 
-//检查错误
+// 检查错误
 func Checkerr(err error) {
 	if err != nil {
 		fmt.Println(Red("ERROE:", err))
@@ -333,78 +400,90 @@ func Checkerr_exit(err error) {
 	}
 }
 
-//输出时间间隔和脚本结束时间
-func Output_endtime(start time.Time)  {
-	Output(fmt.Sprintf("\n%v\nTime consuming:%v\n\n", string(time.Now().AppendFormat([]byte("\rEnd time:"), l1)), time.Since(start)),LightCyan)
+// 输出时间间隔和脚本结束时间
+func Output_endtime(start time.Time) {
+	Output(fmt.Sprintf("\n%v\nTime consuming:%v\n\n", string(time.Now().AppendFormat([]byte("\rEnd time:"), l1)), time.Since(start)), LightCyan)
 }
 
-func SaveInit()  {
+func SaveInit() {
+	isinitfile = true
 	CreatFile()
 	go func() {
-		file,err:=os.OpenFile(Path_result,os.O_APPEND|os.O_WRONLY,0666)
+		file, err := os.OpenFile(Path_result, os.O_APPEND|os.O_WRONLY, 0666)
 		defer file.Close()
 		Checkerr(err)
-		for outputre:=range OutputChan{
+		for outputre := range OutputChan {
 			file.Write([]byte(outputre))
-			if strings.Contains(outputre,"consuming"){
-				runmod=true
-				stopchan<-1
+			if strings.Contains(outputre, "consuming") {
+				runmod = true
+				stopchan <- 1
 				return
 			}
 		}
 	}()
 }
-//输出扫描信息
-func PrintScanBanner(mode string)  {
-	output_verbose:= func() {
+
+// 输出扫描信息
+func PrintScanBanner(mode string) {
+
+	if Proxy != "" {
+		proxyconn, _ = Proxyconn()
+		if proxyconn == nil {
+			Checkerr_exit(fmt.Errorf("proxy error"))
+		}
+	}
+	Inithttp()
+	lib.Inithttp(Client, ClientNoRedirect)
+
+	output_verbose := func() {
 		if Verbose {
-			Output("Verbose:Show verbose\n",LightCyan)
+			Output("Verbose:Show verbose\n", LightCyan)
 		} else {
-			Output("Verbose:Don't show verbose\n",LightCyan)
+			Output("Verbose:Don't show verbose\n", LightCyan)
 		}
 	}
-	output_pingbefor:= func() {
+	output_pingbefor := func() {
 		if !pingbefore {
-			Output(fmt.Sprintf("Ping befor portscan\n"),LightCyan)
+			Output(fmt.Sprintf("Ping befor portscan\n"), LightCyan)
 		} else {
-			Output(fmt.Sprintf("Not ping befor portscan\n"),LightCyan)
+			Output(fmt.Sprintf("Not ping befor portscan\n"), LightCyan)
 		}
 	}
-	output_scan:= func() {
-		Output(fmt.Sprintf("%s\nThe number of threads:%v\nTime delay:%v\nTraget:%v%v\n", string(time.Now().AppendFormat([]byte("Start time:"), l1)), Thread, Timeout, Hosts,TargetUrl),LightCyan)
+	output_scan := func() {
+		Output(fmt.Sprintf("%s\nThe number of threads:%v\nTime delay:%v\nTraget:%v%v\n", string(time.Now().AppendFormat([]byte("Start time:"), l1)), Thread, Timeout, Hosts, TargetUrl), LightCyan)
 	}
-	output_file:= func() {
-		Output(fmt.Sprintf("Save result file:%v\n",Path_result),LightCyan)
+	output_file := func() {
+		Output(fmt.Sprintf("Save result file:%v\n", Path_result), LightCyan)
 	}
-	output_banner:= func() {
-		if banner{
-			Output("Output bannner infomation\n",LightCyan)
+	output_banner := func() {
+		if banner {
+			Output("Output bannner infomation\n", LightCyan)
 		}
 	}
-	output_command:= func() {
-		if Command!=""{
-			Output(fmt.Sprintf("Command executed:%v\n",Command),LightCyan)
+	output_command := func() {
+		if Command != "" {
+			Output(fmt.Sprintf("Command executed:%v\n", Command), LightCyan)
 		}
 	}
-	output_burpthread:= func() {
-		Output(fmt.Sprintf("The number of burp threads:%v\n",burpthread),LightCyan)
+	output_burpthread := func() {
+		Output(fmt.Sprintf("The number of burp threads:%v\n", burpthread), LightCyan)
 	}
-	output_pocscanthread:= func() {
-		Output(fmt.Sprintf("The number of poc scan threads:%v\n",PocThread),LightCyan)
+	output_pocscanthread := func() {
+		Output(fmt.Sprintf("The number of poc scan threads:%v\n", PocThread), LightCyan)
 	}
-	output_pocinfo:= func() {
-		if Pocpath==""{
-			Output("Use built in poc\n",LightCyan)
-		}else {
-			Output(fmt.Sprintf("Use External poc dir: %v\n",Pocpath),LightCyan)
+	output_pocinfo := func() {
+		if Pocpath == "" {
+			Output("Use built in poc\n", LightCyan)
+		} else {
+			Output(fmt.Sprintf("Use External poc dir: %v\n", Pocpath), LightCyan)
 		}
-		if PocName!=""{
-			Output(fmt.Sprintf("Poc name %v\n",PocName),LightCyan)
+		if PocName != "" {
+			Output(fmt.Sprintf("Poc name %v\n", PocName), LightCyan)
 		}
 	}
 	switch mode {
 	case "ps":
-		Output("\nMode:portscan\n",Red)
+		Output("\nMode:portscan\n", Red)
 		output_scan()
 		output_verbose()
 		output_pingbefor()
@@ -412,29 +491,29 @@ func PrintScanBanner(mode string)  {
 		output_file()
 		fmt.Println()
 	case "ping":
-		Output("\nMode:ping discover\n",Red)
+		Output("\nMode:ping discover\n", Red)
 		output_scan()
 		output_verbose()
 		output_file()
 		fmt.Println()
 	case "socks":
-		Output("\nMode:Socks5 server\n",Red)
-		Output(fmt.Sprintf("Listen addr: %v\n\n",Addr),LightCyan)
+		Output("\nMode:Socks5 server\n", Red)
+		Output(fmt.Sprintf("Listen addr: %v\n\n", Addr), LightCyan)
 	case "SocksScan":
-		Output("\nMode:Proxy find\n",Red)
+		Output("\nMode:Proxy find\n", Red)
 		output_scan()
 		output_verbose()
 		output_file()
 		fmt.Println()
 	case "ssh":
-		Output("\nMode:ssh\n",Red)
+		Output("\nMode:ssh\n", Red)
 		output_scan()
-		Output(fmt.Sprintf("The number of burp threads: 10 \n"),LightCyan)
+		Output(fmt.Sprintf("The number of burp threads: 10 \n"), LightCyan)
 		output_verbose()
 		output_file()
 		fmt.Println()
 	case "mysql":
-		Output("\nMode:mysql\n",Red)
+		Output("\nMode:mysql\n", Red)
 		output_scan()
 		output_burpthread()
 		output_verbose()
@@ -442,7 +521,7 @@ func PrintScanBanner(mode string)  {
 		output_command()
 		fmt.Println()
 	case "mssql":
-		Output("\nMode:mssql\n",Red)
+		Output("\nMode:mssql\n", Red)
 		output_scan()
 		output_burpthread()
 		output_verbose()
@@ -450,27 +529,27 @@ func PrintScanBanner(mode string)  {
 		output_command()
 		fmt.Println()
 	case "redis":
-		Output("\nMode:redis\n",Red)
+		Output("\nMode:redis\n", Red)
 		output_scan()
 		output_burpthread()
 		output_verbose()
 		output_file()
 		output_command()
 		fmt.Println()
-	case "netbios":
-		Output("\nMode:netbios\n",Red)
+	case "winscan":
+		Output("\nMode:winscan\n", Red)
 		output_scan()
 		output_verbose()
 		output_file()
 		fmt.Println()
 	case "snmp":
-		Output("\nMode:snmp\n",Red)
+		Output("\nMode:snmp\n", Red)
 		output_scan()
 		output_verbose()
 		output_file()
 		fmt.Println()
 	case "postgres":
-		Output("\nMode:postgres\n",Red)
+		Output("\nMode:postgres\n", Red)
 		output_scan()
 		output_burpthread()
 		output_verbose()
@@ -478,14 +557,14 @@ func PrintScanBanner(mode string)  {
 		output_command()
 		fmt.Println()
 	case "all":
-		Output("\nMode:all\ndont't have ssh\n",Red)
+		Output("\nMode:all\n", Red)
 		output_scan()
 		output_verbose()
 		output_pingbefor()
 		output_file()
 		fmt.Println()
 	case "ftp":
-		Output("\nMode:ftp\n",Red)
+		Output("\nMode:ftp\n", Red)
 		output_scan()
 		output_burpthread()
 		output_verbose()
@@ -493,7 +572,7 @@ func PrintScanBanner(mode string)  {
 		output_command()
 		fmt.Println()
 	case "mongodb":
-		Output("\nMode:mongo\n",Red)
+		Output("\nMode:mongo\n", Red)
 		output_scan()
 		output_burpthread()
 		output_verbose()
@@ -501,23 +580,23 @@ func PrintScanBanner(mode string)  {
 		output_command()
 		fmt.Println()
 	case "httpserver":
-		Output("\nMode:httpserver\n",Red)
-		Output(fmt.Sprintf("%s\n", string(time.Now().AppendFormat([]byte("Start time:"), l1))),LightCyan)
-		Output(fmt.Sprintf("Listen on %v\n", httpserveraddr),LightCyan)
-		Output(fmt.Sprintf("root directory：%v\n", dir),LightCyan)
-		if Username==""&&Password==""{
-			Output("No authentication required\n",LightCyan)
-		}else {
-			Output("Requires authentication\n",LightCyan)
+		Output("\nMode:httpserver\n", Red)
+		Output(fmt.Sprintf("%s\n", string(time.Now().AppendFormat([]byte("Start time:"), l1))), LightCyan)
+		Output(fmt.Sprintf("Listen on %v\n", httpserveraddr), LightCyan)
+		Output(fmt.Sprintf("root directory：%v\n", dir), LightCyan)
+		if Username == "" && Password == "" {
+			Output("No authentication required\n", LightCyan)
+		} else {
+			Output("Requires authentication\n", LightCyan)
 		}
 	case "ms17010":
-		Output("\nMode:ms17_010\n",Red)
+		Output("\nMode:ms17_010\n", Red)
 		output_scan()
 		output_verbose()
 		output_file()
 		fmt.Println()
 	case "ldap":
-		Output("\nMode:ldap\n",Red)
+		Output("\nMode:ldap\n", Red)
 		output_scan()
 		output_burpthread()
 		output_verbose()
@@ -525,21 +604,21 @@ func PrintScanBanner(mode string)  {
 		output_command()
 		fmt.Println()
 	case "rdp":
-		Output("\nMode:rdp\n",Red)
+		Output("\nMode:rdp\n", Red)
 		output_scan()
 		output_burpthread()
 		output_verbose()
 		output_file()
 		fmt.Println()
 	case "poc":
-		Output("\nMode:poc\n",Red)
-		Output(fmt.Sprintf("%s\nHttp time delay:%v(3*Timeout)\nTraget:%v%v\n", string(time.Now().AppendFormat([]byte("Start time:"), l1)), Timeout*3, Hosts,TargetUrl),LightCyan)
+		Output("\nMode:poc\n", Red)
+		Output(fmt.Sprintf("%s\nHttp time delay:%v(3*Timeout)\nTraget:%v%v\n", string(time.Now().AppendFormat([]byte("Start time:"), l1)), Timeout*3, Hosts, TargetUrl), LightCyan)
 		output_pocscanthread()
 		output_pocinfo()
 		output_file()
 		fmt.Println()
 	case "smb":
-		Output("\nMode:smb\n",Red)
+		Output("\nMode:smb\n", Red)
 		output_scan()
 		output_burpthread()
 		output_verbose()
@@ -548,112 +627,114 @@ func PrintScanBanner(mode string)  {
 	}
 }
 
-func GetHost()  {
-	switch  {
-	case Hostfile!=""&&Hosts!="":
-		hostlist,err:=ReadFile(Hostfile)
+func GetHost() {
+	var hostlist []string //拿到的所有目标
+	var err error
+	switch {
+	case Hostfile != "" && Hosts != "":
+		hostlist, err = ReadFile(Hostfile)
 		Checkerr_exit(err)
-		hostlist=RemoveRepByMap(hostlist)
-		if len(hostlist)!=0{
-			if isDomain(hostlist[0]){
-				hostlist=Getiplistfromurl(hostlist)
-			}
+		if strings.Contains(Hosts, ",") {
+			hostlist = append(hostlist, strings.Split(Hosts, ",")...)
+		} else {
+			hostlist = append(hostlist, Hosts)
 		}
-		Hosts=Hosts+","+strings.Join(hostlist,",")
-	case Hostfile!=""&&Hosts=="":
-		hostlist,err:=ReadFile(Hostfile)
+	case Hostfile != "" && Hosts == "":
+		hostlist, err = ReadFile(Hostfile)
 		Checkerr_exit(err)
-		hostlist=RemoveRepByMap(hostlist)
-		if len(hostlist)!=0{
-			if isDomain(hostlist[0]){
-				hostlist=Getiplistfromurl(hostlist)
-			}
+	case Hosts != "" && Hostfile == "":
+		if strings.Contains(Hosts, ",") {
+			hostlist = strings.Split(Hosts, ",")
+		} else {
+			hostlist = append(hostlist, Hosts)
 		}
-		Hosts=strings.Join(hostlist,",")
-	case Hosts!=""&&Hostfile=="":
-		if strings.Contains(Hosts,","){
-			hostlist:=strings.Split(Hosts,",")
-			if isDomain(hostlist[0]){
-				hostlist=Getiplistfromurl(hostlist)
-				Hosts=strings.Join(hostlist,",")
-			}
-		}else {
-			if isDomain(Hosts){
-				hostlist:=Getiplistfromurl([]string{Hosts})
-				if len(hostlist)!=0{
-					Hosts=strings.Join(hostlist,",")
-				}
-			}
-		}
-	case Hosts==""&&Hostfile=="":
-		Checkerr_exit(fmt.Errorf("This module must be required --host or --hostfile\nUse \"zscan modename -h\" get some help"))
+	case Hosts == "" && Hostfile == "":
+		Checkerr_exit(fmt.Errorf("This module must be required --host or --hostfile\nUse \"appname modename -h\" get some help"))
 	default:
+	}
+	var domainTarget []string
+	var ipTarget []string
+	for _, t := range hostlist {
+		if isDomain(t) {
+			domainTarget = append(domainTarget, t)
+		} else {
+			ipTarget = append(ipTarget, t)
+		}
+	}
+	fmt.Println(ipTarget)
+	if len(domainTarget) > 0 {
+		domainTarget = Getiplistfromurl(domainTarget)
+	}
+	if len(ipTarget)+len(domainTarget) != 0 {
+		Hosts = strings.Join(RemoveRepByMap(append(ipTarget, domainTarget...)), ",")
+	} else {
+		Hosts = ""
 	}
 }
 
 func Getiplistfromurl(list []string) []string {
-	Output("Start resolving domain names\n",LightCyan)
-	client, err := cdncheck.NewWithCache()
-	if err != nil {
-		log.Fatal(err)
-	}
+	Output("Start resolving domain names\n", LightCyan)
+	client := cdncheck.New()
 	var re []string
 	var result []string
 	var wg sync.WaitGroup
-	listchan:=make(chan string,100)
-	for i:=0;i<Thread;i++{
+	listchan := make(chan string, 100)
+	for i := 0; i < Thread; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			for l:=range listchan{
-				iplist,err:=net.LookupHost(l)
+			for l := range listchan {
+				iplist, err := net.LookupHost(l)
 				Checkerr(err)
-				if iplist!=nil&&len(iplist)==1{
-					for _,ip:=range iplist{
-						re=append(re,ip)
-						Output(fmt.Sprintf("%v : %v\n",l,ip),White)
+				if iplist != nil && len(iplist) == 1 {
+					for _, ip := range iplist {
+						re = append(re, ip)
+						Output(fmt.Sprintf("%v : %v\n", l, ip), White)
 					}
-				}else if len(iplist)>1 {
-					Output(fmt.Sprintf("%v has cdn\n",l),Yellow)
+				} else if len(iplist) > 1 {
+					Output(fmt.Sprintf("%v has cdn\n", l), Yellow)
 				}
 			}
 		}()
 	}
-	for _,domain:=range list{
-		if strings.HasPrefix(domain,"http://"){
-			domain=strings.TrimPrefix(domain,"http://")
+	for _, domain := range list {
+		if strings.HasPrefix(domain, "http://") {
+			domain = strings.TrimPrefix(domain, "http://")
 		}
-		if strings.HasPrefix(domain,"https://"){
-			domain=strings.TrimPrefix(domain,"https://")
+		if strings.HasPrefix(domain, "https://") {
+			domain = strings.TrimPrefix(domain, "https://")
 		}
-		listchan<-domain
+		listchan <- domain
 	}
 	close(listchan)
 	wg.Wait()
-	re=RemoveRepByMap(re)
-	Output("Start to remove known CDNS\n",LightCyan)
-	for _,ip:=range re{
-		success:=FilterCdn(ip,client)
-		if success!=""&&!strings.Contains(ip,":"){
-			result= append(result, success)
-		}else {
-			Output(fmt.Sprintf("%v is cdn\n",ip),Yellow)
+	re = RemoveRepByMap(re)
+	if len(re) > 0 {
+		Output("Start to remove known CDNS\n", LightCyan)
+	}
+	for _, ip := range re {
+		success := FilterCdn(ip, client)
+		if success != "" && !strings.Contains(ip, ":") {
+			result = append(result, success)
+		} else {
+			Output(fmt.Sprintf("%v is cdn\n", ip), Yellow)
 		}
 	}
-	Output("all target\n",LightCyan)
-	for _,v:=range result{
-		Output(v+"\n",White)
+	if len(result) > 0 {
+		Output("all domain target\n", LightCyan)
+		for _, v := range result {
+			Output(v+"\n", White)
+		}
 	}
 	return result
 }
 
-func FilterCdn(ip string,client *cdncheck.Client) string {
-	if found,_ ,err := client.Check(net.ParseIP(ip)); found && err == nil {
+func FilterCdn(ip string, client *cdncheck.Client) string {
+	if found, _, err := client.CheckCDN(net.ParseIP(ip)); found && err == nil {
 		return ""
 	}
 	return ip
 }
-
 
 func ReadFile(filename string) ([]string, error) {
 	file, err := os.Open(filename)
@@ -681,17 +762,17 @@ func sortip(iplist []net.IP) []net.IP {
 }
 
 func sortip_string(iplist []string) []net.IP {
-	iplist_ip:=[]net.IP{}
-	for _,i:=range iplist{
-		iplist_ip=append(iplist_ip,net.ParseIP(i))
+	iplist_ip := []net.IP{}
+	for _, i := range iplist {
+		iplist_ip = append(iplist_ip, net.ParseIP(i))
 	}
-	iplist_ip=sortip(iplist_ip)
+	iplist_ip = sortip(iplist_ip)
 	return iplist_ip
 }
 
-func contains(s string,list []string) bool {
-	for _,i:=range list{
-		if s==i{
+func contains(s string, list []string) bool {
+	for _, i := range list {
+		if s == i {
 			return true
 		}
 	}
@@ -700,11 +781,11 @@ func contains(s string,list []string) bool {
 
 func RemoveRepByMap(slc []string) []string {
 	result := []string{}
-	tempMap := map[string]byte{}  // 存放不重复主键
-	for _, e := range slc{
+	tempMap := map[string]byte{} // 存放不重复主键
+	for _, e := range slc {
 		l := len(tempMap)
 		tempMap[e] = 0
-		if len(tempMap) != l{  // 加入map后，map长度变化，则元素不重复
+		if len(tempMap) != l { // 加入map后，map长度变化，则元素不重复
 			result = append(result, e)
 		}
 	}
@@ -713,21 +794,21 @@ func RemoveRepByMap(slc []string) []string {
 
 func Parse_IPv6(ipstring string) string {
 	var ipv6 string
-	if ip:=net.ParseIP(ipstring);ip!=nil{
-		ipv6="["+ip.String()+"]"
+	if ip := net.ParseIP(ipstring); ip != nil {
+		ipv6 = "[" + ip.String() + "]"
 	}
 	return ipv6
 }
 
 func isDomain(domain string) bool {
 	var rege = regexp.MustCompile(`[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+.?`)
-	if strings.HasPrefix(domain,"http"){
+	if strings.HasPrefix(domain, "http") {
 		return true
 	}
-	if net.ParseIP(domain)!=nil{
+	if net.ParseIP(domain) != nil {
 		return false
 	}
-	if _,err:=iprangeParse(domain);err==nil{
+	if _, err := iprangeParse(domain); err == nil {
 		return false
 	}
 
@@ -735,12 +816,12 @@ func isDomain(domain string) bool {
 }
 
 func isIPv6(ipv6 string) bool {
-	ip:=net.ParseIP(ipv6)
-	if ip==nil{
+	ip := net.ParseIP(ipv6)
+	if ip == nil {
 		return false
 	}
-	for i:=0;i<len(ipv6);i++{
-		if ipv6[i]==':'{
+	for i := 0; i < len(ipv6); i++ {
+		if ipv6[i] == ':' {
 			return true
 		}
 		continue

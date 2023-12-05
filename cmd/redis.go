@@ -80,6 +80,9 @@ func redis_auth(user,pass,ip string) (error,bool,string) {
 	if rbd==nil{
 		return fmt.Errorf(""),false,"redis"
 	}
+	defer func() {
+		_=rbd.Close()
+	}()
 	_,err:=rbd.Ping(context.Background()).Result()
 	if err!=nil{
 		return err,false,"redis"
@@ -93,7 +96,6 @@ func init() {
 	redisCmd.Flags().StringVarP(&Hosts,"host","H","","Set redis server host")
 	redisCmd.Flags().IntVarP(&redis_port,"port","p",6379,"Set redis server port")
 	redisCmd.Flags().IntVarP(&burpthread,"burpthread","",100,"Set burp password thread(recommend not to change)")
-	redisCmd.Flags().StringVarP(&Command,"command","c","","Set the command you want to execute")
 	redisCmd.Flags().StringVarP(&Password,"password","P","","Set redis password")
 	redisCmd.Flags().StringVarP(&Passdict,"passdict","","","Set redis passworddict path")
 }

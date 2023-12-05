@@ -6,7 +6,7 @@ import (
 
 var scanCmd = &cobra.Command{
 	Use:   "scan",
-	Short: "ms17010,proxyfind,snmp,winscan(smb,netbios,oxid),poc",
+	Short: "The scanning module",
 }
 
 func init() {

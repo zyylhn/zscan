@@ -72,7 +72,7 @@ var RuleDatas = []RuleData{
 	{"atmail-WebMail", "cookie", "(atmail6)"},
 	{"atmail-WebMail", "code", "(/index.php/mail/auth/processlogin|Powered by Atmail)"},
 	{"weblogic", "code", "(/console/framework/skins/wlsconsole/images/login_WebLogic_branding.png|Welcome to Weblogic Application Server|<i>Hypertext Transfer Protocol -- HTTP/1.1</i>)"},
-	{"致远OA", "code", "(/seeyon/common/|/seeyon/USER-DATA/IMAGES/LOGIN/login.gif)"},
+	{"致远OA", "code", "(seeyon/|/seeyon/USER-DATA/IMAGES/LOGIN/login.gif)"},
 	{"discuz", "code", "(content=\"Discuz! X\")"},
 	{"Typecho", "code", "(Typecho</a>)"},
 	{"金蝶EAS", "code", "(easSessionId)"},
@@ -257,7 +257,7 @@ var RuleDatas = []RuleData{
 	{"drupal","headers","X-Generator: Drupal"},
 	{"drupal","code","content=\"Drupal"},
 	{"drupal","code","jQuery.extend(Drupal.settings"},
-	{"向日葵","code","Verification"},
+	{"向日葵","code","Verification failure"},
 }
 
 var Md5Datas = []Md5Data{

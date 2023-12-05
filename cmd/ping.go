@@ -8,6 +8,7 @@ import (
 	"net"
 	"os/exec"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -18,15 +19,16 @@ var (
 	OS         = runtime.GOOS
 	ExistHosts = make(map[string]struct{})
 	livewg     sync.WaitGroup
-	scantype string
-	useicmp bool
-	discover string
+	scantype   string
+	useicmp    bool
+	discover   string
+	//discoverA  bool
 )
 
 var pingCmd = &cobra.Command{
 	Use:              "ping",
 	TraverseChildren: true,
-	Short:            "ping scan to find computer",
+	Short:            "Ping scan to find computer",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		SaveInit()
 		PrintScanBanner("ping")
@@ -41,53 +43,71 @@ var pingCmd = &cobra.Command{
 	},
 }
 
-func ping()  {
-	result:=[]string{}
+func ping() {
+	result := []string{}
 	switch discover {
 	case "":
 		GetHost()
-		host:=Parse_IP(Hosts)
-		ICMPRun(host,!useicmp)
+		host := Parse_IP(Hosts)
+		ICMPRun(host, !useicmp)
 	case "local":
-		localnet:=getlocalnet()   //[192.168.0.0 172.16.0.0]
-		for _,i:=range localnet{
-			fmt.Println("Find local network: "+i)
+		localnet := getlocalnet() //[192.168.0.0 172.16.0.0]
+		for _, i := range localnet {
+			fmt.Println("Find local network: " + i)
 		}
 		//Output(fmt.Sprint(gettasklist(localnet)),White)
 
-		result=ICMPRun(gettasklist(localnet),!useicmp)
-		result=oxid_discover(parsresult(result))
+		result = ICMPRun(gettasklist(localnet), !useicmp)
+		result = oxid_discover(parsresult(result))
 		Print_network(result)
 	default:
-		network:=[]string{}
-		if strings.ContainsAny(discover,","){
-			network=strings.Split(discover,",")
-		}else  {
-			network=append(network,discover)
+		network := []string{}
+		if strings.ContainsAny(discover, ",") {
+			network = strings.Split(discover, ",")
+		} else {
+			network = append(network, discover)
 		}
-		for _,i:=range network{
-			if ok:=net.ParseIP(i);ok==nil{
-				Output("Incorrect IP format",Red)
+		//处理a段发现
+		var newNetwork []string
+		for _, n := range network {
+			r := strings.Split(n, ".")
+			if strings.Contains(r[1], "-") {
+				tmp := strings.Split(r[1], "-")
+				if len(tmp) == 2 {
+					start, _ := strconv.Atoi(tmp[0])
+					end, _ := strconv.Atoi(tmp[1])
+					for i := start; i < end+1; i++ {
+						r[1] = strconv.Itoa(i)
+						newNetwork = append(newNetwork, strings.Join(r, "."))
+					}
+				}
+			} else {
+				newNetwork = append(newNetwork, n)
+			}
+		}
+		for _, i := range newNetwork {
+			if ok := net.ParseIP(i); ok == nil {
+				Output("Incorrect IP format", Red)
 				return
 			}
 		}
-		result=ICMPRun(gettasklist(network),!useicmp)
-		result=oxid_discover(parsresult(result))
+		result = ICMPRun(gettasklist(newNetwork), !useicmp)
+		result = oxid_discover(parsresult(result))
 		Print_network(result)
 	}
 }
 
 func ICMPRun(hostslist []string, Ping bool) []string {
-	Output("\n\r=========================living ip result list==========================\n",LightGreen)
+	Output("\n\r=========================living ip result list==========================\n", LightGreen)
 	chanHosts := make(chan string, len(hostslist))
 	go func() {
 		for ip := range chanHosts {
 			if _, ok := ExistHosts[ip]; !ok && IsContain(hostslist, ip) {
 				ExistHosts[ip] = struct{}{}
 				if Ping == false {
-					Output(fmt.Sprintf("[%v] Find '%s' aliving\n", scantype,ip),White)
+					Output(fmt.Sprintf("[%v] Find '%s' aliving\n", scantype, ip), White)
 				} else {
-					Output(fmt.Sprintf("[%v] Find '%s' aliving\n", scantype,ip),White)
+					Output(fmt.Sprintf("[%v] Find '%s' aliving\n", scantype, ip), White)
 				}
 				AliveHosts = append(AliveHosts, ip)
 			}
@@ -96,23 +116,23 @@ func ICMPRun(hostslist []string, Ping bool) []string {
 	}()
 
 	if Ping {
-		scantype="ping"
+		scantype = "ping"
 		RunPing(hostslist, chanHosts)
 	} else {
 		conn, err := icmp.ListenPacket("ip4:icmp", "0.0.0.0")
 		if err == nil {
-			scantype="icmp listen"
+			scantype = "icmp listen"
 			RunIcmp(hostslist, conn, chanHosts)
-		}  else {
+		} else {
 			Yellow("The current user permissions unable to send icmp packets\n")
-			scantype="ping"
+			scantype = "ping"
 			RunPing(hostslist, chanHosts)
 		}
 	}
 
 	livewg.Wait()
 	close(chanHosts)
-	Output(fmt.Sprintf("A total of %v IP addresses were discovered\n",len(AliveHosts)),LightGreen)
+	Output(fmt.Sprintf("A total of %v IP addresses were discovered\n", len(AliveHosts)), LightGreen)
 	return AliveHosts
 }
 
@@ -159,14 +179,13 @@ func RunIcmp(hostslist []string, conn *icmp.PacketConn, chanHosts chan string) {
 	conn.Close()
 }
 
-
 func RunPing(hostslist []string, chanHosts chan string) {
 	var bsenv = ""
 	if OS != "windows" {
-		bsenv = "/bin/bash"
+		bsenv = "/bin/sh"
 	}
 	var wg sync.WaitGroup
-	limiter := make(chan struct{},50)
+	limiter := make(chan struct{}, 50)
 	for _, host := range hostslist {
 		wg.Add(1)
 		limiter <- struct{}{}
@@ -258,36 +277,36 @@ func IsContain(items []string, item string) bool {
 }
 
 func getlocalnet() []string {
-	addr,err:=net.InterfaceAddrs()
-	if err!=nil{
+	addr, err := net.InterfaceAddrs()
+	if err != nil {
 		fmt.Println(err)
 	}
-	localnet:=[]string{}
-	for _,i :=range addr{
-		if i.String()[0:3]=="172"{
-			localnet=append(localnet,i.String()[0:7]+"0.0")
+	localnet := []string{}
+	for _, i := range addr {
+		if i.String()[0:3] == "172" {
+			localnet = append(localnet, i.String()[0:7]+"0.0")
 		}
-		if i.String()[0:3]=="192"{
-			localnet=append(localnet,i.String()[0:8]+"0.0")
+		if i.String()[0:3] == "192" {
+			localnet = append(localnet, i.String()[0:8]+"0.0")
 		}
-		if i.String()[0:3]=="10."{
-			ip:=strings.Split(i.String(),".")
-			localnet=append(localnet,ip[0]+"."+ip[1]+".0.0")
+		if i.String()[0:3] == "10." {
+			ip := strings.Split(i.String(), ".")
+			localnet = append(localnet, ip[0]+"."+ip[1]+".0.0")
 		}
 	}
-	localnet=RemoveRepByMap(localnet)
+	localnet = RemoveRepByMap(localnet)
 	return localnet
 }
 
 func gettasklist(network []string) []string {
 	var re []string
-	for _,i:=range network{
-		for j:=0;j<256;j++{
-			ip:=strings.Split(i,".")
-			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,0)).String())
-			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,1)).String())
-			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,2)).String())
-			re=append(re,net.ParseIP(fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],j,255)).String())
+	for _, i := range network {
+		for j := 0; j < 256; j++ {
+			ip := strings.Split(i, ".")
+			re = append(re, net.ParseIP(fmt.Sprintf("%v.%v.%v.%v", ip[0], ip[1], j, 0)).String())
+			re = append(re, net.ParseIP(fmt.Sprintf("%v.%v.%v.%v", ip[0], ip[1], j, 1)).String())
+			re = append(re, net.ParseIP(fmt.Sprintf("%v.%v.%v.%v", ip[0], ip[1], j, 2)).String())
+			re = append(re, net.ParseIP(fmt.Sprintf("%v.%v.%v.%v", ip[0], ip[1], j, 255)).String())
 		}
 	}
 	return re
@@ -295,81 +314,82 @@ func gettasklist(network []string) []string {
 
 //先进行ping扫描，将存活的ip以字符串
 func ping_discover() string {
-	host:=Parse_IP(Hosts)
-	return strings.Join(ICMPRun(host,!useicmp),",")
+	host := Parse_IP(Hosts)
+	return strings.Join(ICMPRun(host, !useicmp), ",")
 }
 
 func parsresult(iplist []string) []string {
-	iplist_ip:=sortip_string(iplist)
-	re:=[]string{}
-	for _,i:=range iplist_ip{
-		ip:=strings.Split(i.String(),".")
-		re=append(re,fmt.Sprintf("%v.%v.%v.0/24",ip[0],ip[1],ip[2]))
+	iplist_ip := sortip_string(iplist)
+	re := []string{}
+	for _, i := range iplist_ip {
+		ip := strings.Split(i.String(), ".")
+		re = append(re, fmt.Sprintf("%v.%v.%v.0/24", ip[0], ip[1], ip[2]))
 	}
-	re=RemoveRepByMap(re)
+	re = RemoveRepByMap(re)
 	return re
 }
 
 func oxid_discover(netlist []string) []string {
-	Output("Begin oxid find\n",Yellow)
-	for _,i:=range netlist{
-		fmt.Printf("Start scan %v network\n",i)
-		ips:= Parse_IP(i)
-		aliveserver := NewPortScan(ips, []int{135}, Connectoxid,false)
+	Output("Begin oxid find\n", Yellow)
+	for _, i := range netlist {
+		fmt.Printf("Start scan %v network\n", i)
+		ips := Parse_IP(i)
+		aliveserver := NewPortScan(ips, []int{135}, Connectoxid, false)
 		r := aliveserver.Run()
 		for _, data := range r {
 			//Output(fmt.Sprintf("Traget:%v\n", j), LightBlue)
 			for k, s := range data.banner[135] {
-				if ok:=net.ParseIP(s);ok==nil{
+				if ok := net.ParseIP(s); ok == nil {
 					continue
 				}
-				ip:=strings.Split(s,".")
-				if len(ip)==4{
-					data.banner[135][k]=fmt.Sprintf("%v.%v.%v.0/24",ip[0],ip[1],ip[2])
+				ip := strings.Split(s, ".")
+				if len(ip) == 4 {
+					data.banner[135][k] = fmt.Sprintf("%v.%v.%v.0/24", ip[0], ip[1], ip[2])
 				}
 			}
 		}
 		for l, data := range r {
 			var re string
-			if len(data.banner[135])>2{
+			if len(data.banner[135]) > 2 {
 				for _, s := range data.banner[135] {
-					if !contains(s,netlist){
-						re+="\t"+s
+					if !contains(s, netlist) {
+						re += "\t" + s
 					}
 				}
-				netlist=append(netlist,l+""+re)
+				netlist = append(netlist, l+""+re)
 			}
 		}
 	}
 	return netlist
 }
 
-func Print_network(re []string)  {
-	Output("\n\r==========================network result list===========================\n",LightGreen)
-	for _,i:=range re{
-		if strings.ContainsAny(i,"\t"){
-			re:=strings.Split(i,"\t")
-			for k,v:=range re{
+func Print_network(re []string) {
+	Output("\n\r==========================network result list===========================\n", LightGreen)
+	for _, i := range re {
+		if strings.ContainsAny(i, "\t") {
+			re := strings.Split(i, "\t")
+			for k, v := range re {
 				switch k {
 				case 0:
-					Output("From "+v+" find\n",White)
+					Output("From "+v+" find\n", White)
 				case 1:
-					Output("\tComputer name: "+v+"\n",White)
+					Output("\tComputer name: "+v+"\n", White)
 				default:
-					Output("\t"+v+"\n",LightGreen)
+					Output("\t"+v+"\n", LightGreen)
 				}
 			}
-		}else {
-			Output("Find "+i+"\n",LightGreen)
+		} else {
+			Output("Find "+i+"\n", LightGreen)
 		}
 	}
 }
 
 func init() {
 	RootCmd.AddCommand(pingCmd)
-	pingCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
-	pingCmd.Flags().BoolVarP(&useicmp,"icmp","i",false,"Icmp packets are sent to check whether the host is alive(need root)")
+	pingCmd.Flags().StringVar(&Hostfile, "hostfile", "", "Set host file")
+	pingCmd.Flags().BoolVarP(&useicmp, "icmp", "i", false, "Icmp packets are sent to check whether the host is alive(need root)")
+	//pingCmd.Flags().BoolVarP(&discoverA, "discoverA", "", false, "discoverA")
 	pingCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set `hosts`(The format is similar to Nmap)")
-	pingCmd.Flags().StringVarP(&discover, "discover", "d", "", "Live network segment found,local parameter uses the local NIC information。eg:zscan ping -d local/zscan ping -d 172.18.0.0,172.19.0.0")
+	pingCmd.Flags().StringVarP(&discover, "discover", "d", "", "Live network segment found,local parameter uses the local NIC information。eg:appname ping -d local/appname ping -d 172.10-17.0.0,172.19.0.0")
 	//pingCmd.MarkFlagRequired("host")
 }

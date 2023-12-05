@@ -33,6 +33,7 @@ var httpserverCmd = &cobra.Command{
 
 type logger struct {
 	httplog http.Handler
+	//update http.Handler
 }
 
 func (l *logger) ServeHTTP(w http.ResponseWriter,req *http.Request)  {

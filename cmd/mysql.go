@@ -1,4 +1,3 @@
-
 package cmd
 
 import (
@@ -31,63 +30,65 @@ var mysqlCmd = &cobra.Command{
 	},
 }
 
-func mysqlmode()  {
+func mysqlmode() {
 	burp_mysql()
 }
 
-func burp_mysql()  {
+func burp_mysql() {
 	GetHost()
-	if Username==""{
-		Username=config.Mysqluser
+	if Username == "" {
+		Username = config.Mysqluser
 	}
 	ips := Parse_IP(Hosts)
-	aliveserver:=NewPortScan(ips,[]int{mysql_port},Connectmysql,true)
-	_=aliveserver.Run()
+	aliveserver := NewPortScan(ips, []int{mysql_port}, Connectmysql, true)
+	_ = aliveserver.Run()
 }
 
-func Connectmysql(ip string, port int) (string, int, error,[]string) {
-	conn, err := Getconn(ip,port)
+func Connectmysql(ip string, port int) (string, int, error, []string) {
+	conn, err := Getconn(ip, port)
 	if conn != nil {
 		defer conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
-		fmt.Println(Yellow("Start burp mysql : ",ip))
-		_,f,_:=mysql_auth("zxczxc","zxczxc",ip)
-		if f{
-			Output(fmt.Sprintf("%v burp success:%v No authentication\n","mysql",ip),LightGreen)
-			return ip,port,nil,[]string{"No authentication"}
+		fmt.Println(Yellow("Start burp mysql : ", ip))
+		_, f, _ := mysql_auth("zxczxc", "zxczxc", ip)
+		if f {
+			Output(fmt.Sprintf("%v burp success:%v No authentication\n", "mysql", ip), LightGreen)
+			return ip, port, nil, []string{"No authentication"}
 		}
-		startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,mysql_auth,burpthread)
+		startburp := NewBurp(Password, Username, Userdict, Passdict, ip, mysql_auth, burpthread)
 		startburp.Run()
 	}
-	return ip, port, err,nil
+	return ip, port, err, nil
 }
 
-func mysql_auth(username,password,ip string) (error,bool,string) {
-	DSN := fmt.Sprintf("%s:%s@tcp(%s:%v)/?charset=utf8&timeout=%v", username, password, ip,mysql_port,Timeout)
+func mysql_auth(username, password, ip string) (error, bool, string) {
+	DSN := fmt.Sprintf("%s:%s@tcp(%s:%v)/?charset=utf8&timeout=%v", username, password, ip, mysql_port, Timeout)
 	//注册一个tcp网络，根据是否设置代理返回不同的conn
-	mysql.RegisterDialContext("tcp", func(ctx context.Context,network string) (net.Conn, error) {
-		return Getconn(network,0)
+	mysql.RegisterDialContext("tcp", func(ctx context.Context, network string) (net.Conn, error) {
+		return Getconn(network, 0)
 	})
 	db, err := sql.Open("mysql", DSN)
 	if err == nil {
+		defer func() {
+			_ = db.Close()
+		}()
 		err = db.Ping()
 		if err == nil {
-			return nil,true,"mysql"
+			return nil, true, "mysql"
 		}
 		db.Close()
 	}
-	return err,false,"mysql"
+	return err, false, "mysql"
 }
-
 
 func init() {
 	blastCmd.AddCommand(mysqlCmd)
-	mysqlCmd.Flags().StringVar(&Hostfile,"hostfile","","Set host file")
-	mysqlCmd.Flags().StringVarP(&Hosts,"host","H","","Set mysql server host")
-	mysqlCmd.Flags().IntVarP(&mysql_port,"port","p",3306,"Set mysql server port")
-	mysqlCmd.Flags().IntVarP(&burpthread,"burpthread","",100,"Set burp password thread(recommend not to change)")
-	mysqlCmd.Flags().StringVarP(&Username,"username","U","","Set mysql username")
-	mysqlCmd.Flags().StringVarP(&Password,"password","P","","Set mysql password")
-	mysqlCmd.Flags().StringVarP(&Userdict,"userdict","","","Set mysql userdict path")
-	mysqlCmd.Flags().StringVarP(&Passdict,"passdict","","","Set mysql passworddict path")
+	mysqlCmd.Flags().StringVar(&Hostfile, "hostfile", "", "Set host file")
+	mysqlCmd.Flags().StringVarP(&Hosts, "host", "H", "", "Set mysql server host")
+	mysqlCmd.Flags().IntVarP(&mysql_port, "port", "p", 3306, "Set mysql server port")
+	mysqlCmd.Flags().IntVarP(&burpthread, "burpthread", "", 20, "Set burp password thread(recommend not to change)")
+	mysqlCmd.Flags().StringVarP(&Username, "username", "U", "", "Set mysql username")
+	mysqlCmd.Flags().StringVarP(&Password, "password", "P", "", "Set mysql password")
+	mysqlCmd.Flags().StringVarP(&Userdict, "userdict", "", "", "Set mysql userdict path")
+	mysqlCmd.Flags().StringVarP(&Passdict, "passdict", "", "", "Set mysql passworddict path")
 }

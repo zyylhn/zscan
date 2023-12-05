@@ -17,7 +17,7 @@ var listoid bool
 
 var snmpCmd = &cobra.Command{
 	Use:   "snmp",
-	Short: "snmp scan",
+	Short: "snmp queries",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		PrintScanBanner("snmp")
 	},
@@ -143,5 +143,4 @@ func init() {
 	snmpCmd.Flags().StringVar(&snmpVersion, "version", "2c", "specifies SNMP version to use. 1|2c|3 ")
 	snmpCmd.Flags().StringVar(&get, "get", "", "set an oid")
 	snmpCmd.Flags().StringVar(&walk, "walk", "", "set an oid")
-
 }

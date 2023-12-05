@@ -88,7 +88,7 @@ var netBiosCmd = &cobra.Command{
 	Short: "netbios、smb、oxid scan",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		SaveInit()
-		PrintScanBanner("netbios")
+		PrintScanBanner("winsacn")
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		start := time.Now()
@@ -437,8 +437,8 @@ func smbinfo(conn net.Conn) (error,[]string) {
 	hostname := buf[end:]
 	domain = bytes.Replace(domain, []byte{0x00}, []byte(""), -1)
 	hostname = bytes.Replace(hostname, []byte{0x00}, []byte(""), -1)
-	smbRes = append(smbRes, "domain: "+string(domain))
-	smbRes = append(smbRes, "hostname: "+string(hostname))
+	smbRes = append(smbRes, "domain:"+string(domain))
+	smbRes = append(smbRes, "hostname:"+string(hostname))
 	return nil,smbRes
 }
 

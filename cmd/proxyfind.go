@@ -33,12 +33,13 @@ func proxyfind()  {
 	Checkerr(err)
 	aliveserver:=NewPortScan(ips,ports,Connect_SocksScan,true)
 	r:=aliveserver.Run()
-	PrintResult_Socks(r)
+	Printresult(r)
 }
 
 func Connect_SocksScan(ip string,port int) (string,int,error,[]string) {
 	conn, err := Getconn(ip,port)
 	if conn!=nil{
+		defer conn.Close()
 		result:=""
 		switch proxy_type {
 		case "socks5":
@@ -57,12 +58,6 @@ func Connect_SocksScan(ip string,port int) (string,int,error,[]string) {
 			fmt.Println(Red(fmt.Sprintf("Does not support %v",proxy_type)))
 		}
 	}
-
-	defer func() {
-		if conn != nil {
-			_ = conn.Close()
-		}
-	}()
 	err=fmt.Errorf("")
 	return ip, port, err,nil
 }
@@ -105,16 +100,16 @@ func Socks4Find(conn net.Conn) (bool,string) {
 
 }
 
-
-func PrintResult_Socks(r map[string]*Openport)  {
-	Output("\n\r===========================port result list=============================\n",LightGreen)
-	for _,i:=range r{
-		Output(fmt.Sprintf("Traget:%v\n",i.ip),LightBlue)
-		for _,p:=range i.port{
-			Output(fmt.Sprintf("%v\t%v\n",p,i.banner[p][0]),White)
-		}
-	}
-}
+//
+//func PrintResult_Socks(r map[string]*Openport)  {
+//	Output("\n\r===========================port result list=============================\n",LightGreen)
+//	for _,i:=range r{
+//		Output(fmt.Sprintf("Traget:%v\n",i.ip),LightBlue)
+//		for _,p:=range i.port{
+//			Output(fmt.Sprintf("%v\t%v\n",p,i.banner[p][0]),White)
+//		}
+//	}
+//}
 
 
 func init() {

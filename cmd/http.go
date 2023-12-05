@@ -26,28 +26,26 @@ var (
 )
 
 type httpresp struct {
-	len string
+	len   string
 	title string
-	code int
+	code  int
 }
 
 type HostInfo struct {
-	Host      string
-	Ports     string
-	Url       string
-	Timeout   time.Duration
-	Infostr   []string
+	Host     string
+	Ports    string
+	Url      string
+	Timeout  time.Duration
+	Infostr  []string
 	baseinfo *httpresp
 }
 
-
-
-//flag 1 first try
-//flag 2 /favicon.ico
-//flag 3 302
-//flag 4 400 -> https
-//根据协议设置url，进行第一次获取checkdata尝试，如果遇到跳转则跟进再次尝试，如果返回有https则重新设置url再次尝试以上步骤
-func WebTitle(info *HostInfo) (*HostInfo,error) {
+// flag 1 first try
+// flag 2 /favicon.ico
+// flag 3 302
+// flag 4 400 -> https
+// 根据协议设置url，进行第一次获取checkdata尝试，如果遇到跳转则跟进再次尝试，如果返回有https则重新设置url再次尝试以上步骤
+func WebTitle(info *HostInfo) (*HostInfo, error) {
 	var CheckData []web.CheckDatas
 	//设置url
 	if info.Url == "" {
@@ -70,7 +68,7 @@ func WebTitle(info *HostInfo) (*HostInfo,error) {
 	err, result, CheckData := geturl(info, 1, CheckData)
 	//fmt.Println("第一次",result,string(CheckData[0].Body))
 	if err != nil && !strings.Contains(err.Error(), "EOF") {
-		return nil,err
+		return nil, err
 	}
 
 	//判断是否有跳转,如果有跳转，跟进跳到头，增加一次的CheckData
@@ -80,7 +78,7 @@ func WebTitle(info *HostInfo) (*HostInfo,error) {
 			info.Url = redirecturl.String()
 			err, result, CheckData = geturl(info, 3, CheckData)
 			if err != nil {
-				return nil,err
+				return nil, err
 			}
 		}
 	}
@@ -95,31 +93,31 @@ func WebTitle(info *HostInfo) (*HostInfo,error) {
 				info.Url = redirecturl.String()
 				err, result, CheckData = geturl(info, 3, CheckData)
 				if err != nil {
-					return nil,err
+					return nil, err
 				}
 			}
 		} else {
 			if err != nil {
-				return nil,err
+				return nil, err
 			}
 		}
 	} else if err != nil {
-		return nil,err
+		return nil, err
 	}
 
 	err, _, CheckData = geturl(info, 2, CheckData)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	//将CheckData送去与指纹库对比
 	info.Infostr = web.InfoCheck(CheckData)
-	if info.Infostr!=nil{
-		Output(fmt.Sprintf("\r%v\tcode:%v\tlen:%v\ttitle:%v\tbanner:%s\n",info.Url,info.baseinfo.code,info.baseinfo.len,info.baseinfo.title,info.Infostr),LightGreen)
-	}else {
-		Output(fmt.Sprintf("\r%v\tcode:%v\tlen:%v\ttitle:%v\t\n",info.Url,info.baseinfo.code,info.baseinfo.len,info.baseinfo.title),White)
+	if info.Infostr != nil {
+		Output(fmt.Sprintf("\r%v\tcode:%v\tlen:%v\ttitle:%v\tbanner:%s\n", info.Url, info.baseinfo.code, info.baseinfo.len, info.baseinfo.title, info.Infostr), LightGreen)
+	} else {
+		Output(fmt.Sprintf("\r%v\tcode:%v\tlen:%v\ttitle:%v\t\n", info.Url, info.baseinfo.code, info.baseinfo.len, info.baseinfo.title), White)
 	}
-	httptitle_result.Store(fmt.Sprintf("%v:%v",info.Host,info.Ports), info)
-	return info,err
+	httptitle_result.Store(fmt.Sprintf("%v:%v", info.Host, info.Ports), info)
+	return info, err
 }
 
 func geturl(info *HostInfo, flag int, CheckData []web.CheckDatas) (error, string, []web.CheckDatas) {
@@ -140,7 +138,7 @@ func geturl(info *HostInfo, flag int, CheckData []web.CheckDatas) (error, string
 		//设置http请求头，并在cookie后面添加shior识别
 		req.Header.Set("User-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1468.0 Safari/537.36")
 		req.Header.Set("Accept", "*/*")
-		req.Header.Set("Accept-Language", "zh-CN,zh;q=0.9")
+		req.Header.Set("Accept-Language", "en-US;q=0.3,en;q=0.2")
 		//if common.PocInfo.!= "" {
 		//	req.Header.Set("Cookie", "rememberMe=1;"+common.Pocinfo.Cookie)
 		//} else {
@@ -238,7 +236,7 @@ func geturl(info *HostInfo, flag int, CheckData []web.CheckDatas) (error, string
 					length = fmt.Sprintf("%v", len(body))
 				}
 				//result := fmt.Sprintf("[*] WebTitle:%-25v code:%-3v len:%-6v title:%v", resp.Request.URL, resp.StatusCode, length, title)
-				info.baseinfo=&httpresp{title: title,code: resp.StatusCode,len: length}
+				info.baseinfo = &httpresp{title: title, code: resp.StatusCode, len: length}
 			}
 			CheckData = append(CheckData, web.CheckDatas{body, fmt.Sprintf("%s", resp.Header)})
 			redirURL, err1 := resp.Location()
@@ -265,7 +263,7 @@ func Decodegbk(s []byte) ([]byte, error) { // GBK解码
 	return d, nil
 }
 
-//获取响应body
+// 获取响应body
 func getRespBody(oResp *http.Response) ([]byte, error) {
 	var body []byte
 	if oResp.Header.Get("Content-Encoding") == "gzip" {
@@ -295,7 +293,7 @@ func getRespBody(oResp *http.Response) ([]byte, error) {
 	return body, nil
 }
 
-//判断是什么协议
+// 判断是什么协议
 func GetProtocol(host string, Timeout time.Duration) string {
 	conn, err := tls.DialWithDialer(&net.Dialer{Timeout: Timeout}, "tcp", host, &tls.Config{InsecureSkipVerify: true})
 	defer func() {
@@ -323,9 +321,9 @@ func Inithttp() {
 	}
 }
 
-func InitHttpClient(ThreadsNum int,Timeout time.Duration) error {
-	d:= func(ctx context.Context,network,addr string)(net.Conn,error) {
-		return Getconn(addr,0)
+func InitHttpClient(ThreadsNum int, Timeout time.Duration) error {
+	d := func(ctx context.Context, network, addr string) (net.Conn, error) {
+		return Getconn(addr, 0)
 	}
 	tr := &http.Transport{
 		DialContext:         d,
@@ -334,36 +332,36 @@ func InitHttpClient(ThreadsNum int,Timeout time.Duration) error {
 		MaxIdleConnsPerHost: ThreadsNum * 2,
 		IdleConnTimeout:     keepAlive,
 		TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-		TLSHandshakeTimeout: Timeout*2,
+		TLSHandshakeTimeout: Timeout * 2,
 		DisableKeepAlives:   false,
 	}
 	Client = &http.Client{
 		Transport: tr,
-		Timeout:   Timeout*3,
+		Timeout:   Timeout * 3,
 	}
 	ClientNoRedirect = &http.Client{
 		Transport:     tr,
-		Timeout:       Timeout*3,
+		Timeout:       Timeout * 3,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error { return http.ErrUseLastResponse },
 	}
 	return nil
 }
 
-func OutputHttp(v *HostInfo)  {
-	Output("\r"+v.Url,White)
-	if v.baseinfo.code==200{
-		Output(fmt.Sprintf("  code:",),White)
-		Output(fmt.Sprintf("%v",v.baseinfo.code),LightGreen)
-	}else {
-		Output(fmt.Sprintf("  code:",),White)
-		Output(fmt.Sprintf("%v",v.baseinfo.code),Yellow)
+func OutputHttp(v *HostInfo) {
+	Output("\r"+v.Url, White)
+	if v.baseinfo.code == 200 {
+		Output(fmt.Sprintf("  code:"), White)
+		Output(fmt.Sprintf("%v", v.baseinfo.code), LightGreen)
+	} else {
+		Output(fmt.Sprintf("  code:"), White)
+		Output(fmt.Sprintf("%v", v.baseinfo.code), Yellow)
 	}
-	Output(fmt.Sprintf("  len:%v",v.baseinfo.len),White)
-	Output(fmt.Sprintf("  title:"),White)
-	Output(fmt.Sprintf("%v",v.baseinfo.title),LightGreen)
-	Output(fmt.Sprintf("  banner:"),White)
-	for _,i:=range v.Infostr{
-		Output(fmt.Sprintf("%v",i),LightGreen)
+	Output(fmt.Sprintf("  len:%v", v.baseinfo.len), White)
+	Output(fmt.Sprintf("  title:"), White)
+	Output(fmt.Sprintf("%v", v.baseinfo.title), LightGreen)
+	Output(fmt.Sprintf("  banner:"), White)
+	for _, i := range v.Infostr {
+		Output(fmt.Sprintf("%v", i), LightGreen)
 	}
-	Output("\n",White)
+	Output("\n", White)
 }

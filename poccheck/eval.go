@@ -28,7 +28,7 @@ func NewEnv(c *CustomLib) (*cel.Env, error) {
 }
 
 func Evaluate(env *cel.Env, expression string, params map[string]interface{}) (ref.Val, error) {
-	ast, iss := env.Compile(expression)   //对表达式进行编译
+	ast, iss := env.Compile(expression) //对表达式进行编译
 	if iss.Err() != nil {
 		//fmt.Printf("compile: ", iss.Err())
 		return nil, iss.Err()
@@ -498,6 +498,9 @@ func DoRequest(req *http.Request, redirect bool) (*Response, error) {
 		if req.Header.Get("Content-Type") == "" {
 			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 		}
+		if req.Header.Get("Accept-Language") == "" {
+			req.Header.Set("Accept-Language", "en-US;q=0.3,en;q=0.2")
+		}
 	}
 
 	var oResp *http.Response
@@ -600,4 +603,3 @@ func getRespBody(oResp *http.Response) ([]byte, error) {
 	}
 	return body, nil
 }
-

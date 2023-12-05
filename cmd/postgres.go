@@ -69,6 +69,9 @@ func postgres_auth(username,password,ip string) (error, bool,string) {
 	DSN := fmt.Sprintf("postgres://%s:%s@%s:%d/postgres?sslmode=disable&connect_timeout=%d", username, password, ip, postgre_port, Timeout)
 	db, err := sql.Open("postgres", DSN)
 	if err == nil {
+		defer func() {
+			_=db.Close()
+		}()
 		err = db.Ping()
 		if err == nil {
 			return nil,true,"postgres"

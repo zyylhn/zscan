@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/spf13/cobra"
 	"io"
@@ -39,7 +40,10 @@ func Listen(ladd string) {
 	fmt.Println(Yellow("Waiting for connection"))
 	for {
 		c, err := tcplisten.AcceptTCP()
-		Checkerr(err)
+		if err!=nil{
+			Checkerr(err)
+			continue
+		}
 		fmt.Println(LightGreen("Success connect from " + c.RemoteAddr().String()))
 		go output(&wg, c)
 		go getin(&wg, c)
@@ -82,7 +86,14 @@ func output(wg *sync.WaitGroup, c *net.TCPConn) {
 //从终端获取数据到Conn
 func getin(wg *sync.WaitGroup, c *net.TCPConn) {
 	defer wg.Done()
-	c.ReadFrom(os.Stdin)
+	br := bufio.NewReader(os.Stdin)
+	for {
+		a, _, err := br.ReadLine()
+		if err == io.EOF {
+			os.Exit(0)
+		}
+		c.Write(append(a, []byte("\n")...))
+	}
 }
 
 func init() {

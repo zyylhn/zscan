@@ -18,7 +18,6 @@ var login_key bool
 var key_path string
 var sshCommand string
 
-
 var sshCmd = &cobra.Command{
 	Use:   "ssh",
 	Short: "burp ssh username password or traverse the key",
@@ -259,6 +258,6 @@ func init() {
 	sshCmd.Flags().StringVarP(&Passdict,"passdict","","","Set ssh passworddict path")
 	sshCmd.Flags().BoolVarP(&login_key,"login_key","k",false,"Use public key login")
 	sshCmd.Flags().StringVarP(&key_path,"keypath","d","","Set public key path")
-	sshCmd.Flags().StringVarP(&sshCommand,"command","c","id","command want to exec")
+	sshCmd.Flags().StringVarP(&sshCommand,"command","c","","command want to exec")
 	//sshCmd.MarkFlagRequired("host")
 }

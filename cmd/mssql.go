@@ -66,6 +66,9 @@ func mssql_auth(user ,pass ,addr string) ( error,bool,string) {
 	connString := fmt.Sprintf("sqlserver://%v:%v@%v:%v/?connection+timeout=%v&encrypt=disable", user, pass,addr,mssql_port,5)
 	db, err := sql.Open("mssql", connString)
 	if err == nil {
+		defer func() {
+			_=db.Close()
+		}()
 		err = db.Ping()
 		if err == nil {
 			return nil,true,"mssql"

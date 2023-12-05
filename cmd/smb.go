@@ -56,6 +56,11 @@ func Connectsmbburp(ip string,port int) (string,int,error,[]string) {
 		_ = conn.Close()
 		fmt.Printf(White(fmt.Sprintf("\rFind port %v:%v\r\n", ip, port)))
 		fmt.Println(Yellow("\rStart burp smb : ",ip))
+		_,f,_:=smb_auth("aaa","aaaaa",ip)
+		if f{
+			Output(ip+": SMB unauthorized(printer)",LightGreen)
+			return ip,port,nil,[]string{"SMB unauthorized(printer)"}
+		}
 		startburp:=NewBurp(Password,Username,Userdict,Passdict,ip,smb_auth,burpthread)
 		startburp.Run()
 	}

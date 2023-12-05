@@ -62,11 +62,14 @@ func ldap_auth(username,password,ip string) (error,bool,string) {
 
 func LoginBind(ldapUser, ldapPassword string,ip string) (*ldap.Conn, error) {
 	conn,err:=Getconn(ip, ldap_port)
-	l:=ldap.NewConn(conn,false)
-	l.Start()
 	if err != nil {
 		return nil, err
 	}
+	defer func() {
+		conn.Close()
+	}()
+	l:=ldap.NewConn(conn,false)
+	l.Start()
 	err = l.Bind(ldapUser,ldapPassword)
 	if err != nil {
 		return nil, err

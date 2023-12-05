@@ -1,12 +1,10 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"golang.org/x/net/proxy"
 	"sync"
 	"time"
-	lib "zscan/poccheck"
 )
 
 var Timeout time.Duration
@@ -30,20 +28,22 @@ var stopchan chan int
 var psresultlock sync.RWMutex
 var runmod bool
 var isinitfile bool
+var WriteListIp string
+var WriteListPort string
 
 const l1 = "2006-01-02 15:04:05"
 
 var RootCmd = &cobra.Command{
-	Use:   "zscan",
-	Short: " ______     ______     ______     ______     __   __    \n/\\___  \\   /\\  ___\\   /\\  ___\\   /\\  __ \\   /\\ \"-.\\ \\   \n\\/_/  /__  \\ \\___  \\  \\ \\ \\____  \\ \\  __ \\  \\ \\ \\-.  \\  \n  /\\_____\\  \\/\\_____\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\ \\_\\\\\"\\_\\ \n  \\/_____/   \\/_____/   \\/_____/   \\/_/\\/_/   \\/_/ \\/_/ \n",
+	Use: "zscan",
+	//Short: " ______     ______     ______     ______     __   __    \n/\\___  \\   /\\  ___\\   /\\  ___\\   /\\  __ \\   /\\ \"-.\\ \\   \n\\/_/  /__  \\ \\___  \\  \\ \\ \\____  \\ \\  __ \\  \\ \\ \\-.  \\  \n  /\\_____\\  \\/\\_____\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\ \\_\\\\\"\\_\\ \n  \\/_____/   \\/_____/   \\/_____/   \\/_/\\/_/   \\/_/ \\/_/ \n",
 }
 
 func Execute() {
-	OutputChan=make(chan string)
-	runmod=false
-	stopchan=make(chan int)
+	OutputChan = make(chan string)
+	runmod = false
+	stopchan = make(chan int)
 	cobra.CheckErr(RootCmd.Execute())
-	if runmod{
+	if runmod {
 		<-stopchan
 	}
 }
@@ -52,17 +52,10 @@ func init() {
 	RootCmd.PersistentFlags().DurationVarP(&Timeout, "timeout", "t", time.Second*5, "Set `time`out(s) eg:5s")
 	RootCmd.PersistentFlags().IntVarP(&Thread, "thread", "T", 600, "Set `thread` eg:2000")
 	RootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "Show verbose information")
-	RootCmd.PersistentFlags().StringVarP(&Path_result, "output","o", "result.txt", "the path of result file")
+	RootCmd.PersistentFlags().StringVarP(&Path_result, "output", "o", "result.txt", "the path of result file")
 	RootCmd.PersistentFlags().StringVar(&Proxy, "proxy", "", "Connect with a proxy(user:pass@172.16.95.1:1080 or 172.16.95.1:1080)")
 	RootCmd.PersistentFlags().BoolVar(&No_progress_bar, "nobar", false, "disable portscan progress bar")
-	if Proxy!=""{
-		proxyconn,_=Proxyconn()
-		if proxyconn==nil{
-			Checkerr_exit(fmt.Errorf("proxy error"))
-		}
-	}
-	Inithttp()
-	lib.Inithttp(Client,ClientNoRedirect)
+	RootCmd.PersistentFlags().StringVarP(&WriteListIp, "whiteip", "", "", "set ip white list")
+	RootCmd.PersistentFlags().StringVarP(&WriteListPort, "whiteport", "", "", "set port white list")
+
 }
-
-

@@ -7,7 +7,7 @@ import (
 // toolsCmd represents the tools command
 var toolsCmd = &cobra.Command{
 	Use:   "tools",
-	Short: "Commonly used tools:nc",
+	Short: "Commonly used tools",
 }
 
 func init() {

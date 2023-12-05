@@ -81,10 +81,11 @@ func mongodb_auth(username,password,ip string) (error,bool,string) {
 		Password:  password,
 		PoolLimit: 4096,
 	}
-
 	db, err := mgo.DialWithInfo(dialInfo)
-
 	if err == nil {
+		defer func() {
+			db.Close()
+		}()
 		err = db.Ping()
 		if err == nil {
 			return nil,true,"mongodb"

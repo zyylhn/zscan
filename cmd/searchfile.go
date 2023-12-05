@@ -108,7 +108,7 @@ func findFile(path string,fn filepath.WalkFunc,wg *sync.WaitGroup)  {
 func init() {
 	toolsCmd.AddCommand(searchfileCmd)
 	searchfileCmd.Flags().StringArrayVarP(&regular,"regexp","r",nil,"Specifies the re matching parameters")
-	searchfileCmd.Flags().StringArrayVarP(&searchfielname,"file","f",nil,"set filename eg:zscan tools searchfile -d ./ -f pass.txt -f user.txt")
+	searchfileCmd.Flags().StringArrayVarP(&searchfielname,"file","f",nil,"set filename eg:appname tools searchfile -d ./ -f pass.txt -f user.txt")
 	searchfileCmd.Flags().StringVarP(&rootdir,"dir","d","","set search base Dir")
 	searchfileCmd.Flags().IntVar(&walkNum,"walk",3,"Traversal turns on multithreading depth(Try not to go above 5)")
 }

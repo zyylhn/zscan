@@ -6,89 +6,91 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"time"
 	"zscan/config"
 )
-//var num int
-type Service func(user string,pass string,addr string)(error,bool,string)
+
+// var num int
+type Service func(user string, pass string, addr string) (error, bool, string)
 
 type burp_info struct {
 	username string
 	password string
-	addr string
+	addr     string
 }
 
 type Burp struct {
-	password_ch chan string
+	password_ch   chan string
 	username_list []string
-	username string
-	password string
-	userdict string
-	passdict string
-	aliveaddr string
-	tasklist chan *burp_info
-	service Service
-	wg sync.WaitGroup
-	burpthread int
-	stop chan int8
-	burpresult string
+	username      string
+	password      string
+	userdict      string
+	passdict      string
+	aliveaddr     string
+	tasklist      chan *burp_info
+	service       Service
+	wg            sync.WaitGroup
+	burpthread    int
+	stop          chan int8
+	burpresult    string
 }
 
-func NewBurp(pass,user,userdict,passdict string,aliveaddr string,service Service,burpthread int) (*Burp) {
-	return &Burp{password_ch: make(chan string,Thread*2),
+func NewBurp(pass, user, userdict, passdict string, aliveaddr string, service Service, burpthread int) *Burp {
+	return &Burp{password_ch: make(chan string, Thread*2),
 		username_list: []string{},
-		userdict: userdict,
-		passdict: passdict,
-		tasklist: make(chan *burp_info,Thread*2),
-		service: service,
-		aliveaddr: aliveaddr,
-		password:pass,
-		username: user,
-		burpthread: burpthread,
-		stop:make(chan int8),
+		userdict:      userdict,
+		passdict:      passdict,
+		tasklist:      make(chan *burp_info, Thread*2),
+		service:       service,
+		aliveaddr:     aliveaddr,
+		password:      pass,
+		username:      user,
+		burpthread:    burpthread,
+		stop:          make(chan int8),
 	}
 }
 
 func (b *Burp) Run() string {
-	switch  {
-	case b.username!=""&&b.userdict=="":
-		if strings.Contains(b.username,","){
-			userlist:=strings.Split(b.username,",")
-			for _,user:=range userlist{
-				b.username_list=append(b.username_list,user)
+	switch {
+	case b.username != "" && b.userdict == "":
+		if strings.Contains(b.username, ",") {
+			userlist := strings.Split(b.username, ",")
+			for _, user := range userlist {
+				b.username_list = append(b.username_list, user)
 			}
-		}else {
-			b.username_list=append(b.username_list,b.username)
+		} else {
+			b.username_list = append(b.username_list, b.username)
 		}
-	case b.userdict!="":
+	case b.userdict != "":
 		b.Getuser()
 	default:
-		b.username_list=[]string{""}
+		b.username_list = []string{""}
 	}
-	switch  {
-	case b.password==""&&b.passdict!="":
+	switch {
+	case b.password == "" && b.passdict != "":
 		b.wg.Add(1)
 		go b.Getpass()
-	case b.password!=""&&b.passdict=="":
-		if strings.Contains(b.password,","){
-			passlist:=strings.Split(b.password,",")
-			for _,pass:=range passlist{
-				b.password_ch<-pass
+	case b.password != "" && b.passdict == "":
+		if strings.Contains(b.password, ",") {
+			passlist := strings.Split(b.password, ",")
+			for _, pass := range passlist {
+				b.password_ch <- pass
 			}
 			close(b.password_ch)
-		}else {
-			b.password_ch<-b.password
+		} else {
+			b.password_ch <- b.password
 			close(b.password_ch)
 		}
 	default:
-		b.password_ch=make(chan string,len(config.Pass_dict))
-		for _,i:=range config.Pass_dict{
-			b.password_ch<-i
+		b.password_ch = make(chan string, len(config.Pass_dict))
+		for _, i := range config.Pass_dict {
+			b.password_ch <- i
 		}
 		close(b.password_ch)
 	}
 	b.wg.Add(1)
 	go b.Gettasklist()
-	for i:=0;i<b.burpthread;i++{
+	for i := 0; i < b.burpthread; i++ {
 		b.wg.Add(1)
 		go b.Check()
 	}
@@ -96,14 +98,13 @@ func (b *Burp) Run() string {
 	return b.burpresult
 }
 
-
-//读取密码到缓冲信道中
-func (b *Burp) Getpass()  {
-	b.readdict_To_Ch(b.passdict,&b.password_ch)
+// 读取密码到缓冲信道中
+func (b *Burp) Getpass() {
+	b.readdict_To_Ch(b.passdict, &b.password_ch)
 }
 
-//读取用户名到列表中
-func (b *Burp) Getuser()  {
+// 读取用户名到列表中
+func (b *Burp) Getuser() {
 	file, err := os.Open(b.userdict)
 	Checkerr_exit(err)
 	defer file.Close()
@@ -118,40 +119,62 @@ func (b *Burp) Getuser()  {
 	}
 }
 
-//根据用户名密码还有生成任务列表
-func (b *Burp) Gettasklist()  {
+// 根据用户名密码还有生成任务列表
+func (b *Burp) Gettasklist() {
 	defer b.wg.Done()
-	for pass:=range b.password_ch{
-		for _,user:=range b.username_list{
+	for pass := range b.password_ch {
+		for _, user := range b.username_list {
 			if cancelled(b.stop) {
 				break
 			}
-			b.tasklist<-&burp_info{user,pass,b.aliveaddr}
+			b.tasklist <- &burp_info{user, pass, b.aliveaddr}
 		}
 	}
 	close(b.tasklist)
 }
 
-func (b *Burp) Check()  {
+type burpresult struct {
+	err        error
+	success    bool
+	servername string
+}
+
+func (b *Burp) Check() {
 	defer b.wg.Done()
-	for task:=range b.tasklist{
+	for task := range b.tasklist {
 		if cancelled(b.stop) {
 			break
 		}
 		//if Verbose{
 		//	fmt.Println(Yellow(fmt.Sprintf("Test:%v %v %v",task.addr,task.username,task.password)))
 		//}
-		err,success,servername:=b.service(task.username,task.password,task.addr)
+
+		timeoutch := make(chan burpresult)
+		go func() {
+			err, success, servername := b.service(task.username, task.password, task.addr)
+			timeoutch <- burpresult{err: err, success: success, servername: servername}
+		}()
+		var err error
+		var success bool
+		var servername string
+		select {
+		case re := <-timeoutch:
+			err = re.err
+			success = re.success
+			servername = re.servername
+		case <-time.After(Timeout * 3):
+			continue
+		}
 		//num+=1
-		if err==nil&&success{
-			if cancelled(b.stop){
+		if err == nil && success {
+			if cancelled(b.stop) {
 				break
-			}else {
-				Output(fmt.Sprintf("\r[+]%v burp success:%v %v %v\n",servername,task.addr,task.username,task.password),LightGreen)
+			} else {
+				Output(fmt.Sprintf("\r[+]%v burp success:%v %v %v\n", servername, task.addr, task.username, task.password), LightGreen)
 				if cancelled(b.stop) {
 					break
 				}
-				b.burpresult=fmt.Sprintf("%v\tUsername:%v\tPassword:%v",servername,task.username,task.password)
+				b.burpresult = fmt.Sprintf("%v\tUsername:%v\tPassword:%v", servername, task.username, task.password)
 				close(b.stop)
 				break
 			}
@@ -159,22 +182,22 @@ func (b *Burp) Check()  {
 	}
 }
 
-func (b *Burp) readdict_To_Ch(path string,ch *chan string)  {
+func (b *Burp) readdict_To_Ch(path string, ch *chan string) {
 	defer b.wg.Done()
 	defer close(*ch)
-	file,err:=os.Open(path)
-	if err !=nil{
+	file, err := os.Open(path)
+	if err != nil {
 		fmt.Println(err)
 	}
 	defer file.Close()
-	f:=bufio.NewReader(file)
-	for  {
-		bur,err:=f.ReadString('\n')
-		if err !=nil{
+	f := bufio.NewReader(file)
+	for {
+		bur, err := f.ReadString('\n')
+		if err != nil {
 			//fmt.Println(Red(err))
 			break
 		}
-		bur=strings.TrimSpace(bur)
+		bur = strings.TrimSpace(bur)
 		if cancelled(b.stop) {
 			break
 		}
@@ -182,7 +205,7 @@ func (b *Burp) readdict_To_Ch(path string,ch *chan string)  {
 	}
 }
 
-func cancelled(stop chan int8) bool{
+func cancelled(stop chan int8) bool {
 	select {
 	case <-stop:
 		return true
@@ -212,4 +235,3 @@ func cancelled(stop chan int8) bool{
 //		}
 //	}
 //}
-
